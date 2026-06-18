@@ -40,7 +40,7 @@ uuid = { version = "1", features = ["v4"] }
 thiserror = "1"
 parking_lot = "0.12"
 time = { version = "0.3", features = ["formatting", "macros"] }
-dirs = "5"
+dirs = "6"
 
 # HTTP client for the BYOK assistant proxy (reuses native-tls, like suppaftp)
 reqwest = { version = "0.12", features = ["json"] }
