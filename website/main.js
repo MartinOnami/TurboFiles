@@ -105,4 +105,42 @@
     var el = document.getElementById("version-line");
     if (el) el.textContent = "current release " + s;
   }
+
+  // ---- copy-to-clipboard for the Linux install commands ---------------------
+  var copyBtns = document.querySelectorAll(".fl-copy");
+  for (var i = 0; i < copyBtns.length; i++) {
+    copyBtns[i].addEventListener("click", function () {
+      var btn = this;
+      var cmd = btn.getAttribute("data-copy") || "";
+      var done = function () {
+        var prev = btn.textContent;
+        btn.textContent = "Copied";
+        btn.classList.add("is-copied");
+        setTimeout(function () {
+          btn.textContent = prev;
+          btn.classList.remove("is-copied");
+        }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(cmd).then(done, fallbackCopy);
+      } else {
+        fallbackCopy();
+      }
+      function fallbackCopy() {
+        var ta = document.createElement("textarea");
+        ta.value = cmd;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand("copy");
+          done();
+        } catch (e) {
+          /* clipboard blocked — leave the command visible to select manually */
+        }
+        document.body.removeChild(ta);
+      }
+    });
+  }
 })();

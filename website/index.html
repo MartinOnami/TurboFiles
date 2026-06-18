@@ -322,17 +322,36 @@
               </ol>
               <p class="fl-alt">SmartScreen stops warning once the app builds reputation.</p>
             </article>
-            <article class="fl-card" data-os="linux">
+            <article class="fl-card fl-card--cmd" data-os="linux">
               <header class="fl-card__head">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-2 0-3 2-2.9 4.5.1 1.4-.4 2.2-1.2 3.4-1 1.4-2.2 2.8-2.2 5 0 .9.3 1.6.8 2.2-.2.6-.1 1.3.4 1.7.6.5 1.6.4 2.4.5.7.1 1.2.6 2.7.6s2-.5 2.7-.6c.8-.1 1.8 0 2.4-.5.5-.4.6-1.1.4-1.7.5-.6.8-1.3.8-2.2 0-2.2-1.2-3.6-2.2-5-.8-1.2-1.3-2-1.2-3.4C15 4 14 2 12 2z"/></svg>
                 <h3>Linux</h3>
               </header>
-              <ol class="fl-steps">
-                <li><b>AppImage:</b> right-click → <b>Properties</b> → allow executing (or <code>chmod +x</code>).</li>
-                <li>Double-click to run — no system prompt.</li>
-                <li><b>.deb / .rpm:</b> install with your package manager as normal.</li>
-              </ol>
-              <p class="fl-alt">Most desktops run AppImages straight away.</p>
+              <p class="fl-cmd-intro">No security prompt — install with one command from your download folder:</p>
+              <div class="fl-cmds">
+                <div class="fl-cmd">
+                  <span class="fl-cmd__os">Debian / Ubuntu&nbsp;<span class="fl-cmd__ext">.deb</span></span>
+                  <div class="fl-cmd__row">
+                    <code>sudo apt install ./TurboFiles_*_amd64.deb</code>
+                    <button class="fl-copy" type="button" data-copy="sudo apt install ./TurboFiles_*_amd64.deb" aria-label="Copy command">Copy</button>
+                  </div>
+                </div>
+                <div class="fl-cmd">
+                  <span class="fl-cmd__os">Fedora / RHEL&nbsp;<span class="fl-cmd__ext">.rpm</span></span>
+                  <div class="fl-cmd__row">
+                    <code>sudo dnf install ./TurboFiles-*.x86_64.rpm</code>
+                    <button class="fl-copy" type="button" data-copy="sudo dnf install ./TurboFiles-*.x86_64.rpm" aria-label="Copy command">Copy</button>
+                  </div>
+                </div>
+                <div class="fl-cmd">
+                  <span class="fl-cmd__os">Any distro&nbsp;<span class="fl-cmd__ext">.AppImage</span></span>
+                  <div class="fl-cmd__row">
+                    <code>chmod +x TurboFiles_*.AppImage &amp;&amp; ./TurboFiles_*.AppImage</code>
+                    <button class="fl-copy" type="button" data-copy="chmod +x TurboFiles_*.AppImage &amp;&amp; ./TurboFiles_*.AppImage" aria-label="Copy command">Copy</button>
+                  </div>
+                </div>
+              </div>
+              <p class="fl-alt">AppImage won't start? Install FUSE: <code>sudo apt install libfuse2</code></p>
             </article>
           </div>
           <p class="fl-foot">
