@@ -43,7 +43,7 @@ time = { version = "0.3", features = ["formatting", "macros"] }
 dirs = "5"
 
 # HTTP client for the BYOK assistant proxy (reuses native-tls, like suppaftp)
-reqwest = { version = "0.12", features = ["json"] }
+reqwest = { version = "0.13", features = ["json"] }
 
 # Logging
 tracing = "0.1"
