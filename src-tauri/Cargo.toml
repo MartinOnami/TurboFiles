@@ -33,7 +33,7 @@ socks = "0.3"                                  # SOCKS4/5 proxy support
 
 # Storage & secrets
 rusqlite = { version = "0.31", features = ["bundled"] }
-keyring = "2"
+keyring = "4"
 
 # Utilities
 uuid = { version = "1", features = ["v4"] }
