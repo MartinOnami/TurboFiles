@@ -37,7 +37,7 @@ keyring = "2"
 
 # Utilities
 uuid = { version = "1", features = ["v4"] }
-thiserror = "1"
+thiserror = "2"
 parking_lot = "0.12"
 time = { version = "0.3", features = ["formatting", "macros"] }
 dirs = "5"
