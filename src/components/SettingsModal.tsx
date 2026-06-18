@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FileText,
   Monitor,
   ArrowDownUp,
+  ChevronDown,
   Download,
   Info,
   Moon,
@@ -969,51 +970,99 @@ function renderChangelogInline(text: string): React.ReactNode[] {
   return out;
 }
 
+// Render the body lines of one release (### subsections + bullets).
+function renderChangelogBody(body: string[]): React.ReactNode[] {
+  return body.map((line, i) => {
+    if (/^###\s+/.test(line))
+      return (
+        <p
+          key={i}
+          className="mt-2.5 text-[10px] font-semibold uppercase tracking-wide text-accent first:mt-0"
+        >
+          {line.replace(/^###\s+/, "")}
+        </p>
+      );
+    if (/^\s*[-*]\s+/.test(line))
+      return (
+        <p key={i} className="ml-1 mt-1 flex gap-1.5 text-subtle">
+          <span className="text-fg">•</span>
+          <span>{renderChangelogInline(line.replace(/^\s*[-*]\s+/, ""))}</span>
+        </p>
+      );
+    if (line === "") return null;
+    return (
+      <p key={i} className="mt-1 text-subtle">
+        {renderChangelogInline(line)}
+      </p>
+    );
+  });
+}
+
 function ChangelogPanel() {
-  const lines = changelogRaw.split("\n");
+  // Split the changelog into one collapsible section per release ("## " heading).
+  const sections = useMemo(() => {
+    const out: { title: string; body: string[] }[] = [];
+    let cur: { title: string; body: string[] } | null = null;
+    for (const raw of changelogRaw.split("\n")) {
+      const line = raw.trimEnd();
+      if (/^#\s+/.test(line) && !/^##/.test(line)) continue; // skip the doc title
+      const h2 = line.match(/^##\s+(.*)$/);
+      if (h2) {
+        cur = { title: h2[1].replace(/[[\]]/g, ""), body: [] };
+        out.push(cur);
+      } else if (cur) {
+        cur.body.push(line);
+      }
+    }
+    return out;
+  }, []);
+
+  // Open the running version by default, else the newest (first) release.
+  const initial = Math.max(
+    0,
+    sections.findIndex((s) => s.title.includes(APP_VERSION)),
+  );
+  const [open, setOpen] = useState<number>(initial);
+
   return (
     <div className="flex flex-col gap-3">
       <div className="rounded-md border border-border bg-bg px-3 py-2 text-xs text-subtle">
         <p className="font-medium text-fg">What's new</p>
         <p className="mt-0.5">
-          You're running <span className="font-mono text-fg">v{APP_VERSION}</span>. The full release
-          history is below (also on GitHub).
+          You're running <span className="font-mono text-fg">v{APP_VERSION}</span>. Select a release
+          to expand its notes.
         </p>
       </div>
-      <div className="flex flex-col gap-0.5 text-xs leading-relaxed">
-        {lines.map((raw, i) => {
-          const line = raw.trimEnd();
-          if (/^#\s+/.test(line)) return null; // skip the top-level title
-          if (/^##\s+/.test(line))
-            return (
-              <h3
-                key={i}
-                className="mt-3 border-b border-border pb-1 text-sm font-semibold text-fg"
-              >
-                {line.replace(/^##\s+/, "")}
-              </h3>
-            );
-          if (/^###\s+/.test(line))
-            return (
-              <p
-                key={i}
-                className="mt-2 text-[10px] font-semibold uppercase tracking-wide text-accent"
-              >
-                {line.replace(/^###\s+/, "")}
-              </p>
-            );
-          if (/^\s*[-*]\s+/.test(line))
-            return (
-              <p key={i} className="ml-1 flex gap-1.5 text-subtle">
-                <span className="text-fg">•</span>
-                <span>{renderChangelogInline(line.replace(/^\s*[-*]\s+/, ""))}</span>
-              </p>
-            );
-          if (line === "") return <div key={i} className="h-1.5" />;
+      <div className="flex flex-col gap-1.5">
+        {sections.map((s, i) => {
+          const isOpen = open === i;
+          const isCurrent = s.title.includes(APP_VERSION);
           return (
-            <p key={i} className="text-subtle">
-              {renderChangelogInline(line)}
-            </p>
+            <div key={i} className="overflow-hidden rounded-md border border-border bg-bg">
+              <button
+                onClick={() => setOpen(isOpen ? -1 : i)}
+                className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left hover:bg-muted"
+                aria-expanded={isOpen}
+              >
+                <span className="flex items-center gap-2 text-sm font-semibold text-fg">
+                  {s.title}
+                  {isCurrent && (
+                    <span className="rounded bg-accent/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-accent">
+                      current
+                    </span>
+                  )}
+                </span>
+                <ChevronDown
+                  size={15}
+                  className={`shrink-0 text-subtle transition-transform ${isOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+              {isOpen && (
+                <div className="border-t border-border px-3 pb-2.5 pt-1.5 text-xs leading-relaxed">
+                  {renderChangelogBody(s.body)}
+                </div>
+              )}
+            </div>
           );
         })}
       </div>

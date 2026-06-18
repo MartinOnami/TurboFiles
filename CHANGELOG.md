@@ -3,6 +3,19 @@
 All notable changes to TurboFiles are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Changelog](https://keepachangelog.com).
 
+## [0.1.3] - 2026-06-18
+### Changed
+- Settings → Changelog is now a collapsible accordion (the current release is
+  expanded) so the history is easy to scan without clutter.
+### Fixed
+- Simplified the macOS `.dmg` installer window (removed the custom background).
+
+## [0.1.2] - 2026-06-18
+### Added
+- Update in-app: the "Update available" button and Settings → About now download,
+  install, and relaunch the new version from inside the app (cryptographically
+  signed updates) instead of opening the browser.
+
 ## [0.1.1] - 2026-06-18
 ### Added
 - Ask TurboFiles: optional BYOK assistant (Anthropic / OpenAI-compatible; key in the
