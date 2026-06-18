@@ -27,7 +27,11 @@ serde_json = "1"
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time"] }
 
 # Protocols
-ssh2 = "0.9"                                   # SFTP / SSH
+# `vendored-openssl` builds libssh2 against a bundled OpenSSL on every platform.
+# This is load-bearing: on Windows the default (WinCNG) crypto backend omits
+# `userauth_pubkey_memory` (in-memory SSH keys), and on the macOS universal build
+# the system OpenSSL can't be located for cross-compilation. Vendoring fixes both.
+ssh2 = { version = "0.9", features = ["vendored-openssl"] }  # SFTP / SSH
 suppaftp = { version = "6", features = ["native-tls", "deprecated"] }  # FTP / FTPS (deprecated enables implicit-TLS API)
 socks = "0.3"                                  # SOCKS4/5 proxy support
 
