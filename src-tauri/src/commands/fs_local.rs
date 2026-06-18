@@ -181,7 +181,7 @@ pub fn set_prevent_sleep(
             "prevent-sleep is not supported on this platform",
         ));
 
-        // A missing helper shouldn't fail the transfer flow — just skip the hold.
+        // A missing helper shouldn't fail the transfer flow - just skip the hold.
         if let Ok(child) = spawned {
             *guard = Some(child);
         }
@@ -213,7 +213,7 @@ pub fn debug_info(
     Ok(info)
 }
 
-/// Format a Unix timestamp as "Jun 13 09:42" — matches the SFTP remote format.
+/// Format a Unix timestamp as "Jun 13 09:42" - matches the SFTP remote format.
 fn format_mtime(secs: u64) -> String {
     use time::OffsetDateTime;
     const MON: [&str; 12] = [

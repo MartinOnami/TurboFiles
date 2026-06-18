@@ -1,7 +1,7 @@
 # TurboFiles
 
 A modern, fast SFTP / FTP / FTPS client with a FileZilla-style dual-pane
-interface — built with **Tauri 2**, **React + TypeScript**, and a **Rust**
+interface - built with **Tauri 2**, **React + TypeScript**, and a **Rust**
 transfer engine. Light and dark themes included.
 
 [![CI](https://github.com/MartinOnami/TurboFiles/actions/workflows/ci.yml/badge.svg)](https://github.com/MartinOnami/TurboFiles/actions/workflows/ci.yml)
@@ -73,4 +73,4 @@ Want to contribute or understand the internals? See
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT - see [LICENSE](LICENSE).

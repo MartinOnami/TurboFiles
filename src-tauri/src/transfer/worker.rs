@@ -112,7 +112,7 @@ pub fn spawn_transfer(
                 }
             }
 
-            // Detect entering pause — emit Paused once.
+            // Detect entering pause - emit Paused once.
             if ctrl.is_paused() && !ctrl.is_cancelled() && !was_paused {
                 was_paused = true;
                 if let Some(state) = app_cb.try_state::<AppState>() {
@@ -143,7 +143,7 @@ pub fn spawn_transfer(
                 return false;
             }
 
-            // Detect resume — emit Transferring once, reset throttle.
+            // Detect resume - emit Transferring once, reset throttle.
             if was_paused {
                 was_paused = false;
                 if let Some(state) = app_cb.try_state::<AppState>() {

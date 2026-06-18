@@ -61,7 +61,7 @@ fn plan_upload(fs: &mut dyn RemoteFs, local: &Path, remote: &str) -> Result<Vec<
 /// `(extra_chars, replacement)`.
 type Sanitizer = (String, char);
 
-/// True if `name` is a single, ordinary path component — i.e. safe to join onto
+/// True if `name` is a single, ordinary path component - i.e. safe to join onto
 /// a local directory. Rejects `.`, `..`, empty, absolute paths, and anything
 /// containing a separator, so a hostile server listing can't traverse out of
 /// (or write outside) the chosen download directory.
@@ -453,7 +453,7 @@ mod tests {
             ],
         );
 
-        // No sanitizer configured — the traversal guard must still apply.
+        // No sanitizer configured - the traversal guard must still apply.
         let plans = plan_download(&mut fs, "/srv", &local_root, true, None).unwrap();
         // Only the legitimate file survives; every traversal/absolute name dropped.
         assert_eq!(plans.len(), 1);
@@ -490,7 +490,7 @@ mod tests {
             "illegal chars replaced: {}",
             plans[0].local
         );
-        // The remote path is untouched — we still fetch the real file.
+        // The remote path is untouched - we still fetch the real file.
         assert_eq!(plans[0].remote, "/srv/a:b?.txt");
     }
 }

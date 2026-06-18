@@ -37,7 +37,7 @@ fn socks4(proxy: &ProxyConfig, host: &str, port: u16) -> Result<TcpStream> {
         .next()
         .ok_or_else(|| Error::Connection(format!("cannot resolve {host}")))?;
     let proxy_addr = format!("{}:{}", proxy.host, proxy.port);
-    // SOCKS4 has no password — only an optional userid.
+    // SOCKS4 has no password - only an optional userid.
     let userid = proxy.username.as_deref().unwrap_or("");
     let stream = Socks4Stream::connect(proxy_addr.as_str(), target, userid)
         .map_err(|e| Error::Connection(format!("SOCKS4 proxy {}: {}", proxy.host, e)))?;

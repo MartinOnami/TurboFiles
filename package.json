@@ -1,7 +1,7 @@
 {
   "name": "turbofiles",
   "version": "0.1.3",
-  "description": "TurboFiles — a modern, fast FileZilla-style SFTP/FTP/FTPS client built with Tauri, React and Rust.",
+  "description": "TurboFiles - a modern, fast FileZilla-style SFTP/FTP/FTPS client built with Tauri, React and Rust.",
   "type": "module",
   "license": "MIT",
   "author": "Martin Onami",
@@ -22,6 +22,7 @@
     "lint": "eslint . --ext .ts,.tsx --max-warnings 0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "check:style": "python3 scripts/check-style.py",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

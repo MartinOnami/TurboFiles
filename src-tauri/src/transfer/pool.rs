@@ -8,7 +8,7 @@
 //! single-connection design exactly.
 //!
 //! The stored request carries credentials in memory for the session's lifetime
-//! (never persisted) so extra connections can re-authenticate — the same
+//! (never persisted) so extra connections can re-authenticate - the same
 //! in-memory-secret tradeoff already used for the proxy password.
 
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -86,7 +86,7 @@ impl ConnectionPool {
 
     /// Return a connection after use. If the pool has been closed (the session
     /// disconnected while this transfer was running) the connection is closed
-    /// here rather than re-pooled — otherwise it would leak as a zombie session.
+    /// here rather than re-pooled - otherwise it would leak as a zombie session.
     pub fn release(&self, client: SharedClient) {
         if self.closed.load(Ordering::SeqCst) {
             let _ = client.lock().disconnect();
@@ -188,7 +188,7 @@ mod tests {
         let pool = ConnectionPool::new(dummy_request(), 3, primary);
         assert_eq!(pool.max(), 3);
 
-        // First acquire pops the seeded primary — no network connect involved.
+        // First acquire pops the seeded primary - no network connect involved.
         let c = pool.acquire().expect("acquire").expect("a connection");
         // Returning and re-acquiring reuses the same idle connection (still no
         // mint, since we release before asking again).

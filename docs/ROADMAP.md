@@ -1,7 +1,7 @@
 # Roadmap
 
 Milestones toward practical FileZilla parity with a modern UI. Each is bounded so
-it can be implemented, tested, and shipped independently (and is agent-friendly —
+it can be implemented, tested, and shipped independently (and is agent-friendly -
 see DEVELOPMENT.md "Working in a loop").
 
 | # | Milestone | Status |

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# collect-bundles.sh — gather the installers Tauri just built into one upload-ready
+# collect-bundles.sh - gather the installers Tauri just built into one upload-ready
 # folder, with SHA-256 checksums and a latest.json manifest, for self-hosting on
 # your own website. Run it after `npm run tauri:build` (per OS, or over downloaded
 # CI artifacts). Safe to run on macOS, Linux, or Windows (Git Bash).
@@ -32,7 +32,7 @@ fi
 
 echo "→ collecting installers for v${VERSION} from ${BUNDLE_DIR}"
 
-# Copy every installer artifact (ignore intermediate .app/ dirs — we ship the dmg).
+# Copy every installer artifact (ignore intermediate .app/ dirs - we ship the dmg).
 found=0
 while IFS= read -r -d '' f; do
   cp -f "${f}" "${OUT_DIR}/"

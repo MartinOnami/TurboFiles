@@ -1,11 +1,11 @@
 //! TurboFiles library crate. `run()` builds and launches the Tauri application.
 //!
 //! Module map:
-//! - [`commands`] — the IPC surface (Tauri commands).
-//! - [`protocols`] — SFTP/FTP/FTPS adapters behind the `RemoteFs` trait.
-//! - [`transfer`] — queue, pause/cancel control, and worker threads.
-//! - [`storage`] — SQLite site store and OS-keychain secret storage.
-//! - [`state`] — shared application state managed by Tauri.
+//! - [`commands`] - the IPC surface (Tauri commands).
+//! - [`protocols`] - SFTP/FTP/FTPS adapters behind the `RemoteFs` trait.
+//! - [`transfer`] - queue, pause/cancel control, and worker threads.
+//! - [`storage`] - SQLite site store and OS-keychain secret storage.
+//! - [`state`] - shared application state managed by Tauri.
 
 pub mod commands;
 pub mod error;

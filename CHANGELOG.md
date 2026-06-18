@@ -22,7 +22,7 @@ This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Ch
   OS keychain, proxied through Rust). Navigates panes, reads logs/listings/transfers,
   and performs moves/deletes/renames/uploads after per-action approval.
 - Assistant providers: Anthropic, OpenAI, DeepSeek, Moonshot, Groq, OpenRouter,
-  Ollama, LM Studio, and custom OpenAI-compatible — with a model dropdown
+  Ollama, LM Studio, and custom OpenAI-compatible - with a model dropdown
   auto-populated from each provider (local/keyless servers supported).
 - Assistant site actions: add, delete, connect, disconnect, and list saved sites by
   name; attach files in chat; and run a heuristic WordPress security audit.

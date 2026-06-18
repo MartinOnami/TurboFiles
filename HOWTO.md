@@ -1,4 +1,4 @@
-# TurboFiles — How-To Guide
+# TurboFiles - How-To Guide
 
 This guide walks you through everyday tasks in TurboFiles. No prior FileZilla
 experience needed.
@@ -13,9 +13,9 @@ yourself (see the [README](README.md)). Launch **TurboFiles** like any desktop a
 
 The connection bar runs across the top of the window.
 
-1. **Protocol** — pick `SFTP`, `FTP`, or `FTPS`. The port auto-fills (22 for SFTP,
+1. **Protocol** - pick `SFTP`, `FTP`, or `FTPS`. The port auto-fills (22 for SFTP,
    21 for FTP/FTPS); change it if your server differs.
-2. **Host** — e.g. `sftp.example.com`.
+2. **Host** - e.g. `sftp.example.com`.
 3. **Username** and **Password**. For SFTP key auth, leave the password blank and
    save a site with a private key (see §5).
 4. Click **Connect**.
@@ -44,7 +44,7 @@ and the status bar shows a green lock.
 
 Saving a site stores its settings so you can reconnect in one click. Your
 **password is stored securely in your operating system's keychain** (macOS
-Keychain, Windows Credential Manager, or the Linux Secret Service) — never in
+Keychain, Windows Credential Manager, or the Linux Secret Service) - never in
 plain text and never in the app's database.
 
 Saved sites appear in the left **Site Manager** sidebar.
@@ -57,7 +57,7 @@ TurboFiles remembers your choice and otherwise follows your system setting.
 ## 7. Read the logs
 
 The **Logs** tab (next to Transfer Queue) shows a timestamped record of
-connections, listings, and transfers — useful when something doesn't work.
+connections, listings, and transfers - useful when something doesn't work.
 
 ## Troubleshooting
 

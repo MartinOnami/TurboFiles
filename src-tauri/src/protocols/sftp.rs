@@ -98,7 +98,7 @@ impl SftpClient {
 
 /// Route authentication based on the requested logon type.
 fn authenticate(session: &mut ssh2::Session, req: &ConnectionRequest) -> Result<()> {
-    // Try the SSH agent first when enabled — succeeds silently if a loaded key
+    // Try the SSH agent first when enabled - succeeds silently if a loaded key
     // matches, otherwise falls through to the configured logon type.
     if req.use_agent.unwrap_or(false)
         && session.userauth_agent(&req.username).is_ok()
@@ -135,12 +135,12 @@ fn authenticate(session: &mut ssh2::Session, req: &ConnectionRequest) -> Result<
         LogonType::Normal => {
             let pw = req.password.as_deref().ok_or_else(|| {
                 Error::Auth(
-                    "no password stored — edit the site in Site Manager and re-enter the password"
+                    "no password stored - edit the site in Site Manager and re-enter the password"
                         .to_string(),
                 )
             })?;
 
-            // Try keyboard-interactive first — matches FileZilla's SFTP behaviour.
+            // Try keyboard-interactive first - matches FileZilla's SFTP behaviour.
             // Do NOT call auth_methods() first; that consumes one attempt on strict
             // servers (e.g. WP Engine limits total attempts to 3).
             let kbd_ok = session
@@ -155,7 +155,7 @@ fn authenticate(session: &mut ssh2::Session, req: &ConnectionRequest) -> Result<
                 // Fall back to plain-password method.
                 session.userauth_password(&req.username, pw).map_err(|e| {
                     Error::Auth(format!(
-                        "authentication failed — the stored SFTP password is wrong. \
+                        "authentication failed - the stored SFTP password is wrong. \
                          Use the ✏ Edit button on the site in the Site Manager, \
                          re-enter the correct password, and click Save. \
                          Server: {}",
@@ -406,7 +406,7 @@ fn sort_key(e: &DirEntry) -> (u8, String) {
     (dir_first, e.name.to_lowercase())
 }
 
-/// Format a Unix mtime as "Jun 13 13:24" — short enough for the table column.
+/// Format a Unix mtime as "Jun 13 13:24" - short enough for the table column.
 /// `offset_minutes` shifts the timestamp to align the server clock with local time.
 fn format_mtime(secs: u64, offset_minutes: i32) -> String {
     use time::OffsetDateTime;

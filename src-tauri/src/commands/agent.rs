@@ -63,7 +63,7 @@ fn provider_error(json: &serde_json::Value) -> String {
 
 /// List the models available from the provider, so the user can pick one.
 /// Works for Anthropic (`/v1/models`) and any OpenAI-compatible server's
-/// `/models` endpoint — including local Ollama / LM Studio.
+/// `/models` endpoint - including local Ollama / LM Studio.
 #[tauri::command]
 pub async fn llm_list_models(provider: String, base_url: String) -> Result<Vec<String>> {
     let url = if provider == "anthropic" {

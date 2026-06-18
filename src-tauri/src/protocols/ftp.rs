@@ -432,7 +432,7 @@ fn parse_vms_line(line: &str, parent: &str) -> Option<DirEntry> {
         return None;
     }
     let first = parts[0];
-    // VMS filenames carry a `;version` suffix — the strongest format signal.
+    // VMS filenames carry a `;version` suffix - the strongest format signal.
     let (raw_name, _version) = first.split_once(';')?;
     if raw_name.is_empty() {
         return None;

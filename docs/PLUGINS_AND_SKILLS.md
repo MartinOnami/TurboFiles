@@ -39,9 +39,9 @@ installed, plus the GitHub connector for CI/PR work. Use them like this.
 | `operations:runbook` / `operations:risk-assessment` | Release runbooks, risk register. |
 
 ## Authoring & automation
-- `doc-coauthoring` — structured co-authoring for specs and decision docs.
-- `skill-creator` — if you want a custom "new-protocol scaffold" skill.
-- `schedule` — e.g. a weekly dependency-audit reminder.
+- `doc-coauthoring` - structured co-authoring for specs and decision docs.
+- `skill-creator` - if you want a custom "new-protocol scaffold" skill.
+- `schedule` - e.g. a weekly dependency-audit reminder.
 
 ## Suggested first moves
 1. Connect the **GitHub** connector and push this repo.

@@ -20,7 +20,7 @@ concern.
 
 ### Transport
 - **SFTP** runs over SSH; host-key handling follows the `ssh2`/libssh2 defaults.
-- **FTPS** uses explicit TLS via native-tls. Plain **FTP is unencrypted** — the UI
+- **FTPS** uses explicit TLS via native-tls. Plain **FTP is unencrypted** - the UI
   surfaces the protocol clearly so users make an informed choice.
 
 ### Application sandboxing
@@ -32,7 +32,7 @@ concern.
   permissions to the minimum required.
 
 ### Supply chain
-- `cargo audit` and `npm audit` run in CI (and weekly) — see
+- `cargo audit` and `npm audit` run in CI (and weekly) - see
   `.github/workflows/security.yml`.
 - **CodeQL** static analysis runs on every push/PR.
 - **Dependabot** keeps npm, cargo, and GitHub Actions dependencies patched.

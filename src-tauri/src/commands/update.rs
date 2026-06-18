@@ -2,7 +2,7 @@
 //!
 //! Runs in Rust (via reqwest) so the renderer's CSP can stay locked to `'self'`
 //! (a direct fetch to api.github.com from the web layer would be blocked). It
-//! reads only public release metadata — no auth header, no secrets.
+//! reads only public release metadata - no auth header, no secrets.
 
 use crate::error::{Error, Result};
 use serde::Serialize;
@@ -43,7 +43,7 @@ pub async fn check_latest_release(repo: String) -> Result<Option<ReleaseInfo>> {
         .await
         .map_err(|e| Error::Connection(format!("could not reach GitHub: {e}")))?;
 
-    // No release published yet (or repo not found) — not an error for the UI.
+    // No release published yet (or repo not found) - not an error for the UI.
     if resp.status() == reqwest::StatusCode::NOT_FOUND {
         return Ok(None);
     }

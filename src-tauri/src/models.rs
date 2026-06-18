@@ -13,18 +13,18 @@ pub enum Protocol {
     Ftps,
 }
 
-/// FTP/FTPS encryption mode — mirrors FileZilla's Encryption dropdown.
+/// FTP/FTPS encryption mode - mirrors FileZilla's Encryption dropdown.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 #[serde(rename_all = "snake_case")]
 pub enum FtpEncryption {
     /// Try explicit TLS (AUTH TLS); fall back to plain FTP on TLS failure.
     #[default]
     ExplicitTlsIfAvailable,
-    /// Require explicit TLS — fail if the server does not support AUTH TLS.
+    /// Require explicit TLS - fail if the server does not support AUTH TLS.
     RequireExplicitTls,
-    /// Require implicit TLS — TLS wraps the whole session (typically port 990).
+    /// Require implicit TLS - TLS wraps the whole session (typically port 990).
     RequireImplicitTls,
-    /// Plain FTP — no encryption.
+    /// Plain FTP - no encryption.
     Plain,
 }
 
@@ -39,7 +39,7 @@ pub enum ProxyType {
     Http,
 }
 
-/// Proxy configuration. Credentials are not persisted to SQLite — they arrive
+/// Proxy configuration. Credentials are not persisted to SQLite - they arrive
 /// per-connect from the frontend's in-memory settings.
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -65,7 +65,7 @@ pub enum FtpMode {
     Passive,
 }
 
-/// How the client authenticates — matches FileZilla's logon types.
+/// How the client authenticates - matches FileZilla's logon types.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 #[serde(rename_all = "lowercase")]
 pub enum LogonType {

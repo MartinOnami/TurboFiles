@@ -72,7 +72,7 @@ pub fn connect_implicit(req: &ConnectionRequest) -> Result<FtpsClient> {
         .is_some_and(|p| p.kind != crate::models::ProxyType::None)
     {
         return Err(Error::Connection(
-            "a proxy cannot be used with implicit FTPS — use explicit TLS instead".into(),
+            "a proxy cannot be used with implicit FTPS - use explicit TLS instead".into(),
         ));
     }
     let addr = format!("{}:{}", req.host, req.port);

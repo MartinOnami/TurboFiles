@@ -1,4 +1,4 @@
-# git-cliff configuration — generates CHANGELOG.md from Conventional Commits.
+# git-cliff configuration - generates CHANGELOG.md from Conventional Commits.
 [changelog]
 header = "# Changelog\n\n"
 body = """

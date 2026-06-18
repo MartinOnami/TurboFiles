@@ -1,4 +1,4 @@
-# CLAUDE.md — Agent guide for TurboFiles
+# CLAUDE.md - Agent guide for TurboFiles
 
 Context for AI agents (and humans) working in this repo. Read this first.
 
@@ -12,7 +12,7 @@ logic lives in Rust**.
 - UI components stay presentational; state in Zustand (`src/store`), backend
   calls only through `src/lib/api.ts`.
 - TS types (`src/lib/types.ts`) must match Rust serde models
-  (`src-tauri/src/models.rs`) — camelCase on the wire.
+  (`src-tauri/src/models.rs`) - camelCase on the wire.
 - **Never** store secrets in SQLite/logs/frontend. Secrets → OS keychain only.
 - Every new command: register in `lib.rs`, wrap in `api.ts`, document in
   `docs/API.md`, add a test.
@@ -29,12 +29,16 @@ cd src-tauri && cargo fmt --all --check && cargo clippy --all-targets --all-feat
   `docs/FEATURE_PARITY.md` and `CHANGELOG.md` after each.
 
 ## Conventions
-- Conventional Commits (`feat:`, `fix:`, `docs:`, …).
+- Conventional Commits (`feat:`, `fix:`, `docs:`, ...).
 - SemVer; bump via `scripts/bump-version.sh`.
+- Writing style: plain ASCII punctuation in all copy, comments, and docs. No
+  em-dashes, en-dashes, or curly quotes (use a hyphen/comma/colon/period and
+  straight quotes); avoid AI-cliche filler. Enforced by `npm run check:style`
+  (CI). See CONTRIBUTING.md.
 
 ## Key files
-- `src-tauri/src/lib.rs` — app wiring + command registration.
-- `src-tauri/src/protocols/traits.rs` — the `RemoteFs` contract.
-- `src-tauri/src/transfer/worker.rs` — transfer execution + progress events.
-- `src/App.tsx` — top-level UI composition.
-- `docs/ARCHITECTURE.md` — the big picture.
+- `src-tauri/src/lib.rs` - app wiring + command registration.
+- `src-tauri/src/protocols/traits.rs` - the `RemoteFs` contract.
+- `src-tauri/src/transfer/worker.rs` - transfer execution + progress events.
+- `src/App.tsx` - top-level UI composition.
+- `docs/ARCHITECTURE.md` - the big picture.

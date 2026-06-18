@@ -11,7 +11,7 @@ ICONSET = os.path.join(
 
 # Blue gradient: bright sky-blue → deep navy
 TOP_COLOR = (82, 159, 255)   # #529FFF
-MID_COLOR = (37, 99, 235)    # #2563EB – Tailwind blue-600
+MID_COLOR = (37, 99, 235)    # #2563EB - Tailwind blue-600
 BOT_COLOR = (23, 56, 172)    # #1738AC
 
 FOLDER_WHITE = (255, 255, 255, 240)
@@ -167,7 +167,7 @@ def main():
     if ret == 0:
         print("✓ icon.icns rebuilt")
     else:
-        print("✗ iconutil failed — check macOS is available")
+        print("✗ iconutil failed - check macOS is available")
 
 
 if __name__ == "__main__":

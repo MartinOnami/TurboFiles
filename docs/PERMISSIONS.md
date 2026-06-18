@@ -9,16 +9,16 @@ convenience) if you decline. This page lists every prompt you might see and why.
 
 | Capability | When it's used | How consent is asked |
 | --- | --- | --- |
-| **Keychain / secret store** | Saving a site password, key passphrase, or a BYOK assistant API key | The OS prompts on first access (macOS: "TurboFiles wants to use your confidential information stored in … in your keychain"). Secrets live **only** in the OS keychain — never in SQLite, logs, or the frontend. |
+| **Keychain / secret store** | Saving a site password, key passphrase, or a BYOK assistant API key | The OS prompts on first access (macOS: "TurboFiles wants to use your confidential information stored in … in your keychain"). Secrets live **only** in the OS keychain - never in SQLite, logs, or the frontend. |
 | **Outbound network** | Connecting over SFTP/FTP/FTPS, and the optional assistant's HTTPS calls to your chosen model provider | No prompt on Windows/Linux. macOS may show a **Local Network** prompt for LAN servers. |
-| **Local files you pick** | Browsing the local pane, uploading, downloading, "Open with…" | Native file/folder picker — choosing a path *is* the consent. macOS may show a one-time **Downloads/Documents/Desktop** access prompt (TCC) the first time you touch those folders. |
+| **Local files you pick** | Browsing the local pane, uploading, downloading, "Open with…" | Native file/folder picker - choosing a path *is* the consent. macOS may show a one-time **Downloads/Documents/Desktop** access prompt (TCC) the first time you touch those folders. |
 
 That's the whole list. TurboFiles does **not** request camera, microphone, contacts,
 location, or background-activity permissions.
 
 ## Designed to survive a "No"
 
-- A site can be **saved without a stored password** — you'll simply be asked for it
+- A site can be **saved without a stored password** - you'll simply be asked for it
   at connect time (and can choose whether to remember it). So declining keychain
   access never blocks you from connecting.
 - The BYOK assistant is **entirely optional**; if you never add a key, nothing is

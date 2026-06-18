@@ -43,7 +43,7 @@ cargo test --all-features
 ## Protocol test servers
 ```bash
 docker compose -f docker/docker-compose.test.yml up -d
-# SFTP localhost:2222, FTP localhost:21, FTPS localhost:2121 — testuser/testpass
+# SFTP localhost:2222, FTP localhost:21, FTPS localhost:2121 - testuser/testpass
 ```
 
 ## Conventions
@@ -62,4 +62,4 @@ The repo is structured so an agent can iterate milestone-by-milestone:
 5. Commit with a Conventional Commit message.
 
 Keep each loop bounded to one milestone rather than "reach full parity" in one
-run — see the README and ROADMAP for why.
+run - see the README and ROADMAP for why.

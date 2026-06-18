@@ -49,7 +49,7 @@ if gh api "repos/$REPO/pages" >/dev/null 2>&1; then
 else
   gh api -X POST "repos/$REPO/pages" -f "build_type=workflow" >/dev/null 2>&1 \
     && echo "✓ Pages enabled." \
-    || echo "! Could not auto-enable Pages — set Settings → Pages → Source = GitHub Actions manually."
+    || echo "! Could not auto-enable Pages - set Settings → Pages → Source = GitHub Actions manually."
 fi
 
 # 4. Tag v0.1.0 → triggers release.yml to build macOS/Windows/Linux installers.
@@ -71,9 +71,9 @@ Watch it come together here:
   Repository   https://github.com/$REPO
   Actions      https://github.com/$REPO/actions     (Pages deploy + installer builds)
   Website      https://$OWNER_LC.github.io/$NAME/   (live ~1 min after the Pages job)
-  Releases     https://github.com/$REPO/releases    (a DRAFT appears — open it and click Publish)
+  Releases     https://github.com/$REPO/releases    (a DRAFT appears - open it and click Publish)
 
 The installer builds take a few minutes. Once you Publish the draft release, the
 website's Download buttons and the app's "Update available" check light up
-automatically — no further edits needed.
+automatically - no further edits needed.
 EOF

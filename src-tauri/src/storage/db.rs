@@ -1,6 +1,6 @@
 //! SQLite-backed Site Manager.
 //!
-//! Stores connection *profiles* only — never secrets (those go to the keychain,
+//! Stores connection *profiles* only - never secrets (those go to the keychain,
 //! see [`super::keychain`]). The store is wrapped in a mutex so it can be shared
 //! across Tauri command threads.
 
@@ -57,7 +57,7 @@ impl SiteStore {
             );
             "#,
         )?;
-        // Additive migrations — ignore "duplicate column" errors from previous runs.
+        // Additive migrations - ignore "duplicate column" errors from previous runs.
         let _ = conn.execute_batch(
             "ALTER TABLE sites ADD COLUMN logon_type TEXT NOT NULL DEFAULT 'normal'",
         );

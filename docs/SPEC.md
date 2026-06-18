@@ -1,4 +1,4 @@
-# TurboFiles — Product Spec
+# TurboFiles - Product Spec
 
 ## Vision
 A modern, fast, cross-platform file-transfer client that matches FileZilla's
@@ -15,7 +15,7 @@ proven workflow with a clean, themeable UI and a high-performance Rust core.
 ## Non-goals (initial)
 - Server-to-server (FXP) transfers.
 - Built-in text/file editing.
-- Cloud storage backends (S3, etc.) — possible future work.
+- Cloud storage backends (S3, etc.) - possible future work.
 
 ## Personas
 - **Web developer** deploying a static site over SFTP.

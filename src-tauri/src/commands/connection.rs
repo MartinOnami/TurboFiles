@@ -310,7 +310,7 @@ pub async fn download_to_temp(
 }
 
 /// Read a (small) remote text file and return up to `max_bytes` of its content as
-/// UTF-8 (lossy). Intended for config/version/log inspection by the assistant —
+/// UTF-8 (lossy). Intended for config/version/log inspection by the assistant -
 /// the returned text is capped at 1 MiB.
 #[tauri::command]
 pub async fn read_remote_text(
@@ -398,7 +398,7 @@ pub async fn start_file_edit(
                 return;
             };
             let Some(client) = state.client(&session_id) else {
-                return; // session gone — stop watching
+                return; // session gone - stop watching
             };
             let current = file_mtime(&watch_dest);
             if current > last {

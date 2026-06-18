@@ -51,7 +51,7 @@ attached. Code-signing/notarization is wired up via repo secrets (`APPLE_*`,
 
 ## Host the installers on your own website
 
-You don't need GitHub Releases — you can serve the installers from your own server
+You don't need GitHub Releases - you can serve the installers from your own server
 and link to them from the [landing page](../website/). After a build, gather every
 platform's installer (with SHA-256 checksums and a `latest.json` manifest) into one
 folder:

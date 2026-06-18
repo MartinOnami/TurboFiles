@@ -1,4 +1,4 @@
-# ADR-0001: Tech stack — Tauri + React + Rust
+# ADR-0001: Tech stack - Tauri + React + Rust
 
 - Status: Accepted
 - Date: 2026-06-13
@@ -9,11 +9,11 @@ and has a modern, themeable UI, while keeping protocol/transfer logic robust and
 testable.
 
 ## Options considered
-1. **Electron + React + Node** — fastest to build, huge ecosystem, but large app
+1. **Electron + React + Node** - fastest to build, huge ecosystem, but large app
    size and high memory; transfer logic in Node is workable but less efficient.
-2. **Tauri + React + Rust** — small binaries, low memory, Rust backend ideal for
+2. **Tauri + React + Rust** - small binaries, low memory, Rust backend ideal for
    streaming and concurrency; cost is a steeper backend learning curve.
-3. **Qt + C++/Rust** — excellent performance, but slower UI iteration and a
+3. **Qt + C++/Rust** - excellent performance, but slower UI iteration and a
    heavier toolchain.
 
 ## Decision

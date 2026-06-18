@@ -5,8 +5,8 @@ of conduct. The full text is available at:
 
 - https://www.contributor-covenant.org/version/2/1/code_of_conduct/
 
-By participating in this project — contributing code, opening issues, commenting
-on pull requests, or taking part in any community space — you agree to uphold it.
+By participating in this project - contributing code, opening issues, commenting
+on pull requests, or taking part in any community space - you agree to uphold it.
 In short: be respectful, assume good faith, and help keep TurboFiles a welcoming
 and harassment-free space for everyone.
 

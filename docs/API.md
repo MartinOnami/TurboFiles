@@ -1,4 +1,4 @@
-# API Reference — Tauri Commands & Events
+# API Reference - Tauri Commands & Events
 
 The frontend talks to the backend exclusively through the commands below, wrapped
 in `src/lib/api.ts`. All payloads use `camelCase`. On failure a command rejects
@@ -107,7 +107,7 @@ connection handles browsing. Different sessions always run in parallel. A
 per-site `connectionLimit` caps the pool size. Errors: `SESSION_NOT_FOUND`.
 
 ### `setSpeedLimits(downloadKib, uploadKib, burstSecs?, momentarySpeed?) → void`
-Set global transfer speed caps in KiB/s (0 = unlimited). `burstSecs` (0–30,
+Set global transfer speed caps in KiB/s (0 = unlimited). `burstSecs` (0-30,
 default 0) grants that many seconds' worth of allowance above the cap as a
 short burst. `momentarySpeed` reports instantaneous instead of average speed.
 Applies to transfers started after the change.
@@ -144,14 +144,14 @@ Logs and finished transfers are persisted to a SQLite history DB
 The frontend hydrates a recent window (latest 2000) at startup; the database
 retains everything.
 
-### `appendLog(entry) → void`  — also mirrors to the log file when enabled
-### `listLogs() → LogEntry[]`  — latest 2000, oldest-first
+### `appendLog(entry) → void`  - also mirrors to the log file when enabled
+### `listLogs() → LogEntry[]`  - latest 2000, oldest-first
 ### `clearLogs() → void`
-### `setLogFile(path) → void`  — empty path disables file logging
-### `debugInfo() → Record<string,string>`  — version / OS / paths / session count
-### `recordTransfer(transfer, finishedAt) → void`  — upsert by id
-### `listTransferHistory() → Transfer[]`  — latest 2000, oldest-first
-### `clearTransferHistory() → void`  — purges completed/cancelled (failed kept)
+### `setLogFile(path) → void`  - empty path disables file logging
+### `debugInfo() → Record<string,string>`  - version / OS / paths / session count
+### `recordTransfer(transfer, finishedAt) → void`  - upsert by id
+### `listTransferHistory() → Transfer[]`  - latest 2000, oldest-first
+### `clearTransferHistory() → void`  - purges completed/cancelled (failed kept)
 
 ```ts
 interface LogEntry { timestamp: string; level: "info"|"warn"|"error"|"debug"; message: string; scope?: string; }
@@ -160,8 +160,8 @@ interface LogEntry { timestamp: string; level: "info"|"warn"|"error"|"debug"; me
 ## Site Manager
 
 ### `listSites() → Site[]`
-### `saveSite(site, secret?) → Site`  — `secret` (if given) is stored in the keychain.
-### `deleteSite(id) → void`  — also removes the keychain secret.
+### `saveSite(site, secret?) → Site`  - `secret` (if given) is stored in the keychain.
+### `deleteSite(id) → void`  - also removes the keychain secret.
 
 ```ts
 interface Site {
@@ -177,9 +177,9 @@ The optional natural-language assistant uses a Bring-Your-Own-Key model. The API
 key is stored in the OS keychain and never returned to the web layer; `llmProxy`
 injects it server-side, so the CSP stays locked to `'self'`.
 
-### `llmSetKey(provider, key) → void`  — store (empty `key` clears) the provider's API key
-### `llmHasKey(provider) → boolean`  — whether a key is stored (the key itself is never returned)
-### `llmClearKey(provider) → void`  — remove the stored key
+### `llmSetKey(provider, key) → void`  - store (empty `key` clears) the provider's API key
+### `llmHasKey(provider) → boolean`  - whether a key is stored (the key itself is never returned)
+### `llmClearKey(provider) → void`  - remove the stored key
 ### `llmProxy(provider, url, body) → object`
 Forward the provider-native chat-completion request `body` to `url`, injecting the
 stored key as the correct auth header (`anthropic` → `x-api-key` +
@@ -188,7 +188,7 @@ for OpenAI-compatible servers (local Ollama / LM Studio need none). Returns the 
 JSON response. Errors: `INVALID` (Anthropic with no key), `CONNECTION`, `REMOTE`.
 
 ### `llmListModels(provider, baseUrl) → string[]`
-List model ids available from the provider — Anthropic's `/v1/models`, or any
+List model ids available from the provider - Anthropic's `/v1/models`, or any
 OpenAI-compatible server's `/models` (blank `baseUrl` → OpenAI; works with local
 Ollama / LM Studio). Used to populate the model picker.
 
