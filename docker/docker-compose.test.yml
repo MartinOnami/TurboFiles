@@ -1,0 +1,33 @@
+# Local protocol servers for integration testing TurboFiles.
+# Usage: docker compose -f docker/docker-compose.test.yml up -d
+services:
+  sftp:
+    image: atmoz/sftp:alpine
+    container_name: turbofiles-sftp
+    ports:
+      - "2222:22"
+    # user:password:uid:gid:upload_dir
+    command: testuser:testpass:1001:1001:upload
+
+  ftp:
+    image: delfer/alpine-ftp-server:latest
+    container_name: turbofiles-ftp
+    ports:
+      - "21:21"
+      - "21000-21010:21000-21010"
+    environment:
+      USERS: "testuser|testpass|/home/testuser"
+      ADDRESS: "127.0.0.1"
+
+  ftps:
+    image: stilliard/pure-ftpd:latest
+    container_name: turbofiles-ftps
+    ports:
+      - "2121:21"
+      - "30000-30009:30000-30009"
+    environment:
+      PUBLICHOST: "127.0.0.1"
+      FTP_USER_NAME: "testuser"
+      FTP_USER_PASS: "testpass"
+      FTP_USER_HOME: "/home/testuser"
+      TLS: "2"

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!--
+    Entitlements for the notarized, hardened-runtime macOS build of TurboFiles.
+    The app is NOT App Store sandboxed (it needs to read/write arbitrary local
+    files the user picks and open outbound SFTP/FTP/FTPS connections), so we do
+    not request com.apple.security.app-sandbox. These keys let the hardened
+    runtime allow the network and keychain access the client genuinely needs.
+  -->
+
+  <!-- Outbound connections: SFTP / FTP / FTPS control + data channels, and the
+       BYOK assistant's HTTPS calls to the configured model provider. -->
+  <key>com.apple.security.network.client</key>
+  <true/>
+
+  <!-- Inbound connections: FTP active-mode data channels listen locally. -->
+  <key>com.apple.security.network.server</key>
+  <true/>
+
+  <!-- Site passwords / passphrases and BYOK API keys are stored in the login
+       keychain (never on disk); allow the hardened runtime to reach it. -->
+  <key>keychain-access-groups</key>
+  <array>
+    <string>$(AppIdentifierPrefix)io.xfusion.turbofiles</string>
+  </array>
+</dict>
+</plist>

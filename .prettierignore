@@ -1,0 +1,6 @@
+dist
+coverage
+src-tauri/target
+node_modules
+website
+*.md

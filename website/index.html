@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TurboFiles — a fast, modern SFTP / FTP / FTPS client</title>
+    <meta
+      name="description"
+      content="TurboFiles is a fast, modern desktop file-transfer client for SFTP, FTP and FTPS — dual-pane workspace, transfer queue, OS-keychain security and a built-in BYOK AI assistant. For macOS, Windows and Linux."
+    />
+    <meta property="og:title" content="TurboFiles — move files anywhere, fast" />
+    <meta
+      property="og:description"
+      content="A modern SFTP/FTP/FTPS client with a dual-pane workspace, transfer queue, keychain security and an optional AI assistant. macOS · Windows · Linux."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="assets/logo.png" type="image/png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- ============================================================ NAV -->
+    <header class="nav">
+      <div class="wrap nav__inner">
+        <a class="brand" href="#top" aria-label="TurboFiles home">
+          <img src="assets/logo.png" width="26" height="26" alt="" />
+          TurboFiles
+        </a>
+        <nav class="nav__links">
+          <a href="#features">Features</a>
+          <a href="#showcase">Tour</a>
+          <a href="https://github.com/MartinOnami/TurboFiles" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn btn--primary" href="#download">Download</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- ============================================================ HERO -->
+    <main id="top">
+      <section class="hero">
+        <div class="wrap hero__grid">
+          <div class="hero__copy">
+            <span class="eyebrow">macOS · Windows · Linux</span>
+            <h1>Move files <span class="grad-text">anywhere</span>, fast.</h1>
+            <p class="lead">
+              TurboFiles is a modern desktop client for <b>SFTP, FTP &amp; FTPS</b> — a clean
+              dual-pane workspace with a transfer queue, resume, drag &amp; drop, keychain
+              security and an optional AI assistant that does the busywork for you.
+            </p>
+            <div class="hero__cta">
+              <a class="btn btn--primary btn--lg" href="#download">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
+                Download free
+              </a>
+              <a class="btn btn--ghost btn--lg" href="#features">Explore features</a>
+            </div>
+            <p class="hero__os-note">
+              Free &amp; open-source · <b>No account required</b> · Your keys stay in the OS keychain.
+            </p>
+          </div>
+
+          <!-- Hi-fi app-window recreation (matches the real dual-pane UI) -->
+          <div class="hero__art">
+            <div class="window window--float" role="img" aria-label="TurboFiles dual-pane interface">
+              <div class="titlebar">
+                <div class="dots"><span class="dot dot--r"></span><span class="dot dot--y"></span><span class="dot dot--g"></span></div>
+                <div class="titlebar__title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1456cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                  TurboFiles
+                </div>
+              </div>
+              <div class="toolbar">
+                <span class="pill pill--ok">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  sftp · deploy@acme-staging
+                </span>
+                <span class="pill">/var/www/acme/public</span>
+              </div>
+              <div class="panes">
+                <div class="pane">
+                  <div class="pane__title">Local site</div>
+                  <div class="row"><svg class="ic ic--dir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="name">build</span><span class="size">—</span></div>
+                  <div class="row"><svg class="ic ic--dir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="name">assets</span><span class="size">—</span></div>
+                  <div class="row"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v5h5M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg><span class="name">index.html</span><span class="size">4.2 KB</span></div>
+                  <div class="row"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v5h5M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg><span class="name">styles.css</span><span class="size">11 KB</span></div>
+                  <div class="row"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v5h5M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg><span class="name">app.bundle.js</span><span class="size">182 KB</span></div>
+                  <div class="row"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v5h5M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg><span class="name">README.md</span><span class="size">2.0 KB</span></div>
+                </div>
+                <div class="midcol">
+                  <div class="arrowbtn arrowbtn--hot" title="Upload">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg>
+                  </div>
+                  <div class="arrowbtn" title="Download">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m0 0 6 6m-6-6 6-6"/></svg>
+                  </div>
+                </div>
+                <div class="pane">
+                  <div class="pane__title">Remote site</div>
+                  <div class="row"><svg class="ic ic--dir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="name">wp-content</span><span class="size">—</span></div>
+                  <div class="row"><svg class="ic ic--dir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="name">wp-includes</span><span class="size">—</span></div>
+                  <div class="row"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v5h5M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg><span class="name">index.html</span><span class="size">4.2 KB</span></div>
+                  <div class="row"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v5h5M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg><span class="name">wp-config.php</span><span class="size">3.1 KB</span></div>
+                  <div class="row"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v5h5M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg><span class="name">.htaccess</span><span class="size">812 B</span></div>
+                </div>
+              </div>
+              <div class="queue">
+                <div class="queue__head"><span>Transfer queue</span><span>2 active · 4.1 MB/s</span></div>
+                <div class="qrow"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1456cc" stroke-width="2" stroke-linecap="round"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg><span class="qname">app.bundle.js</span><span class="bar"><span style="width:72%"></span></span><span class="qpct">72%</span></div>
+                <div class="qrow"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1456cc" stroke-width="2" stroke-linecap="round"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg><span class="qname">styles.css</span><span class="bar"><span style="width:100%"></span></span><span class="qpct">100%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ FEATURES -->
+      <section id="features">
+        <div class="wrap">
+          <div class="section-head">
+            <span class="eyebrow">Everything you expect — and more</span>
+            <h2>Built for people who move a lot of files</h2>
+            <p>FileZilla-grade power with a clean, modern interface and a security-first core.</p>
+          </div>
+          <div class="features">
+            <div class="feature">
+              <div class="ficon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+              <h3>SFTP, FTP &amp; FTPS</h3>
+              <p>Secure-by-default transfers with host-key verification, key-file auth, SSH-agent and configurable TLS — all behind one consistent UI.</p>
+            </div>
+            <div class="feature">
+              <div class="ficon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="8" height="16" rx="1.5"/><rect x="13" y="4" width="8" height="16" rx="1.5"/></svg></div>
+              <h3>Dual-pane + queue</h3>
+              <p>Local and remote side-by-side, with a live transfer queue, resume, concurrent transfers, drag &amp; drop and column sorting.</p>
+            </div>
+            <div class="feature">
+              <div class="ficon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg></div>
+              <h3>Ask TurboFiles (BYOK AI)</h3>
+              <p>Bring your own key (Anthropic, OpenAI, DeepSeek, Ollama &amp; more). "Open wp-content", "audit this site" — reads freely, writes only after you confirm.</p>
+            </div>
+            <div class="feature">
+              <div class="ficon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+              <h3>Keychain security</h3>
+              <p>Passwords, passphrases and API keys live only in the OS keychain — never in SQLite, logs or the frontend. The renderer is locked down by CSP.</p>
+            </div>
+            <div class="feature">
+              <div class="ficon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></div>
+              <h3>Truly cross-platform</h3>
+              <p>One native app for macOS, Windows and Linux — signed installers, dark/light themes and a universal Apple-silicon + Intel build.</p>
+            </div>
+            <div class="feature">
+              <div class="ficon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"/><path d="M16 3h5v5M21 3l-9 9"/></svg></div>
+              <h3>Site Manager</h3>
+              <p>Save sites with per-site defaults, bookmarks, server time-offset, proxy bypass and import from FileZilla. Paste credentials and connect.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ SHOWCASE -->
+      <section id="showcase">
+        <div class="wrap">
+          <div class="section-head">
+            <span class="eyebrow">A closer look</span>
+            <h2>Power where you need it, calm everywhere else</h2>
+          </div>
+
+          <!-- Ask TurboFiles assistant -->
+          <div class="showcase" style="margin-bottom:48px">
+            <div class="showcase__copy">
+              <span class="eyebrow">Ask TurboFiles</span>
+              <h3>An assistant that actually does the work</h3>
+              <p>Natural-language commands run as tool calls against your session. It shows its chain of thought, and every change waits for your confirmation.</p>
+              <ul class="checklist">
+                <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Bring your own key — cloud or fully local (Ollama / LM Studio).</li>
+                <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Reads logs, listings &amp; files automatically; writes are confirmation-gated.</li>
+                <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Built-in WordPress security audit and clear success / failed status.</li>
+              </ul>
+            </div>
+            <div class="chat">
+              <div class="chat__head">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg>
+                Ask TurboFiles
+              </div>
+              <div class="chat__body">
+                <div class="bubble-user">audit this WordPress site for known issues</div>
+                <div class="cot">
+                  <div class="cot__title">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1456cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 0-4 12.7V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.3A7 7 0 0 0 12 2z"/></svg>
+                    Worked through 3 steps
+                  </div>
+                  <div class="cot__steps">
+                    <div class="cot__step"><svg class="sd" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>wordpress_audit /var/www/acme/public</span></div>
+                    <div class="cot__step"><svg class="sd" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>read_remote_file wp-includes/version.php</span></div>
+                    <div class="cot__step"><svg class="sd" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>list_remote_directory wp-content</span></div>
+                  </div>
+                  <div class="cot__answer">Core 6.5 is current. <b>wp-config.php</b> is not world-readable ✓. No <code>debug.log</code> or <code>.env</code> exposed. One plugin is two minors behind — consider updating.</div>
+                  <div class="cot__status">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    Successful
+                  </div>
+                </div>
+              </div>
+              <div class="chat__composer">
+                <span class="ph">Ask anything…</span>
+                <span class="send"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5m0 0-7 7m7-7 7 7"/></svg></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Site Manager modal -->
+          <div class="showcase">
+            <div class="modal-demo">
+              <div class="modal-demo__head">
+                New site
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </div>
+              <div class="formgrid">
+                <div class="field col-3"><label>Name</label><div class="input">Acme Staging</div></div>
+                <div class="field"><label>Protocol</label><div class="input">SFTP</div></div>
+                <div class="field"><label>Port</label><div class="input">22</div></div>
+                <div class="field"><label>Logon</label><div class="input">Key file</div></div>
+                <div class="field col-3"><label>Host / IP</label><div class="input">203.0.113.42</div></div>
+                <div class="field"><label>Username</label><div class="input">deploy</div></div>
+                <div class="field col-2"><label>Key file</label><div class="input">~/.ssh/id_ed25519</div></div>
+                <div class="field col-2"><label>Default remote directory</label><div class="input">/var/www/acme/public</div></div>
+                <div class="field"><label>Charset</label><div class="input">Autodetect</div></div>
+              </div>
+              <div class="modal-demo__foot">
+                <span class="btn btn--ghost">Cancel</span>
+                <span class="btn btn--primary"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Save</span>
+              </div>
+            </div>
+            <div class="showcase__copy">
+              <span class="eyebrow">Site Manager</span>
+              <h3>Save once, connect in a click</h3>
+              <p>A roomy three-column editor with per-site defaults — protocol, key-file auth, default directories, charset and proxy. Bookmark favorites and import your existing FileZilla sites.</p>
+              <ul class="checklist">
+                <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Paste credentials and connect — password optional, asked at connect time.</li>
+                <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Per-site connection limits, server time-offset and proxy bypass.</li>
+                <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Secrets go straight to the OS keychain.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ DOWNLOAD -->
+      <section id="download">
+        <div class="wrap">
+          <div class="download">
+            <h2>Get TurboFiles</h2>
+            <p>Free and open-source. Pick your platform — the installer is signed and ready to run.</p>
+            <div class="os-cards" id="os-cards">
+              <div class="os-card" data-os="macos">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.9c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.8-3.5.8s-1.8-.8-3-.8c-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.8 1.1 9 .7 1.1 1.6 2.3 2.7 2.2 1.1 0 1.5-.7 2.8-.7s1.7.7 2.8.7c1.2 0 1.9-1.1 2.6-2.2.8-1.2 1.2-2.4 1.2-2.5-.1 0-2.3-.9-2.3-3.4zM14.3 5.8c.6-.7 1-1.7.9-2.8-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.6-1 2.6 1 .1 2-.5 2.7-1.1z"/></svg>
+                <span class="os-name">macOS</span>
+                <span class="os-file" data-file="macos">universal .dmg</span>
+                <a class="btn" data-link="macos" href="https://github.com/MartinOnami/TurboFiles/releases/latest">Download</a>
+              </div>
+              <div class="os-card" data-os="windows">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.7 10.3 4.7v7.2H3zM3 18.3l7.3 1V12H3zM11.3 4.6 21 3v8.9h-9.7zM11.3 19.4 21 21v-9.1h-9.7z"/></svg>
+                <span class="os-name">Windows</span>
+                <span class="os-file" data-file="windows">.exe installer</span>
+                <a class="btn" data-link="windows" href="https://github.com/MartinOnami/TurboFiles/releases/latest">Download</a>
+              </div>
+              <div class="os-card" data-os="linux">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-2 0-3 2-2.9 4.5.1 1.4-.4 2.2-1.2 3.4-1 1.4-2.2 2.8-2.2 5 0 .9.3 1.6.8 2.2-.2.6-.1 1.3.4 1.7.6.5 1.6.4 2.4.5.7.1 1.2.6 2.7.6s2-.5 2.7-.6c.8-.1 1.8 0 2.4-.5.5-.4.6-1.1.4-1.7.5-.6.8-1.3.8-2.2 0-2.2-1.2-3.6-2.2-5-.8-1.2-1.3-2-1.2-3.4C15 4 14 2 12 2zm-1.4 4.3c.4 0 .7.4.7.9s-.3.9-.7.9-.7-.4-.7-.9.3-.9.7-.9zm2.8 0c.4 0 .7.4.7.9s-.3.9-.7.9-.7-.4-.7-.9.3-.9.7-.9z"/></svg>
+                <span class="os-name">Linux</span>
+                <span class="os-file" data-file="linux_appimage">.AppImage</span>
+                <a class="btn" data-link="linux_appimage" href="https://github.com/MartinOnami/TurboFiles/releases/latest">Download</a>
+                <div class="os-altlinks">
+                  <a data-link="linux_deb" href="https://github.com/MartinOnami/TurboFiles/releases/latest">.deb</a>
+                  <span class="sep">·</span>
+                  <a data-link="linux_rpm" href="https://github.com/MartinOnami/TurboFiles/releases/latest">.rpm</a>
+                </div>
+              </div>
+            </div>
+            <p class="download__hint">
+              Building it yourself? <a href="https://github.com/MartinOnami/TurboFiles/blob/main/docs/INSTALL.md" target="_blank" rel="noopener">See the install guide</a>
+              · <span id="version-line">latest release</span>
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============================================================ FOOTER -->
+    <footer>
+      <div class="wrap footer__inner">
+        <span class="brand"><img src="assets/logo.png" width="20" height="20" alt="" /> TurboFiles</span>
+        <div class="footer__links">
+          <a href="#features">Features</a>
+          <a href="#download">Download</a>
+          <a href="https://github.com/MartinOnami/TurboFiles" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/MartinOnami/TurboFiles/blob/main/docs/PERMISSIONS.md" target="_blank" rel="noopener">Privacy &amp; permissions</a>
+        </div>
+        <span>© 2026 xFusion · MIT licensed</span>
+      </div>
+    </footer>
+
+    <script src="main.js"></script>
+  </body>
+</html>

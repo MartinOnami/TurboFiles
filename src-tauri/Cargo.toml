@@ -1,0 +1,65 @@
+[package]
+name = "turbofiles"
+version = "0.1.0"
+description = "TurboFiles — modern SFTP/FTP/FTPS client"
+authors = ["Martin Onami"]
+license = "MIT"
+repository = "https://github.com/MartinOnami/TurboFiles"
+edition = "2021"
+rust-version = "1.77"
+
+[lib]
+name = "turbofiles_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-dialog = "2"
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Async runtime (commands are async; blocking protocol I/O runs on spawn_blocking)
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time"] }
+
+# Protocols
+ssh2 = "0.9"                                   # SFTP / SSH
+suppaftp = { version = "6", features = ["native-tls", "deprecated"] }  # FTP / FTPS (deprecated enables implicit-TLS API)
+socks = "0.3"                                  # SOCKS4/5 proxy support
+
+# Storage & secrets
+rusqlite = { version = "0.31", features = ["bundled"] }
+keyring = "2"
+
+# Utilities
+uuid = { version = "1", features = ["v4"] }
+thiserror = "1"
+parking_lot = "0.12"
+time = { version = "0.3", features = ["formatting", "macros"] }
+dirs = "5"
+
+# HTTP client for the BYOK assistant proxy (reuses native-tls, like suppaftp)
+reqwest = { version = "0.12", features = ["json"] }
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[dev-dependencies]
+tempfile = "3"
+serial_test = "3"
+
+[features]
+# Default Tauri custom-protocol for production builds.
+custom-protocol = ["tauri/custom-protocol"]
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"

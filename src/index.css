@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Theme tokens. Colours are stored as space-separated RGB channels so Tailwind's
+ * `<alpha-value>` syntax works (see tailwind.config.js). `.dark` on <html> flips
+ * the palette; the default :root is the light theme.
+ */
+/* Light */
+:root {
+  --bg: 245 246 248;
+  --surface: 255 255 255;
+  --elevated: 248 249 251;
+  --border: 225 228 233;
+  --muted: 240 242 245;
+  --fg: 23 28 38;
+  --subtle: 100 116 139;
+  --accent: 20 86 204;
+  --accent-fg: 255 255 255;
+  --success: 22 163 74;
+  --warning: 202 138 4;
+  --danger: 220 38 38;
+}
+
+/* Dark */
+.dark {
+  --bg: 12 16 26;
+  --surface: 17 22 34;
+  --elevated: 23 30 45;
+  --border: 35 43 60;
+  --muted: 28 35 51;
+  --fg: 232 236 243;
+  --subtle: 140 150 168;
+  --accent: 56 138 255;
+  --accent-fg: 255 255 255;
+  --success: 34 197 94;
+  --warning: 234 179 8;
+  --danger: 248 113 113;
+}
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  background: rgb(var(--bg));
+  color: rgb(var(--fg));
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: rgb(var(--border)); border-radius: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
