@@ -28,7 +28,7 @@ tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time"
 
 # Protocols
 ssh2 = "0.9"                                   # SFTP / SSH
-suppaftp = { version = "6", features = ["native-tls", "deprecated"] }  # FTP / FTPS (deprecated enables implicit-TLS API)
+suppaftp = { version = "8", features = ["native-tls", "deprecated"] }  # FTP / FTPS (deprecated enables implicit-TLS API)
 socks = "0.3"                                  # SOCKS4/5 proxy support
 
 # Storage & secrets
