@@ -1,0 +1,13 @@
+# Code owners for TurboFiles.
+# Listed owners are automatically requested for review on matching changes.
+# Security-sensitive paths (CI, signing, native backend) require owner review.
+
+# Default owner for everything in the repo.
+*                       @MartinOnami
+
+# CI / release pipeline and anything that touches signing or secrets.
+/.github/               @MartinOnami
+/.github/workflows/     @MartinOnami
+
+# Rust backend (all network/filesystem/protocol logic and the keychain).
+/src-tauri/             @MartinOnami
