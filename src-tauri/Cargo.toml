@@ -32,7 +32,7 @@ suppaftp = { version = "6", features = ["native-tls", "deprecated"] }  # FTP / F
 socks = "0.3"                                  # SOCKS4/5 proxy support
 
 # Storage & secrets
-rusqlite = { version = "0.31", features = ["bundled"] }
+rusqlite = { version = "0.40", features = ["bundled"] }
 keyring = "2"
 
 # Utilities
