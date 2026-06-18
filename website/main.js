@@ -15,6 +15,7 @@
   var TARGETS = [
     { key: "macos", test: function (n) { return /\.dmg$/i.test(n); } },
     { key: "windows", test: function (n) { return /-setup\.exe$/i.test(n); }, alt: function (n) { return /\.msi$/i.test(n); } },
+    { key: "windows_msi", test: function (n) { return /\.msi$/i.test(n); } },
     { key: "linux_appimage", test: function (n) { return /\.appimage$/i.test(n); } },
     { key: "linux_deb", test: function (n) { return /\.deb$/i.test(n); } },
     { key: "linux_rpm", test: function (n) { return /\.rpm$/i.test(n); } },
@@ -91,9 +92,10 @@
     for (var i = 0; i < links.length; i++) {
       links[i].setAttribute("href", href);
       links[i].setAttribute("download", "");
+      // Expose the exact filename on hover without clobbering the human-readable
+      // card label (e.g. "Apple Silicon & Intel") shown in the .os-file span.
+      if (file) links[i].setAttribute("title", file);
     }
-    var f = document.querySelector('[data-file="' + key + '"]');
-    if (f && file) f.textContent = file;
   }
 
   function setVersion(v) {
