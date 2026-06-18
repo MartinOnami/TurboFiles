@@ -39,7 +39,9 @@ export function OverwriteDialog({ conflict, onResolve }: OverwriteDialogProps) {
 
   useEffect(() => {
     if (!conflict) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onResolve({ action: "skip" }); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onResolve({ action: "skip" });
+    };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [conflict, onResolve]);
@@ -76,18 +78,31 @@ export function OverwriteDialog({ conflict, onResolve }: OverwriteDialogProps) {
 
         <div className="px-4 py-3 text-xs text-fg">
           <p className="mb-3 text-subtle">
-            A file named <span className="font-medium text-fg">{conflict.name}</span> already exists
-            {" "}{conflict.destLabel}. Choose what to do.
+            A file named <span className="font-medium text-fg">{conflict.name}</span> already exists{" "}
+            {conflict.destLabel}. Choose what to do.
           </p>
 
           <div className="grid grid-cols-[1fr_auto_1fr] items-stretch gap-2">
-            <FileCard label={sourceLabel} size={conflict.sourceSize} modified={conflict.sourceModified} highlight />
-            <div className="flex items-center text-subtle"><ArrowRight size={16} /></div>
-            <FileCard label={targetLabel} size={conflict.destSize} modified={conflict.destModified} />
+            <FileCard
+              label={sourceLabel}
+              size={conflict.sourceSize}
+              modified={conflict.sourceModified}
+              highlight
+            />
+            <div className="flex items-center text-subtle">
+              <ArrowRight size={16} />
+            </div>
+            <FileCard
+              label={targetLabel}
+              size={conflict.destSize}
+              modified={conflict.destModified}
+            />
           </div>
 
           {sameSize && (
-            <p className="mt-2 text-[11px] text-subtle">Both files are the same size ({formatBytes(conflict.sourceSize)}).</p>
+            <p className="mt-2 text-[11px] text-subtle">
+              Both files are the same size ({formatBytes(conflict.sourceSize)}).
+            </p>
           )}
 
           {renaming && (
@@ -96,7 +111,9 @@ export function OverwriteDialog({ conflict, onResolve }: OverwriteDialogProps) {
                 autoFocus
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") confirmRename(); }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") confirmRename();
+                }}
                 className="h-8 flex-1 rounded border border-border bg-bg px-2 text-xs text-fg focus:outline-none focus:ring-1 focus:ring-accent"
                 placeholder="New file name"
               />
@@ -137,7 +154,9 @@ export function OverwriteDialog({ conflict, onResolve }: OverwriteDialogProps) {
           <button
             onClick={() => setRenaming((v) => !v)}
             className={`rounded-md border px-3 py-1.5 text-xs ${
-              renaming ? "border-accent text-accent" : "border-border text-subtle hover:bg-muted hover:text-fg"
+              renaming
+                ? "border-accent text-accent"
+                : "border-border text-subtle hover:bg-muted hover:text-fg"
             }`}
           >
             Rename…
@@ -155,10 +174,20 @@ export function OverwriteDialog({ conflict, onResolve }: OverwriteDialogProps) {
 }
 
 function FileCard({
-  label, size, modified, highlight,
-}: { label: string; size: number; modified?: string; highlight?: boolean }) {
+  label,
+  size,
+  modified,
+  highlight,
+}: {
+  label: string;
+  size: number;
+  modified?: string;
+  highlight?: boolean;
+}) {
   return (
-    <div className={`rounded-md border px-2.5 py-2 ${highlight ? "border-accent/40 bg-accent/5" : "border-border bg-bg"}`}>
+    <div
+      className={`rounded-md border px-2.5 py-2 ${highlight ? "border-accent/40 bg-accent/5" : "border-border bg-bg"}`}
+    >
       <p className="text-[10px] font-medium uppercase tracking-wide text-subtle">{label}</p>
       <p className="mt-1 text-fg">{formatBytes(size)}</p>
       {modified && <p className="mt-0.5 text-[11px] text-subtle">{modified}</p>}

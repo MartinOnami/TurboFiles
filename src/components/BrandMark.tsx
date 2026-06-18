@@ -13,14 +13,27 @@ export function BrandMark({ size = 20 }: { size?: number }) {
           <stop stopColor="#5360ec" />
           <stop offset="1" stopColor="#4049d8" />
         </linearGradient>
-        <linearGradient id="tfPocket" x1="32" y1="22" x2="32" y2="47" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id="tfPocket"
+          x1="32"
+          y1="22"
+          x2="32"
+          y2="47"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stopColor="#5b67ea" />
           <stop offset="1" stopColor="#e9ebfb" />
         </linearGradient>
       </defs>
-      <path d="M23 8H37L45 16V31a3 3 0 0 1-3 3H23a3 3 0 0 1-3-3V11a3 3 0 0 1 3-3Z" fill="url(#tfDoc)" />
+      <path
+        d="M23 8H37L45 16V31a3 3 0 0 1-3 3H23a3 3 0 0 1-3-3V11a3 3 0 0 1 3-3Z"
+        fill="url(#tfDoc)"
+      />
       <path d="M37 8L45 16H37Z" fill="#c3c8f6" />
-      <path d="M15 23H49a3 3 0 0 1 3 3v14a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5V26a3 3 0 0 1 3-3Z" fill="url(#tfPocket)" />
+      <path
+        d="M15 23H49a3 3 0 0 1 3 3v14a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5V26a3 3 0 0 1 3-3Z"
+        fill="url(#tfPocket)"
+      />
     </svg>
   );
 }

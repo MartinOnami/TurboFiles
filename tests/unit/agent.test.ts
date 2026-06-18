@@ -1,9 +1,21 @@
 import { describe, expect, it } from "vitest";
-import { buildRequest, parseResponse, isWriteTool, providerById, validateToolArgs, PROVIDERS, type AgentMsg } from "@/lib/agent";
+import {
+  buildRequest,
+  parseResponse,
+  isWriteTool,
+  providerById,
+  validateToolArgs,
+  PROVIDERS,
+  type AgentMsg,
+} from "@/lib/agent";
 
 const convo: AgentMsg[] = [
   { role: "user", text: "list /var/www" },
-  { role: "assistant", text: "", toolCalls: [{ id: "t1", name: "list_remote_directory", args: { path: "/var/www" } }] },
+  {
+    role: "assistant",
+    text: "",
+    toolCalls: [{ id: "t1", name: "list_remote_directory", args: { path: "/var/www" } }],
+  },
   { role: "tool", id: "t1", name: "list_remote_directory", content: "index.html" },
 ];
 
@@ -45,13 +57,22 @@ describe("agent provider adapters", () => {
         {
           message: {
             content: "ok",
-            tool_calls: [{ id: "y", function: { name: "delete_item", arguments: '{"scope":"local","path":"/tmp/x"}' } }],
+            tool_calls: [
+              {
+                id: "y",
+                function: { name: "delete_item", arguments: '{"scope":"local","path":"/tmp/x"}' },
+              },
+            ],
           },
         },
       ],
     });
     expect(r.text).toBe("ok");
-    expect(r.toolCalls[0]).toEqual({ id: "y", name: "delete_item", args: { scope: "local", path: "/tmp/x" } });
+    expect(r.toolCalls[0]).toEqual({
+      id: "y",
+      name: "delete_item",
+      args: { scope: "local", path: "/tmp/x" },
+    });
   });
 
   it("flags write tools (which require confirmation)", () => {
@@ -80,15 +101,21 @@ describe("agent provider adapters", () => {
   it("validates tool arguments (rejects malformed/dangerous input)", () => {
     // Valid calls don't throw.
     expect(() => validateToolArgs("open_remote_directory", { path: "/wp-content" })).not.toThrow();
-    expect(() => validateToolArgs("rename_item", { scope: "remote", from: "/a", to: "/b" })).not.toThrow();
-    expect(() => validateToolArgs("add_site", { protocol: "sftp", host: "h", port: 22 })).not.toThrow();
+    expect(() =>
+      validateToolArgs("rename_item", { scope: "remote", from: "/a", to: "/b" }),
+    ).not.toThrow();
+    expect(() =>
+      validateToolArgs("add_site", { protocol: "sftp", host: "h", port: 22 }),
+    ).not.toThrow();
     expect(() => validateToolArgs("delete_site", { name: "Blitz" })).not.toThrow();
     // Missing/empty/invalid args throw.
     expect(() => validateToolArgs("read_remote_file", { path: "" })).toThrow();
     expect(() => validateToolArgs("delete_site", { name: "" })).toThrow();
     expect(() => validateToolArgs("delete_item", { scope: "everything", path: "/x" })).toThrow();
     expect(() => validateToolArgs("add_site", { protocol: "telnet", host: "h" })).toThrow();
-    expect(() => validateToolArgs("add_site", { protocol: "sftp", host: "h", port: 70000 })).toThrow();
+    expect(() =>
+      validateToolArgs("add_site", { protocol: "sftp", host: "h", port: 70000 }),
+    ).toThrow();
     expect(() => validateToolArgs("download_items", { remotePaths: [] })).toThrow();
     // Control characters are rejected.
     expect(() => validateToolArgs("open_remote_directory", { path: "/a\u0001b" })).toThrow();

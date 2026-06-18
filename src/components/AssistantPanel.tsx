@@ -1,9 +1,29 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Sparkles, ArrowUp, X, ShieldAlert, Settings as SettingsIcon, Paperclip, Loader2, Brain, ChevronDown, Check, CircleX } from "lucide-react";
+import {
+  Sparkles,
+  ArrowUp,
+  X,
+  ShieldAlert,
+  Settings as SettingsIcon,
+  Paperclip,
+  Loader2,
+  Brain,
+  ChevronDown,
+  Check,
+  CircleX,
+} from "lucide-react";
 import { api, pickFiles } from "../lib/api";
 import { useStore } from "../store/useStore";
 import { useSettings } from "../store/useSettings";
-import { buildRequest, parseResponse, isWriteTool, providerById, validateToolArgs, type AgentMsg, type ToolCall } from "../lib/agent";
+import {
+  buildRequest,
+  parseResponse,
+  isWriteTool,
+  providerById,
+  validateToolArgs,
+  type AgentMsg,
+  type ToolCall,
+} from "../lib/agent";
 import type { DirEntry, Transfer } from "../lib/types";
 
 export interface AssistantPanelProps {
@@ -35,7 +55,8 @@ interface Pending {
 
 function fmtErr(e: unknown): string {
   if (e instanceof Error) return e.message;
-  if (typeof e === "object" && e !== null && "message" in e) return String((e as { message: unknown }).message);
+  if (typeof e === "object" && e !== null && "message" in e)
+    return String((e as { message: unknown }).message);
   return String(e);
 }
 
@@ -61,7 +82,9 @@ const summarize = (entries: DirEntry[]) =>
     : "(empty directory)";
 const summarizeTransfers = (ts: Transfer[]) =>
   ts.length
-    ? ts.map((t) => `${t.name}: ${t.direction} ${t.status} ${t.bytesTransferred}/${t.totalBytes}B`).join("\n")
+    ? ts
+        .map((t) => `${t.name}: ${t.direction} ${t.status} ${t.bytesTransferred}/${t.totalBytes}B`)
+        .join("\n")
     : "The transfer queue is empty.";
 
 /** Collapse a multi-line tool result to a short single line for the step detail. */
@@ -70,7 +93,8 @@ const oneLine = (s: string) => {
   return t.length > 140 ? `${t.slice(0, 140)}…` : t;
 };
 
-const joinRemote = (dir: string, name: string) => (dir.endsWith("/") ? dir + name : `${dir}/${name}`);
+const joinRemote = (dir: string, name: string) =>
+  dir.endsWith("/") ? dir + name : `${dir}/${name}`;
 /** Extract a "Version:" header value from a PHP/CSS plugin/theme file. */
 const matchVersion = (text: string) => text.match(/^\s*\*?\s*Version:\s*(.+)$/im)?.[1].trim();
 /** Unix permission string "world" bits (last triad: r w x). */
@@ -78,11 +102,19 @@ const worldReadable = (p?: string) => !!p && p.length >= 10 && p[7] === "r";
 const worldWritable = (p?: string) => !!p && p.length >= 10 && p[8] === "w";
 
 /** Best-effort plugin version from its main PHP file's header. */
-async function pluginVersion(sessionId: string, pluginDir: string, slug: string): Promise<string | undefined> {
+async function pluginVersion(
+  sessionId: string,
+  pluginDir: string,
+  slug: string,
+): Promise<string | undefined> {
   try {
-    const v = matchVersion(await api.readRemoteText(sessionId, joinRemote(pluginDir, `${slug}.php`), 4000));
+    const v = matchVersion(
+      await api.readRemoteText(sessionId, joinRemote(pluginDir, `${slug}.php`), 4000),
+    );
     if (v) return v;
-  } catch { /* fall through to scanning */ }
+  } catch {
+    /* fall through to scanning */
+  }
   try {
     const files = (await api.listRemote(sessionId, pluginDir))
       .filter((e) => e.kind !== "directory" && e.name.endsWith(".php"))
@@ -94,9 +126,13 @@ async function pluginVersion(sessionId: string, pluginDir: string, slug: string)
           const v = matchVersion(txt);
           if (v) return v;
         }
-      } catch { /* ignore unreadable file */ }
+      } catch {
+        /* ignore unreadable file */
+      }
     }
-  } catch { /* ignore unlistable dir */ }
+  } catch {
+    /* ignore unlistable dir */
+  }
   return undefined;
 }
 
@@ -134,40 +170,73 @@ async function wordpressAudit(sessionId: string, rootArg: string): Promise<strin
   if (cfg) {
     out.push(`wp-config.php permissions: ${cfg.permissions ?? "?"}`);
     if (worldReadable(cfg.permissions))
-      issues.push("wp-config.php is world-readable — database credentials and secret keys are exposed.");
+      issues.push(
+        "wp-config.php is world-readable — database credentials and secret keys are exposed.",
+      );
     if (worldWritable(cfg.permissions)) issues.push("wp-config.php is world-writable.");
   }
-  for (const f of ["readme.html", "license.txt", "wp-config.php.bak", "wp-config.bak", ".env", ".git", "backup.zip", "backup.sql", "database.sql"]) {
+  for (const f of [
+    "readme.html",
+    "license.txt",
+    "wp-config.php.bak",
+    "wp-config.bak",
+    ".env",
+    ".git",
+    "backup.zip",
+    "backup.sql",
+    "database.sql",
+  ]) {
     if (byName.has(f)) issues.push(`Exposed file at web root: ${f}`);
   }
   for (const e of rootList)
-    if (e.kind === "directory" && worldWritable(e.permissions)) issues.push(`World-writable directory: ${e.name} (${e.permissions}).`);
+    if (e.kind === "directory" && worldWritable(e.permissions))
+      issues.push(`World-writable directory: ${e.name} (${e.permissions}).`);
   try {
     const wpc = await api.listRemote(sessionId, at("/wp-content"));
-    if (wpc.some((e) => e.name === "debug.log")) issues.push("wp-content/debug.log present (may leak paths and errors).");
-  } catch { /* ignore */ }
+    if (wpc.some((e) => e.name === "debug.log"))
+      issues.push("wp-content/debug.log present (may leak paths and errors).");
+  } catch {
+    /* ignore */
+  }
 
   out.push("\nPlugins:");
   try {
-    const plist = (await api.listRemote(sessionId, at("/wp-content/plugins"))).filter((e) => e.kind === "directory");
+    const plist = (await api.listRemote(sessionId, at("/wp-content/plugins"))).filter(
+      (e) => e.kind === "directory",
+    );
     const capped = plist.slice(0, 40);
     for (const d of capped) {
-      const ver = await pluginVersion(sessionId, joinRemote(at("/wp-content/plugins"), d.name), d.name);
+      const ver = await pluginVersion(
+        sessionId,
+        joinRemote(at("/wp-content/plugins"), d.name),
+        d.name,
+      );
       out.push(`- ${d.name}: ${ver ?? "version unknown"}`);
     }
-    if (plist.length > capped.length) out.push(`  …and ${plist.length - capped.length} more (not scanned).`);
+    if (plist.length > capped.length)
+      out.push(`  …and ${plist.length - capped.length} more (not scanned).`);
   } catch {
     out.push("  (could not list wp-content/plugins)");
   }
 
   out.push("\nThemes:");
   try {
-    const tlist = (await api.listRemote(sessionId, at("/wp-content/themes"))).filter((e) => e.kind === "directory");
+    const tlist = (await api.listRemote(sessionId, at("/wp-content/themes"))).filter(
+      (e) => e.kind === "directory",
+    );
     for (const d of tlist.slice(0, 20)) {
       let ver: string | undefined;
       try {
-        ver = matchVersion(await api.readRemoteText(sessionId, joinRemote(joinRemote(at("/wp-content/themes"), d.name), "style.css"), 4000));
-      } catch { /* ignore */ }
+        ver = matchVersion(
+          await api.readRemoteText(
+            sessionId,
+            joinRemote(joinRemote(at("/wp-content/themes"), d.name), "style.css"),
+            4000,
+          ),
+        );
+      } catch {
+        /* ignore */
+      }
       out.push(`- ${d.name}: ${ver ?? "version unknown"}`);
     }
   } catch {
@@ -175,12 +244,19 @@ async function wordpressAudit(sessionId: string, rootArg: string): Promise<strin
   }
 
   out.push("\nPotential issues:");
-  out.push(issues.length ? issues.map((i) => `- ${i}`).join("\n") : "- None obvious from file inspection.");
+  out.push(
+    issues.length ? issues.map((i) => `- ${i}`).join("\n") : "- None obvious from file inspection.",
+  );
   out.push("\n(Heuristic inventory from file inspection — compare versions against known CVEs.)");
   return out.join("\n");
 }
 
-export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }: AssistantPanelProps) {
+export function AssistantPanel({
+  open,
+  onClose,
+  onOpenSettings,
+  onConnectSite,
+}: AssistantPanelProps) {
   const { tabs, activeTabId, localPath } = useStore();
   const agentProvider = useSettings((s) => s.agentProvider);
   const agentModel = useSettings((s) => s.agentModel);
@@ -219,7 +295,10 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
 
   useEffect(() => {
     if (!open) return;
-    api.llmHasKey(agentProvider).then(setHasKey).catch(() => setHasKey(false));
+    api
+      .llmHasKey(agentProvider)
+      .then(setHasKey)
+      .catch(() => setHasKey(false));
   }, [open, agentProvider]);
 
   useEffect(() => {
@@ -230,7 +309,9 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
 
   // --- Chain-of-thought: a single collapsible "thought" item per turn that
   // accumulates the reasoning + tool steps the model takes.
-  const patchThought = (fn: (t: Extract<ChatItem, { kind: "thought" }>) => Extract<ChatItem, { kind: "thought" }>) =>
+  const patchThought = (
+    fn: (t: Extract<ChatItem, { kind: "thought" }>) => Extract<ChatItem, { kind: "thought" }>,
+  ) =>
     setItems((prev) => {
       for (let i = prev.length - 1; i >= 0; i--) {
         const it = prev[i];
@@ -247,7 +328,11 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
     patchThought((t) => {
       if (!t.steps.length) return t;
       const steps = t.steps.slice();
-      steps[steps.length - 1] = { ...steps[steps.length - 1], status, detail: detail ?? steps[steps.length - 1].detail };
+      steps[steps.length - 1] = {
+        ...steps[steps.length - 1],
+        status,
+        detail: detail ?? steps[steps.length - 1].detail,
+      };
       return { ...t, steps };
     });
   // Finish the open thought. If it has steps, fold the final answer into it (one
@@ -298,7 +383,9 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
         if (st.sites.length === 0) st.setSites(await api.listSites());
         const sites = useStore.getState().sites;
         return sites.length
-          ? sites.map((s) => `${s.name} — ${s.protocol} ${s.username}@${s.host}:${s.port}`).join("\n")
+          ? sites
+              .map((s) => `${s.name} — ${s.protocol} ${s.username}@${s.host}:${s.port}`)
+              .join("\n")
           : "No saved sites yet.";
       }
       case "connect_site": {
@@ -312,7 +399,10 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
           sites.find((s) => s.name.toLowerCase() === q) ??
           sites.find((s) => s.name.toLowerCase().includes(q)) ??
           sites.find((s) => `${s.username}@${s.host}`.toLowerCase().includes(q));
-        if (!site) throw new ToolFailure(`No saved site matches "${a.name}". Use list_sites to see the names.`);
+        if (!site)
+          throw new ToolFailure(
+            `No saved site matches "${a.name}". Use list_sites to see the names.`,
+          );
         // Idempotent: if already connected to this site, just focus its tab —
         // never open a duplicate session/tab.
         const open = st.tabs.find((t) => t.siteId === site.id && t.session);
@@ -326,7 +416,9 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
         if (res.ok && cur) {
           return `Connected to ${cur.username}@${cur.host} (current directory ${cur.cwd}).`;
         }
-        throw new ToolFailure(`Could not connect to "${site.name}": ${res.reason ?? "unknown error"}.`);
+        throw new ToolFailure(
+          `Could not connect to "${site.name}": ${res.reason ?? "unknown error"}.`,
+        );
       }
       case "disconnect_site": {
         const tab = st.tabs.find((t) => t.id === st.activeTabId);
@@ -341,7 +433,8 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
         return `Disconnected from ${label}.`;
       }
       case "open_remote_directory": {
-        if (!sess) throw new ToolFailure("Not connected to a server. Connect first with connect_site.");
+        if (!sess)
+          throw new ToolFailure("Not connected to a server. Connect first with connect_site.");
         if (!st.activeTabId) throw new ToolFailure("No active session tab.");
         const path = String(a.path);
         const entries = await api.listRemote(sess.id, path);
@@ -356,7 +449,8 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
         return `Opened ${path}.\n${summarize(entries)}`;
       }
       case "list_remote_directory":
-        if (!sess) throw new ToolFailure("Not connected to a server. Connect first with connect_site.");
+        if (!sess)
+          throw new ToolFailure("Not connected to a server. Connect first with connect_site.");
         return summarize(await api.listRemote(sess.id, String(a.path)));
       case "list_local_directory":
         return summarize(await api.listLocal(String(a.path)));
@@ -366,26 +460,31 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
         const cutoff = since ? Date.now() - since * 60000 : 0;
         const rows = st.logs.filter(
           (l) =>
-            (!lvl || l.level === lvl) &&
-            (!cutoff || new Date(l.timestamp).getTime() >= cutoff),
+            (!lvl || l.level === lvl) && (!cutoff || new Date(l.timestamp).getTime() >= cutoff),
         );
         return rows.length
-          ? rows.slice(-120).map((l) => `${l.timestamp} [${l.level}] ${l.scope ?? "-"} ${l.message}`).join("\n")
+          ? rows
+              .slice(-120)
+              .map((l) => `${l.timestamp} [${l.level}] ${l.scope ?? "-"} ${l.message}`)
+              .join("\n")
           : "No matching log entries.";
       }
       case "list_transfers":
         return summarizeTransfers(st.transfers);
       case "read_remote_file": {
-        if (!sess) throw new ToolFailure("Not connected to a server. Connect first with connect_site.");
+        if (!sess)
+          throw new ToolFailure("Not connected to a server. Connect first with connect_site.");
         const max = typeof a.maxBytes === "number" ? a.maxBytes : 65536;
         return await api.readRemoteText(sess.id, String(a.path), max);
       }
       case "wordpress_audit": {
-        if (!sess) throw new ToolFailure("Not connected to a server. Connect first with connect_site.");
+        if (!sess)
+          throw new ToolFailure("Not connected to a server. Connect first with connect_site.");
         return await wordpressAudit(sess.id, a.rootPath ? String(a.rootPath) : remote || "/");
       }
       case "download_items": {
-        if (!sess) throw new ToolFailure("Not connected to a server. Connect first with connect_site.");
+        if (!sess)
+          throw new ToolFailure("Not connected to a server. Connect first with connect_site.");
         const dir = String(a.localDir || local);
         const paths = (a.remotePaths as string[]) ?? [];
         let n = 0;
@@ -397,7 +496,8 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
         return `Queued ${n} download(s) to ${dir}.`;
       }
       case "upload_items": {
-        if (!sess) throw new ToolFailure("Not connected to a server. Connect first with connect_site.");
+        if (!sess)
+          throw new ToolFailure("Not connected to a server. Connect first with connect_site.");
         const dir = String(a.remoteDir || remote);
         const paths = (a.localPaths as string[]) ?? [];
         let n = 0;
@@ -467,7 +567,10 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
           sites.find((s) => s.name.toLowerCase() === q) ??
           sites.find((s) => s.name.toLowerCase().includes(q)) ??
           sites.find((s) => `${s.username}@${s.host}`.toLowerCase().includes(q));
-        if (!site) throw new ToolFailure(`No saved site matches "${a.name}". Use list_sites to see the names.`);
+        if (!site)
+          throw new ToolFailure(
+            `No saved site matches "${a.name}". Use list_sites to see the names.`,
+          );
         // If a live session for this site is open, disconnect and close its tab first.
         const open = st.tabs.find((t) => t.siteId === site.id && t.session);
         if (open?.session) {
@@ -520,7 +623,8 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
   async function run(userText: string, attached: string[]) {
     setBusy(true);
     push({ kind: "user", text: userText });
-    if (attached.length) push({ kind: "tool", text: `📎 attached: ${attached.map(baseName).join(", ")}` });
+    if (attached.length)
+      push({ kind: "tool", text: `📎 attached: ${attached.map(baseName).join(", ")}` });
     // Give the model the attached local paths as context (data, not an instruction
     // to upload — it uploads only when the user says where, via upload_items).
     const note = attached.length
@@ -554,7 +658,12 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
           if (isWriteTool(tc.name)) {
             const ok = await confirm(describeWrite(tc));
             if (!ok) {
-              convo.current.push({ role: "tool", id: tc.id, name: tc.name, content: "User declined this action." });
+              convo.current.push({
+                role: "tool",
+                id: tc.id,
+                name: tc.name,
+                content: "User declined this action.",
+              });
               updateLastStep("error", "declined");
               continue;
             }
@@ -614,7 +723,10 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
       <header className="flex items-center gap-2 border-b border-border px-3 py-2">
         <Sparkles size={15} className="text-accent" />
         <span className="text-sm font-semibold">Ask TurboFiles</span>
-        <span className="ml-1 truncate text-[10px] text-subtle" title={`${agentProvider} · ${agentModel}`}>
+        <span
+          className="ml-1 truncate text-[10px] text-subtle"
+          title={`${agentProvider} · ${agentModel}`}
+        >
           {agentModel || agentProvider}
         </span>
         <div className="flex-1" />
@@ -627,7 +739,11 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
         {!ready ? (
           <div className="rounded-md border border-border bg-bg p-3 text-xs text-subtle">
             <p className="mb-2 font-medium text-fg">Connect your model</p>
-            <p>Add an API key for your provider to start — or point the provider at a local model (Ollama / LM Studio), which needs no key. Keys are stored in the OS keychain and never leave your device.</p>
+            <p>
+              Add an API key for your provider to start — or point the provider at a local model
+              (Ollama / LM Studio), which needs no key. Keys are stored in the OS keychain and never
+              leave your device.
+            </p>
             <button
               onClick={onOpenSettings}
               className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-fg hover:bg-muted"
@@ -645,8 +761,12 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
               <li>“Audit this WordPress site for known vulnerabilities”</li>
               <li>“Add a site: sftp to 10.0.0.5 as deploy” (paste creds; password optional)</li>
             </ul>
-            <p className="mt-2">Attach files with the 📎 clip, then tell me where to upload them.</p>
-            <p className="mt-1">Reads run automatically; anything that changes files asks you first.</p>
+            <p className="mt-2">
+              Attach files with the 📎 clip, then tell me where to upload them.
+            </p>
+            <p className="mt-1">
+              Reads run automatically; anything that changes files asks you first.
+            </p>
           </div>
         ) : null}
 
@@ -695,7 +815,11 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
                 >
                   <Paperclip size={11} className="text-subtle" />
                   <span className="max-w-[140px] truncate">{baseName(p)}</span>
-                  <button onClick={() => removeAttachment(p)} className="text-subtle hover:text-danger" title="Remove">
+                  <button
+                    onClick={() => removeAttachment(p)}
+                    className="text-subtle hover:text-danger"
+                    title="Remove"
+                  >
                     <X size={11} />
                   </button>
                 </span>
@@ -713,7 +837,13 @@ export function AssistantPanel({ open, onClose, onOpenSettings, onConnectSite }:
               }
             }}
             rows={1}
-            placeholder={busy ? "Working…" : attachments.length ? "Where should I upload these?" : "Ask about your files…"}
+            placeholder={
+              busy
+                ? "Working…"
+                : attachments.length
+                  ? "Where should I upload these?"
+                  : "Ask about your files…"
+            }
             disabled={busy || !ready}
             className="block w-full resize-none overflow-y-auto bg-transparent px-2 pb-1 pt-2 text-sm leading-5 text-fg placeholder:text-subtle focus:outline-none disabled:opacity-60"
           />
@@ -770,7 +900,15 @@ function ChatLine({ item }: { item: Exclude<ChatItem, { kind: "thought" }> }) {
 
 /** Chain of thought: steps stay collapsed; a tiny bold success/failed status and
  *  the final answer sit under the header to keep each turn compact. */
-function ChainOfThought({ steps, done, answer }: { steps: Step[]; done: boolean; answer?: string }) {
+function ChainOfThought({
+  steps,
+  done,
+  answer,
+}: {
+  steps: Step[];
+  done: boolean;
+  answer?: string;
+}) {
   const [open, setOpen] = useState(false); // collapsed always by default
   const failed = steps.some((s) => s.status === "error");
 
@@ -789,9 +927,15 @@ function ChainOfThought({ steps, done, answer }: { steps: Step[]; done: boolean;
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center gap-2 px-2.5 py-2 text-sm text-subtle hover:bg-muted/50"
       >
-        {done ? <Brain size={15} className="text-accent" /> : <Loader2 size={15} className="animate-spin text-accent" />}
+        {done ? (
+          <Brain size={15} className="text-accent" />
+        ) : (
+          <Loader2 size={15} className="animate-spin text-accent" />
+        )}
         <span className="font-medium text-fg">
-          {done ? `Worked through ${steps.length} step${steps.length !== 1 ? "s" : ""}` : "Thinking…"}
+          {done
+            ? `Worked through ${steps.length} step${steps.length !== 1 ? "s" : ""}`
+            : "Thinking…"}
         </span>
         <span className="flex-1" />
         <ChevronDown size={15} className={`transition-transform ${open ? "rotate-180" : ""}`} />
@@ -858,7 +1002,12 @@ function renderInline(line: string): ReactNode[] {
   while ((m = re.exec(line)) !== null) {
     if (m.index > last) nodes.push(line.slice(last, m.index));
     if (m[1] != null) nodes.push(<strong key={key++}>{m[1]}</strong>);
-    else if (m[2] != null) nodes.push(<code key={key++} className="rounded bg-muted px-1 font-sans">{m[2]}</code>);
+    else if (m[2] != null)
+      nodes.push(
+        <code key={key++} className="rounded bg-muted px-1 font-sans">
+          {m[2]}
+        </code>,
+      );
     last = m.index + m[0].length;
   }
   if (last < line.length) nodes.push(line.slice(last));

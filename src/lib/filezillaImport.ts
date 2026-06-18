@@ -32,20 +32,29 @@ function serverName(server: Element): string {
 /** Map FileZilla's numeric protocol to ours (best-effort). */
 function mapProtocol(code: string): { protocol: Protocol; encryption?: FtpEncryption } {
   switch (code) {
-    case "1": return { protocol: "sftp" };
-    case "3": return { protocol: "ftps", encryption: "require_implicit_tls" }; // FTPS implicit
-    case "4": return { protocol: "ftp", encryption: "require_explicit_tls" };  // FTPES explicit
-    default:  return { protocol: "ftp", encryption: "plain" };                  // 0 = FTP
+    case "1":
+      return { protocol: "sftp" };
+    case "3":
+      return { protocol: "ftps", encryption: "require_implicit_tls" }; // FTPS implicit
+    case "4":
+      return { protocol: "ftp", encryption: "require_explicit_tls" }; // FTPES explicit
+    default:
+      return { protocol: "ftp", encryption: "plain" }; // 0 = FTP
   }
 }
 
 /** Map FileZilla's numeric logon type to ours. */
 function mapLogon(code: string): LogonType {
   switch (code) {
-    case "0": return "anonymous";
-    case "3": return "interactive";
-    case "5": case "6": return "key"; // key file / key+agent
-    default:  return "normal";
+    case "0":
+      return "anonymous";
+    case "3":
+      return "interactive";
+    case "5":
+    case "6":
+      return "key"; // key file / key+agent
+    default:
+      return "normal";
   }
 }
 
@@ -55,7 +64,11 @@ function decodePass(server: Element): string | undefined {
   const raw = el.textContent ?? "";
   if (!raw) return undefined;
   if (el.getAttribute("encoding") === "base64") {
-    try { return atob(raw); } catch { return undefined; }
+    try {
+      return atob(raw);
+    } catch {
+      return undefined;
+    }
   }
   return raw;
 }

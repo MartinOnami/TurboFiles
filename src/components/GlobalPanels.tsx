@@ -35,8 +35,14 @@ function scopesOf(items: { scope?: string }[]): string[] {
 }
 
 function ScopeSelect({
-  value, scopes, onChange,
-}: { value: string; scopes: string[]; onChange: (v: string) => void }) {
+  value,
+  scopes,
+  onChange,
+}: {
+  value: string;
+  scopes: string[];
+  onChange: (v: string) => void;
+}) {
   return (
     <label className="flex items-center gap-1.5 text-xs text-subtle">
       Site
@@ -46,7 +52,11 @@ function ScopeSelect({
         className="h-7 rounded border border-border bg-surface px-2 text-xs text-fg focus:outline-none focus:ring-1 focus:ring-accent"
       >
         <option value="all">All sites</option>
-        {scopes.map((s) => <option key={s} value={s}>{s}</option>)}
+        {scopes.map((s) => (
+          <option key={s} value={s}>
+            {s}
+          </option>
+        ))}
       </select>
     </label>
   );
@@ -77,7 +87,9 @@ export function GlobalLogsPanel({ logs }: { logs: LogEntry[] }) {
               key={lv}
               onClick={() => setLevel(lv)}
               className={`rounded-full px-2.5 py-1 text-xs capitalize transition-colors ${
-                level === lv ? "bg-accent text-accent-fg" : "text-subtle hover:bg-muted hover:text-fg"
+                level === lv
+                  ? "bg-accent text-accent-fg"
+                  : "text-subtle hover:bg-muted hover:text-fg"
               }`}
             >
               {lv}
@@ -96,7 +108,9 @@ export function GlobalLogsPanel({ logs }: { logs: LogEntry[] }) {
       </div>
 
       <div className="flex-1 overflow-auto">
-        {visible.length === 0 && <p className="p-3 text-xs text-subtle">No matching log entries.</p>}
+        {visible.length === 0 && (
+          <p className="p-3 text-xs text-subtle">No matching log entries.</p>
+        )}
         {groupByDate(visible).map((group) => (
           <div key={group.key}>
             <div className="sticky top-0 z-10 border-b border-border bg-elevated px-3 py-1 text-[11px] font-semibold text-subtle">
@@ -107,7 +121,8 @@ export function GlobalLogsPanel({ logs }: { logs: LogEntry[] }) {
               <span className="absolute bottom-1 left-3 top-1 w-px bg-border" />
               {group.entries.map(({ entry, i }) => {
                 const scope = entry.scope || "System";
-                const dot = scope === "System" ? "var(--tw-prose-bullets, #64748b)" : scopeColor(scope);
+                const dot =
+                  scope === "System" ? "var(--tw-prose-bullets, #64748b)" : scopeColor(scope);
                 return (
                   <div key={i} className="relative py-1">
                     <span
@@ -115,8 +130,12 @@ export function GlobalLogsPanel({ logs }: { logs: LogEntry[] }) {
                       style={{ backgroundColor: dot }}
                     />
                     <div className="flex flex-wrap items-baseline gap-2 text-xs">
-                      <span className="font-mono text-subtle">{formatLogTime(entry.timestamp)}</span>
-                      <span className={`font-mono uppercase ${LEVEL_COLOR[entry.level]}`}>[{entry.level}]</span>
+                      <span className="font-mono text-subtle">
+                        {formatLogTime(entry.timestamp)}
+                      </span>
+                      <span className={`font-mono uppercase ${LEVEL_COLOR[entry.level]}`}>
+                        [{entry.level}]
+                      </span>
                       {scope !== "System" && <SiteBadge scope={scope} />}
                       <span className="break-all text-fg">{entry.message}</span>
                     </div>
@@ -137,7 +156,9 @@ function tsMillis(ts?: string): number {
 }
 
 /** Sort items chronologically and group into consecutive same-day sections. */
-function groupByDate<T extends { timestamp?: string }>(items: T[]): { key: string; label: string; entries: { entry: T; i: number }[] }[] {
+function groupByDate<T extends { timestamp?: string }>(
+  items: T[],
+): { key: string; label: string; entries: { entry: T; i: number }[] }[] {
   const sorted = [...items].sort((a, b) => tsMillis(a.timestamp) - tsMillis(b.timestamp));
   const groups: { key: string; label: string; entries: { entry: T; i: number }[] }[] = [];
   sorted.forEach((entry, i) => {
@@ -171,7 +192,12 @@ const QFILTERS: { value: string; label: string; match: (s: Transfer["status"]) =
 
 /** Full-window transfer queue as a date + site timeline (mirrors the Logs tab). */
 export function GlobalQueuePanel({
-  transfers, onPause, onResume, onCancel, onRetry, onClearCompleted,
+  transfers,
+  onPause,
+  onResume,
+  onCancel,
+  onRetry,
+  onClearCompleted,
 }: { transfers: Transfer[] } & Omit<TransferQueueProps, "transfers">) {
   const [scope, setScope] = useState("all");
   const [filter, setFilter] = useState("all");
@@ -193,7 +219,9 @@ export function GlobalQueuePanel({
               key={f.value}
               onClick={() => setFilter(f.value)}
               className={`rounded-full px-2.5 py-1 text-xs transition-colors ${
-                filter === f.value ? "bg-accent text-accent-fg" : "text-subtle hover:bg-muted hover:text-fg"
+                filter === f.value
+                  ? "bg-accent text-accent-fg"
+                  : "text-subtle hover:bg-muted hover:text-fg"
               }`}
             >
               {f.label}
@@ -201,7 +229,10 @@ export function GlobalQueuePanel({
           ))}
         </div>
         {hasCleared && (
-          <button onClick={onClearCompleted} className="ml-auto text-[10px] text-subtle hover:text-fg">
+          <button
+            onClick={onClearCompleted}
+            className="ml-auto text-[10px] text-subtle hover:text-fg"
+          >
             Clear completed
           </button>
         )}
@@ -217,7 +248,14 @@ export function GlobalQueuePanel({
             <div className="relative py-1 pl-7 pr-3">
               <span className="absolute bottom-1 left-3 top-1 w-px bg-border" />
               {group.entries.map(({ entry: t }) => (
-                <QueueRow key={t.id} t={t} onPause={onPause} onResume={onResume} onCancel={onCancel} onRetry={onRetry} />
+                <QueueRow
+                  key={t.id}
+                  t={t}
+                  onPause={onPause}
+                  onResume={onResume}
+                  onCancel={onCancel}
+                  onRetry={onRetry}
+                />
               ))}
             </div>
           </div>
@@ -230,12 +268,20 @@ export function GlobalQueuePanel({
 const QACTIVE = new Set<Transfer["status"]>(["queued", "transferring", "paused"]);
 
 function QueueRow({
-  t, onPause, onResume, onCancel, onRetry,
+  t,
+  onPause,
+  onResume,
+  onCancel,
+  onRetry,
 }: { t: Transfer } & Omit<TransferQueueProps, "transfers" | "onClearCompleted">) {
-  const pct = t.totalBytes > 0
-    ? Math.round((t.bytesTransferred / t.totalBytes) * 100)
-    : t.status === "completed" ? 100 : 0;
-  const bar = t.status === "failed" ? "bg-danger" : t.status === "completed" ? "bg-success" : "bg-accent";
+  const pct =
+    t.totalBytes > 0
+      ? Math.round((t.bytesTransferred / t.totalBytes) * 100)
+      : t.status === "completed"
+        ? 100
+        : 0;
+  const bar =
+    t.status === "failed" ? "bg-danger" : t.status === "completed" ? "bg-success" : "bg-accent";
   const scope = t.scope || "System";
   const dot = scope === "System" ? "#64748b" : scopeColor(scope);
   return (
@@ -248,29 +294,64 @@ function QueueRow({
         <span className="shrink-0 font-mono text-subtle">{formatLogTime(t.timestamp)}</span>
         <span className="shrink-0 text-subtle">{t.direction === "upload" ? "⬆" : "⬇"}</span>
         {scope !== "System" && <SiteBadge scope={scope} />}
-        <span className="min-w-0 flex-1 truncate text-fg" title={t.remotePath}>{t.name || "—"}</span>
+        <span className="min-w-0 flex-1 truncate text-fg" title={t.remotePath}>
+          {t.name || "—"}
+        </span>
         <div className="hidden h-1.5 w-24 shrink-0 overflow-hidden rounded-full bg-muted sm:block">
           <div className={`h-full ${bar} transition-all`} style={{ width: `${pct}%` }} />
         </div>
         <span className="w-9 shrink-0 text-right text-subtle">{pct}%</span>
         <span className={`w-20 shrink-0 capitalize ${STATUS_COLOR[t.status]}`}>
           {t.status}
-          {t.error && <span className="ml-1 text-danger" title={t.error}>⚠</span>}
+          {t.error && (
+            <span className="ml-1 text-danger" title={t.error}>
+              ⚠
+            </span>
+          )}
         </span>
         <div className="flex w-14 shrink-0 items-center justify-end gap-0.5">
-          {t.status === "transferring" && <RowAction label="Pause" onClick={() => onPause(t.id)}>⏸</RowAction>}
-          {t.status === "paused" && <RowAction label="Resume" onClick={() => onResume(t.id)}>▶</RowAction>}
-          {t.status === "failed" && <RowAction label="Retry" onClick={() => onRetry(t)}>↻</RowAction>}
-          {QACTIVE.has(t.status) && <RowAction label="Cancel" onClick={() => onCancel(t.id)}>✕</RowAction>}
+          {t.status === "transferring" && (
+            <RowAction label="Pause" onClick={() => onPause(t.id)}>
+              ⏸
+            </RowAction>
+          )}
+          {t.status === "paused" && (
+            <RowAction label="Resume" onClick={() => onResume(t.id)}>
+              ▶
+            </RowAction>
+          )}
+          {t.status === "failed" && (
+            <RowAction label="Retry" onClick={() => onRetry(t)}>
+              ↻
+            </RowAction>
+          )}
+          {QACTIVE.has(t.status) && (
+            <RowAction label="Cancel" onClick={() => onCancel(t.id)}>
+              ✕
+            </RowAction>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-function RowAction({ children, label, onClick }: { children: ReactNode; label: string; onClick: () => void }) {
+function RowAction({
+  children,
+  label,
+  onClick,
+}: {
+  children: ReactNode;
+  label: string;
+  onClick: () => void;
+}) {
   return (
-    <button onClick={onClick} title={label} aria-label={label} className="rounded px-1 py-0.5 text-subtle hover:bg-muted hover:text-fg">
+    <button
+      onClick={onClick}
+      title={label}
+      aria-label={label}
+      className="rounded px-1 py-0.5 text-subtle hover:bg-muted hover:text-fg"
+    >
       {children}
     </button>
   );

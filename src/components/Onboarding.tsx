@@ -55,7 +55,9 @@ export function Onboarding({ onContinue }: OnboardingProps) {
           <span className="inline-block rounded-md bg-accent/15 px-2.5 py-1 text-xs font-semibold text-accent">
             {s.badge}
           </span>
-          <h1 className="mt-10 text-5xl font-bold leading-[1.05] tracking-tight text-fg">{s.title}</h1>
+          <h1 className="mt-10 text-5xl font-bold leading-[1.05] tracking-tight text-fg">
+            {s.title}
+          </h1>
           <p className="mt-6 max-w-lg text-lg leading-relaxed text-subtle">{s.body}</p>
         </div>
 
@@ -122,7 +124,9 @@ function HeroVisual({ visual }: { visual: OnbStep["visual"] }) {
           <span className="h-3 w-3 rounded-full bg-green-400" />
           <div className="ml-2 flex items-center gap-1.5">
             <BrandMark size={14} />
-            <span className="text-[11px] font-semibold tracking-tight text-slate-600">TurboFiles</span>
+            <span className="text-[11px] font-semibold tracking-tight text-slate-600">
+              TurboFiles
+            </span>
           </div>
         </div>
 
@@ -144,7 +148,9 @@ function HeroVisual({ visual }: { visual: OnbStep["visual"] }) {
             </div>
             <div>
               <div className="text-sm font-semibold text-slate-800">Keychain &amp; TLS</div>
-              <div className="text-xs text-slate-500">Host-key verified · secrets never on disk</div>
+              <div className="text-xs text-slate-500">
+                Host-key verified · secrets never on disk
+              </div>
             </div>
           </div>
         )}
@@ -163,7 +169,9 @@ function HeroVisual({ visual }: { visual: OnbStep["visual"] }) {
           <div className="mt-2 rounded-md border border-slate-200 px-2 py-1 text-[11px] text-slate-600">
             ✓ Worked through 3 steps
           </div>
-          <div className="mt-1.5 text-[11px] text-slate-500">No critical CVEs · wp-config not exposed.</div>
+          <div className="mt-1.5 text-[11px] text-slate-500">
+            No critical CVEs · wp-config not exposed.
+          </div>
           <div className="mt-2 flex items-center gap-1 rounded-full border border-slate-200 px-2 py-1">
             <span className="flex-1 text-[11px] text-slate-400">Ask anything…</span>
             <ArrowUp size={12} className="text-blue-600" />
@@ -183,8 +191,13 @@ function Pane({ title, rows, remote = false }: { title: string; rows: number; re
       <div className="py-1">
         {Array.from({ length: rows }).map((_, i) => (
           <div key={i} className="flex items-center gap-2 px-3 py-[5px]">
-            <div className={`h-3 w-3 shrink-0 rounded-[3px] ${remote ? "bg-sky-400/70" : "bg-blue-400/70"}`} />
-            <div className="h-2 rounded bg-slate-200" style={{ width: `${45 + ((i * 13) % 45)}%` }} />
+            <div
+              className={`h-3 w-3 shrink-0 rounded-[3px] ${remote ? "bg-sky-400/70" : "bg-blue-400/70"}`}
+            />
+            <div
+              className="h-2 rounded bg-slate-200"
+              style={{ width: `${45 + ((i * 13) % 45)}%` }}
+            />
           </div>
         ))}
       </div>

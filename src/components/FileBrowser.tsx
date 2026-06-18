@@ -1,5 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronUp, ExternalLink, File, Folder, FolderPlus, FolderUp, RefreshCw, Trash2 } from "lucide-react";
+import {
+  ChevronUp,
+  ExternalLink,
+  File,
+  Folder,
+  FolderPlus,
+  FolderUp,
+  RefreshCw,
+  Trash2,
+} from "lucide-react";
 import type { DirEntry } from "@/lib/types";
 import { formatBytes } from "@/lib/utils";
 import { useSettings } from "@/store/useSettings";
@@ -72,16 +81,37 @@ function extOf(name: string): string {
 
 /** Friendly app name from an app path (drops directory + `.app`/`.exe` suffix). */
 function appLabel(appPath: string): string {
-  const base = appPath.replace(/[/\\]+$/, "").split(/[/\\]/).pop() ?? appPath;
+  const base =
+    appPath
+      .replace(/[/\\]+$/, "")
+      .split(/[/\\]/)
+      .pop() ?? appPath;
   return base.replace(/\.(app|exe|AppImage)$/i, "");
 }
 
 type CtxMenu = { x: number; y: number; entry: DirEntry | null };
 
 export function FileBrowser({
-  title, path, entries, remote, selected, isRefreshing, paneKind,
-  onOpenDir, onNavigateUp, onTransfer, onSelect, onRefresh,
-  onDelete, onRename, onMkdir, onRevealInFinder, onOpenFile, onOpenFileWith, onDropEntry, compareWith,
+  title,
+  path,
+  entries,
+  remote,
+  selected,
+  isRefreshing,
+  paneKind,
+  onOpenDir,
+  onNavigateUp,
+  onTransfer,
+  onSelect,
+  onRefresh,
+  onDelete,
+  onRename,
+  onMkdir,
+  onRevealInFinder,
+  onOpenFile,
+  onOpenFileWith,
+  onDropEntry,
+  compareWith,
   compareThreshold = 0,
 }: FileBrowserProps) {
   const [ctxMenu, setCtxMenu] = useState<CtxMenu | null>(null);
@@ -91,7 +121,10 @@ export function FileBrowser({
   const [sortAsc, setSortAsc] = useState(true);
   const toggleSort = (col: "name" | "size" | "modified") => {
     if (sortBy === col) setSortAsc((a) => !a);
-    else { setSortBy(col); setSortAsc(true); }
+    else {
+      setSortBy(col);
+      setSortAsc(true);
+    }
   };
   const menuRef = useRef<HTMLDivElement>(null);
   const confirmDelete = useSettings((s) => s.confirmDelete);
@@ -176,12 +209,12 @@ export function FileBrowser({
       const payload = JSON.parse(raw) as { kind: PaneKind; entry: DirEntry };
       // Only cross-pane drops transfer (local↔remote); ignore same-pane drops.
       if (payload.kind !== paneKind) onDropEntry(payload.entry);
-    } catch { /* ignore malformed payload */ }
+    } catch {
+      /* ignore malformed payload */
+    }
   };
 
-  const compareMap = compareWith
-    ? new Map(compareWith.map((e) => [e.name, e]))
-    : null;
+  const compareMap = compareWith ? new Map(compareWith.map((e) => [e.name, e])) : null;
 
   const folders = entries.filter((e) => e.kind === "directory").length;
   const files = entries.filter((e) => e.kind !== "directory");
@@ -209,7 +242,9 @@ export function FileBrowser({
   return (
     <section
       className="flex min-w-0 flex-1 flex-col border border-border bg-surface"
-      onContextMenu={(e) => { if (e.target === e.currentTarget) openCtx(e, null); }}
+      onContextMenu={(e) => {
+        if (e.target === e.currentTarget) openCtx(e, null);
+      }}
     >
       <header className="flex items-center gap-2 border-b border-border px-3 py-2">
         <span className="shrink-0 text-xs font-medium text-subtle">{title}</span>
@@ -246,7 +281,10 @@ export function FileBrowser({
 
       <div
         className={`relative flex-1 overflow-auto ${dragOver ? "ring-2 ring-inset ring-accent" : ""}`}
-        onContextMenu={(e) => { e.stopPropagation(); openCtx(e, null); }}
+        onContextMenu={(e) => {
+          e.stopPropagation();
+          openCtx(e, null);
+        }}
         onDragOver={handleDragOver}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
@@ -260,13 +298,37 @@ export function FileBrowser({
             <col className={remote ? "w-12" : "hidden"} />
           </colgroup>
           <thead className="sticky top-0 bg-elevated text-left text-xs text-subtle">
-            <tr>{[
-              <th key="n" className="cursor-pointer select-none px-3 py-2 font-medium hover:text-fg" onClick={() => toggleSort("name")}>Name{sortArrow("name")}</th>,
-              <th key="s" className="cursor-pointer select-none px-3 py-2 text-right font-medium hover:text-fg" onClick={() => toggleSort("size")}>Size{sortArrow("size")}</th>,
-              <th key="m" className="cursor-pointer select-none px-3 py-2 font-medium hover:text-fg" onClick={() => toggleSort("modified")}>Modified{sortArrow("modified")}</th>,
-              <th key="p" className={`px-3 py-2 font-medium ${extraCls}`}>Permissions</th>,
-              <th key="o" className={`px-3 py-2 font-medium ${extraCls}`}>Owner</th>,
-            ]}</tr>
+            <tr>
+              {[
+                <th
+                  key="n"
+                  className="cursor-pointer select-none px-3 py-2 font-medium hover:text-fg"
+                  onClick={() => toggleSort("name")}
+                >
+                  Name{sortArrow("name")}
+                </th>,
+                <th
+                  key="s"
+                  className="cursor-pointer select-none px-3 py-2 text-right font-medium hover:text-fg"
+                  onClick={() => toggleSort("size")}
+                >
+                  Size{sortArrow("size")}
+                </th>,
+                <th
+                  key="m"
+                  className="cursor-pointer select-none px-3 py-2 font-medium hover:text-fg"
+                  onClick={() => toggleSort("modified")}
+                >
+                  Modified{sortArrow("modified")}
+                </th>,
+                <th key="p" className={`px-3 py-2 font-medium ${extraCls}`}>
+                  Permissions
+                </th>,
+                <th key="o" className={`px-3 py-2 font-medium ${extraCls}`}>
+                  Owner
+                </th>,
+              ]}
+            </tr>
           </thead>
           <tbody>
             <ParentRow onNavigateUp={onNavigateUp} onSelect={onSelect} extraCls={extraCls} />
@@ -276,13 +338,18 @@ export function FileBrowser({
                 entry={entry}
                 isSelected={selected === entry.path}
                 extraCls={extraCls}
-                compareCls={compareMap ? COMPARE_CLS[compareEntry(entry, compareMap, compareThreshold)] : ""}
+                compareCls={
+                  compareMap ? COMPARE_CLS[compareEntry(entry, compareMap, compareThreshold)] : ""
+                }
                 onSelect={onSelect}
                 onOpenDir={onOpenDir}
                 onTransfer={onTransfer}
                 enterDirs={enterDirs}
                 transferFiles={transferFiles}
-                onContextMenu={(e) => { e.stopPropagation(); openCtx(e, entry); }}
+                onContextMenu={(e) => {
+                  e.stopPropagation();
+                  openCtx(e, entry);
+                }}
                 onDragStart={(e) => handleDragStart(e, entry)}
               />
             ))}
@@ -344,18 +411,32 @@ export function FileBrowser({
             </>
           )}
           <CtxSep />
-          <CtxItem onClick={() => { setCtxMenu(null); onRefresh?.(); }}>Refresh</CtxItem>
-          <CtxItem onClick={() => { setCtxMenu(null); handleMkdir(); }}>
+          <CtxItem
+            onClick={() => {
+              setCtxMenu(null);
+              onRefresh?.();
+            }}
+          >
+            Refresh
+          </CtxItem>
+          <CtxItem
+            onClick={() => {
+              setCtxMenu(null);
+              handleMkdir();
+            }}
+          >
             <span className="flex items-center gap-1.5">
               <FolderPlus size={11} /> Create directory
             </span>
           </CtxItem>
           {!remote && onRevealInFinder && (
-            <CtxItem onClick={() => {
-              const p = ctxMenu.entry?.path ?? path;
-              setCtxMenu(null);
-              onRevealInFinder(p);
-            }}>
+            <CtxItem
+              onClick={() => {
+                const p = ctxMenu.entry?.path ?? path;
+                setCtxMenu(null);
+                onRevealInFinder(p);
+              }}
+            >
               <span className="flex items-center gap-1.5">
                 <ExternalLink size={11} /> Reveal in Finder
               </span>
@@ -365,10 +446,7 @@ export function FileBrowser({
             <>
               <CtxSep />
               <CtxItem onClick={handleRename}>Rename</CtxItem>
-              <CtxItem
-                onClick={handleDelete}
-                className="text-danger hover:bg-danger/10"
-              >
+              <CtxItem onClick={handleDelete} className="text-danger hover:bg-danger/10">
                 <span className="flex items-center gap-1.5">
                   <Trash2 size={11} /> Delete
                 </span>
@@ -397,18 +475,20 @@ function ParentRow({
       className="cursor-pointer border-b border-border/50 hover:bg-muted"
       onDoubleClick={onNavigateUp}
       onClick={() => onSelect?.(null)}
-    >{[
-      <td key="n" className="px-3 py-1.5 text-subtle">
-        <div className="flex items-center gap-2">
-          <FolderUp size={16} className="shrink-0" />
-          <span>..</span>
-        </div>
-      </td>,
-      <td key="s" />,
-      <td key="m" />,
-      <td key="p" className={extraCls} />,
-      <td key="o" className={extraCls} />,
-    ]}</tr>
+    >
+      {[
+        <td key="n" className="px-3 py-1.5 text-subtle">
+          <div className="flex items-center gap-2">
+            <FolderUp size={16} className="shrink-0" />
+            <span>..</span>
+          </div>
+        </td>,
+        <td key="s" />,
+        <td key="m" />,
+        <td key="p" className={extraCls} />,
+        <td key="o" className={extraCls} />,
+      ]}
+    </tr>
   );
 }
 
@@ -439,8 +519,9 @@ function EntryRow({
 }) {
   const isDir = entry.kind === "directory";
   const onDoubleClick = () => {
-    if (isDir) { if (enterDirs) onOpenDir(entry.path); }
-    else if (transferFiles) onTransfer(entry);
+    if (isDir) {
+      if (enterDirs) onOpenDir(entry.path);
+    } else if (transferFiles) onTransfer(entry);
   };
   return (
     <tr
@@ -451,26 +532,32 @@ function EntryRow({
       onContextMenu={onContextMenu}
       onDragStart={onDragStart}
       title={isDir ? "Double-click to open · drag to transfer" : "Double-click or drag to transfer"}
-    >{[
-      <td key="n" className="px-3 py-1.5 text-fg">
-        <div className="flex min-w-0 items-center gap-2">
-          {isDir
-            ? <Folder size={15} className="shrink-0 text-accent" />
-            : <File size={15} className="shrink-0 text-subtle" />}
-          <span className="truncate">{entry.name}</span>
-        </div>
-      </td>,
-      <td key="s" className="px-3 py-1.5 text-right text-subtle">
-        {isDir ? null : formatBytes(entry.size)}
-      </td>,
-      <td key="m" className="px-3 py-1.5 text-subtle">{entry.modified ?? null}</td>,
-      <td key="p" className={`px-3 py-1.5 font-mono text-xs text-subtle ${extraCls}`}>
-        {entry.permissions ?? null}
-      </td>,
-      <td key="o" className={`px-3 py-1.5 text-subtle ${extraCls}`}>
-        {entry.owner ?? null}
-      </td>,
-    ]}</tr>
+    >
+      {[
+        <td key="n" className="px-3 py-1.5 text-fg">
+          <div className="flex min-w-0 items-center gap-2">
+            {isDir ? (
+              <Folder size={15} className="shrink-0 text-accent" />
+            ) : (
+              <File size={15} className="shrink-0 text-subtle" />
+            )}
+            <span className="truncate">{entry.name}</span>
+          </div>
+        </td>,
+        <td key="s" className="px-3 py-1.5 text-right text-subtle">
+          {isDir ? null : formatBytes(entry.size)}
+        </td>,
+        <td key="m" className="px-3 py-1.5 text-subtle">
+          {entry.modified ?? null}
+        </td>,
+        <td key="p" className={`px-3 py-1.5 font-mono text-xs text-subtle ${extraCls}`}>
+          {entry.permissions ?? null}
+        </td>,
+        <td key="o" className={`px-3 py-1.5 text-subtle ${extraCls}`}>
+          {entry.owner ?? null}
+        </td>,
+      ]}
+    </tr>
   );
 }
 

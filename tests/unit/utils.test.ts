@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { cn, formatBytes, formatLogTime, formatSpeed, logDateKey, scopeColor, setByteFormat } from "@/lib/utils";
+import {
+  cn,
+  formatBytes,
+  formatLogTime,
+  formatSpeed,
+  logDateKey,
+  scopeColor,
+  setByteFormat,
+} from "@/lib/utils";
 
 describe("formatBytes (binary default)", () => {
   it("formats zero", () => expect(formatBytes(0)).toBe("0 B"));

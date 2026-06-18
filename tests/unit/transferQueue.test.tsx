@@ -18,14 +18,30 @@ const transfer: Transfer = {
 
 describe("TransferQueue", () => {
   it("renders an empty state", () => {
-    render(<TransferQueue transfers={[]} onPause={vi.fn()} onResume={vi.fn()} onCancel={vi.fn()} onRetry={vi.fn()} onClearCompleted={vi.fn()} />);
+    render(
+      <TransferQueue
+        transfers={[]}
+        onPause={vi.fn()}
+        onResume={vi.fn()}
+        onCancel={vi.fn()}
+        onRetry={vi.fn()}
+        onClearCompleted={vi.fn()}
+      />,
+    );
     expect(screen.getByText(/Queue is empty/i)).toBeInTheDocument();
   });
 
   it("renders a transfer with 50% progress and fires cancel", () => {
     const onCancel = vi.fn();
     render(
-      <TransferQueue transfers={[transfer]} onPause={vi.fn()} onResume={vi.fn()} onCancel={onCancel} onRetry={vi.fn()} onClearCompleted={vi.fn()} />,
+      <TransferQueue
+        transfers={[transfer]}
+        onPause={vi.fn()}
+        onResume={vi.fn()}
+        onCancel={onCancel}
+        onRetry={vi.fn()}
+        onClearCompleted={vi.fn()}
+      />,
     );
     expect(screen.getByText("video.mp4")).toBeInTheDocument();
     expect(screen.getByText("50%")).toBeInTheDocument();

@@ -1,7 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Bookmark, Check, Download, Folder, FolderOpen, ListTree, Loader2, Pencil, Plug, Plus, ScrollText,
-  Search, Settings, Trash2, Unplug, X,
+  Bookmark,
+  Check,
+  Download,
+  Folder,
+  FolderOpen,
+  ListTree,
+  Loader2,
+  Pencil,
+  Plug,
+  Plus,
+  ScrollText,
+  Search,
+  Settings,
+  Trash2,
+  Unplug,
+  X,
 } from "lucide-react";
 import { useStore } from "@/store/useStore";
 import { useSettings } from "@/store/useSettings";
@@ -13,21 +27,21 @@ import { Input } from "./ui/Input";
 // UI only shows sftp and ftp; "ftps" sites are loaded as ftp + encryption.
 const PROTOCOLS: { value: Protocol; label: string; defaultPort: number }[] = [
   { value: "sftp", label: "SFTP – SSH File Transfer", defaultPort: 22 },
-  { value: "ftp",  label: "FTP – File Transfer",      defaultPort: 21 },
+  { value: "ftp", label: "FTP – File Transfer", defaultPort: 21 },
 ];
 
 const FTP_ENCRYPTION: { value: FtpEncryption; label: string; port: number }[] = [
   { value: "explicit_tls_if_available", label: "Use explicit FTP over TLS if available", port: 21 },
-  { value: "require_explicit_tls",      label: "Require explicit FTP over TLS",          port: 21 },
-  { value: "require_implicit_tls",      label: "Require implicit FTP over TLS",          port: 990 },
-  { value: "plain",                     label: "Only use plain FTP (insecure) ⚠",        port: 21 },
+  { value: "require_explicit_tls", label: "Require explicit FTP over TLS", port: 21 },
+  { value: "require_implicit_tls", label: "Require implicit FTP over TLS", port: 990 },
+  { value: "plain", label: "Only use plain FTP (insecure) ⚠", port: 21 },
 ];
 
 const LOGON_TYPES: { value: LogonType; label: string; protocols: Protocol[] }[] = [
-  { value: "normal",      label: "Normal",      protocols: ["sftp", "ftp", "ftps"] },
-  { value: "anonymous",   label: "Anonymous",   protocols: ["ftp", "ftps"] },
+  { value: "normal", label: "Normal", protocols: ["sftp", "ftp", "ftps"] },
+  { value: "anonymous", label: "Anonymous", protocols: ["ftp", "ftps"] },
   { value: "interactive", label: "Interactive", protocols: ["sftp"] },
-  { value: "key",         label: "Key file",    protocols: ["sftp"] },
+  { value: "key", label: "Key file", protocols: ["sftp"] },
 ];
 
 type EditState = {
@@ -54,11 +68,23 @@ type EditState = {
 
 function blankEdit(): EditState {
   return {
-    siteId: null, name: "", protocol: "sftp", logonType: "normal",
-    ftpEncryption: "explicit_tls_if_available", ftpMode: "default",
-    host: "", port: 22, username: "", password: "", keyPath: "",
-    defaultLocalPath: "", defaultRemotePath: "", connectionLimit: "",
-    timezoneOffsetMinutes: "", encoding: "auto", bypassProxy: false,
+    siteId: null,
+    name: "",
+    protocol: "sftp",
+    logonType: "normal",
+    ftpEncryption: "explicit_tls_if_available",
+    ftpMode: "default",
+    host: "",
+    port: 22,
+    username: "",
+    password: "",
+    keyPath: "",
+    defaultLocalPath: "",
+    defaultRemotePath: "",
+    connectionLimit: "",
+    timezoneOffsetMinutes: "",
+    encoding: "auto",
+    bypassProxy: false,
   };
 }
 
@@ -69,14 +95,21 @@ function siteToEdit(s: Site): EditState {
     s.ftpEncryption ??
     (s.protocol === "ftps" ? "require_explicit_tls" : "explicit_tls_if_available");
   return {
-    siteId: s.id, name: s.name, protocol, logonType: s.logonType,
-    ftpEncryption, ftpMode: s.ftpMode ?? "default",
-    host: s.host, port: s.port, username: s.username,
-    password: "", keyPath: s.privateKeyPath ?? "",
-    defaultLocalPath: s.defaultLocalPath ?? "", defaultRemotePath: s.defaultRemotePath ?? "",
+    siteId: s.id,
+    name: s.name,
+    protocol,
+    logonType: s.logonType,
+    ftpEncryption,
+    ftpMode: s.ftpMode ?? "default",
+    host: s.host,
+    port: s.port,
+    username: s.username,
+    password: "",
+    keyPath: s.privateKeyPath ?? "",
+    defaultLocalPath: s.defaultLocalPath ?? "",
+    defaultRemotePath: s.defaultRemotePath ?? "",
     connectionLimit: s.connectionLimit ? String(s.connectionLimit) : "",
-    timezoneOffsetMinutes:
-      s.timezoneOffsetMinutes != null ? String(s.timezoneOffsetMinutes) : "",
+    timezoneOffsetMinutes: s.timezoneOffsetMinutes != null ? String(s.timezoneOffsetMinutes) : "",
     encoding: s.encoding === "utf8" ? "utf8" : "auto",
     bypassProxy: s.bypassProxy ?? false,
   };
@@ -84,7 +117,10 @@ function siteToEdit(s: Site): EditState {
 
 export interface SidebarProps {
   onConnectSite: (site: Site) => void;
-  onSaveSite: (site: Omit<Site, "id" | "createdAt" | "updatedAt" | "hasStoredSecret"> & { id?: string }, password?: string) => Promise<void>;
+  onSaveSite: (
+    site: Omit<Site, "id" | "createdAt" | "updatedAt" | "hasStoredSecret"> & { id?: string },
+    password?: string,
+  ) => Promise<void>;
   onDeleteSite: (siteId: string) => Promise<void>;
   /** Import sites from a FileZilla sitemanager.xml export. */
   onImportFileZilla: () => void;
@@ -102,9 +138,16 @@ export interface SidebarProps {
 type ContextMenuState = { site: Site; x: number; y: number };
 
 export function Sidebar({
-  onConnectSite, onSaveSite, onDeleteSite, onImportFileZilla,
-  onDisconnect, connectedSiteSessions, busySiteId,
-  onShowQueue, onShowLogs, onOpenSettings,
+  onConnectSite,
+  onSaveSite,
+  onDeleteSite,
+  onImportFileZilla,
+  onDisconnect,
+  connectedSiteSessions,
+  busySiteId,
+  onShowQueue,
+  onShowLogs,
+  onOpenSettings,
 }: SidebarProps) {
   const sites = useStore((s) => s.sites);
   const editSiteRequest = useStore((s) => s.editSiteRequest);
@@ -130,9 +173,33 @@ export function Sidebar({
       active: bookmarksOnly,
       onClick: () => setBookmarksOnly((v) => !v),
     },
-    { icon: ListTree, label: "Transfer Queue", active: false, onClick: () => { setBookmarksOnly(false); onShowQueue(); } },
-    { icon: ScrollText, label: "Logs", active: false, onClick: () => { setBookmarksOnly(false); onShowLogs(); } },
-    { icon: Settings, label: "Settings", active: false, onClick: () => { setBookmarksOnly(false); onOpenSettings(); } },
+    {
+      icon: ListTree,
+      label: "Transfer Queue",
+      active: false,
+      onClick: () => {
+        setBookmarksOnly(false);
+        onShowQueue();
+      },
+    },
+    {
+      icon: ScrollText,
+      label: "Logs",
+      active: false,
+      onClick: () => {
+        setBookmarksOnly(false);
+        onShowLogs();
+      },
+    },
+    {
+      icon: Settings,
+      label: "Settings",
+      active: false,
+      onClick: () => {
+        setBookmarksOnly(false);
+        onOpenSettings();
+      },
+    },
   ];
 
   useEffect(() => {
@@ -148,7 +215,10 @@ export function Sidebar({
   useEffect(() => {
     if (!editSiteRequest) return;
     const site = sites.find((s) => s.id === editSiteRequest);
-    if (site) { setDeleting(null); setEditing(siteToEdit(site)); }
+    if (site) {
+      setDeleting(null);
+      setEditing(siteToEdit(site));
+    }
     requestEditSite(null);
   }, [editSiteRequest, sites, requestEditSite]);
 
@@ -184,7 +254,10 @@ export function Sidebar({
       const sessionId = connectedSiteSessions[deleting];
       if (sessionId && disconnectOnDelete) onDisconnect(sessionId, deleting);
       await onDeleteSite(deleting);
-    } finally { setSaving(false); setDeleting(null); }
+    } finally {
+      setSaving(false);
+      setDeleting(null);
+    }
   };
 
   const submitEdit = async () => {
@@ -199,7 +272,7 @@ export function Sidebar({
           logonType: editing.logonType,
           ftpEncryption: editing.protocol === "ftp" ? editing.ftpEncryption : undefined,
           ftpMode: editing.protocol === "ftp" ? editing.ftpMode : undefined,
-          privateKeyPath: editing.logonType === "key" ? (editing.keyPath || undefined) : undefined,
+          privateKeyPath: editing.logonType === "key" ? editing.keyPath || undefined : undefined,
           defaultLocalPath: editing.defaultLocalPath || undefined,
           defaultRemotePath: editing.defaultRemotePath || undefined,
           connectionLimit: editing.connectionLimit ? Number(editing.connectionLimit) : undefined,
@@ -216,13 +289,17 @@ export function Sidebar({
         editing.password || undefined,
       );
       setEditing(null);
-    } finally { setSaving(false); }
+    } finally {
+      setSaving(false);
+    }
   };
 
   const onProtoChange = (p: Protocol) => {
     if (!editing) return;
-    const defaultPort = p === "sftp" ? 22
-      : FTP_ENCRYPTION.find((e) => e.value === editing.ftpEncryption)?.port ?? 21;
+    const defaultPort =
+      p === "sftp"
+        ? 22
+        : (FTP_ENCRYPTION.find((e) => e.value === editing.ftpEncryption)?.port ?? 21);
     const validLogon = LOGON_TYPES.filter((l) => l.protocols.includes(p));
     const logonType = validLogon.find((l) => l.value === editing.logonType)
       ? editing.logonType
@@ -248,8 +325,8 @@ export function Sidebar({
 
   const showUser = editing?.logonType !== "anonymous";
   const showPass = editing?.logonType === "normal" || editing?.logonType === "interactive";
-  const showKey  = editing?.logonType === "key";
-  const showEnc  = editing?.protocol === "ftp";
+  const showKey = editing?.logonType === "key";
+  const showEnc = editing?.protocol === "ftp";
   const availableLogonTypes = editing
     ? LOGON_TYPES.filter((l) => l.protocols.includes(editing.protocol))
     : [];
@@ -269,7 +346,10 @@ export function Sidebar({
               <Download size={14} />
             </button>
             <button
-              onClick={() => { setDeleting(null); setEditing(blankEdit()); }}
+              onClick={() => {
+                setDeleting(null);
+                setEditing(blankEdit());
+              }}
               className="rounded p-0.5 text-subtle hover:bg-muted hover:text-fg"
               title="New site"
             >
@@ -303,7 +383,9 @@ export function Sidebar({
             onMouseDown={(e) => e.stopPropagation()}
           >
             <header className="flex items-center justify-between border-b border-border px-4 py-3">
-              <h2 className="text-sm font-semibold text-fg">{editing.siteId ? "Edit site" : "New site"}</h2>
+              <h2 className="text-sm font-semibold text-fg">
+                {editing.siteId ? "Edit site" : "New site"}
+              </h2>
               <button
                 onClick={cancelEdit}
                 title="Close"
@@ -332,7 +414,9 @@ export function Sidebar({
                     className="h-7 w-full rounded border border-border bg-surface px-1.5 text-xs text-fg focus:outline-none focus:ring-1 focus:ring-accent"
                   >
                     {PROTOCOLS.map((p) => (
-                      <option key={p.value} value={p.value}>{p.label}</option>
+                      <option key={p.value} value={p.value}>
+                        {p.label}
+                      </option>
                     ))}
                   </select>
                 </FormField>
@@ -350,11 +434,15 @@ export function Sidebar({
                 <FormField label="Logon Type">
                   <select
                     value={editing.logonType}
-                    onChange={(e) => setEditing({ ...editing, logonType: e.target.value as LogonType })}
+                    onChange={(e) =>
+                      setEditing({ ...editing, logonType: e.target.value as LogonType })
+                    }
                     className="h-7 w-full rounded border border-border bg-surface px-1.5 text-xs text-fg focus:outline-none focus:ring-1 focus:ring-accent"
                   >
                     {availableLogonTypes.map((l) => (
-                      <option key={l.value} value={l.value}>{l.label}</option>
+                      <option key={l.value} value={l.value}>
+                        {l.label}
+                      </option>
                     ))}
                   </select>
                 </FormField>
@@ -367,7 +455,9 @@ export function Sidebar({
                       className="h-7 w-full rounded border border-border bg-surface px-1.5 text-xs text-fg focus:outline-none focus:ring-1 focus:ring-accent"
                     >
                       {FTP_ENCRYPTION.map((e) => (
-                        <option key={e.value} value={e.value}>{e.label}</option>
+                        <option key={e.value} value={e.value}>
+                          {e.label}
+                        </option>
                       ))}
                     </select>
                   </FormField>
@@ -377,7 +467,9 @@ export function Sidebar({
                   <FormField label="Transfer mode">
                     <select
                       value={editing.ftpMode}
-                      onChange={(e) => setEditing({ ...editing, ftpMode: e.target.value as FtpMode })}
+                      onChange={(e) =>
+                        setEditing({ ...editing, ftpMode: e.target.value as FtpMode })
+                      }
                       className="h-7 w-full rounded border border-border bg-surface px-1.5 text-xs text-fg focus:outline-none focus:ring-1 focus:ring-accent"
                     >
                       <option value="default">Default</option>
@@ -499,7 +591,9 @@ export function Sidebar({
                   <select
                     className="h-7 w-full rounded border border-border bg-bg px-2 text-xs text-fg focus:outline-none focus:ring-1 focus:ring-accent"
                     value={editing.encoding}
-                    onChange={(e) => setEditing({ ...editing, encoding: e.target.value as "auto" | "utf8" })}
+                    onChange={(e) =>
+                      setEditing({ ...editing, encoding: e.target.value as "auto" | "utf8" })
+                    }
                   >
                     <option value="auto">Autodetect</option>
                     <option value="utf8">Force UTF-8</option>
@@ -513,7 +607,9 @@ export function Sidebar({
                     min={-1440}
                     max={1440}
                     value={editing.timezoneOffsetMinutes}
-                    onChange={(e) => setEditing({ ...editing, timezoneOffsetMinutes: e.target.value })}
+                    onChange={(e) =>
+                      setEditing({ ...editing, timezoneOffsetMinutes: e.target.value })
+                    }
                     placeholder="0"
                   />
                 </FormField>
@@ -595,18 +691,31 @@ export function Sidebar({
               ) : (
                 <div
                   className="group relative mb-0.5 flex items-center rounded-md hover:bg-muted"
-                  onContextMenu={(e) => { e.preventDefault(); setCtxMenu({ site, x: e.clientX, y: e.clientY }); }}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    setCtxMenu({ site, x: e.clientX, y: e.clientY });
+                  }}
                 >
                   <button
-                    onClick={() => { if (!busy) onConnectSite(site); }}
+                    onClick={() => {
+                      if (!busy) onConnectSite(site);
+                    }}
                     disabled={busy}
                     className="flex min-w-0 flex-1 items-center gap-2 px-2 py-2 text-left disabled:cursor-wait"
-                    title={busy ? "Connecting…" : connected ? `Connected to ${site.host}` : `Connect to ${site.host}`}
+                    title={
+                      busy
+                        ? "Connecting…"
+                        : connected
+                          ? `Connected to ${site.host}`
+                          : `Connect to ${site.host}`
+                    }
                   >
                     <span className="relative shrink-0">
-                      {busy
-                        ? <Loader2 size={14} className="animate-spin text-accent" />
-                        : <Folder size={14} className="text-subtle" />}
+                      {busy ? (
+                        <Loader2 size={14} className="animate-spin text-accent" />
+                      ) : (
+                        <Folder size={14} className="text-subtle" />
+                      )}
                       {connected && !busy && (
                         <span className="absolute -right-1 -top-1 h-1.5 w-1.5 rounded-full bg-green-500 ring-1 ring-surface" />
                       )}
@@ -614,20 +723,29 @@ export function Sidebar({
                     <span className="min-w-0 flex-1 overflow-hidden">
                       <span className="flex items-center gap-1">
                         <span className="truncate text-xs font-medium text-fg">{site.name}</span>
-                        {bookmarked && <Bookmark size={10} className="shrink-0 fill-accent text-accent" />}
+                        {bookmarked && (
+                          <Bookmark size={10} className="shrink-0 fill-accent text-accent" />
+                        )}
                       </span>
                       <span className="block truncate text-[10px] text-subtle">
-                        {busy ? "Connecting…" : `${site.protocol === "ftps" ? "FTP" : site.protocol.toUpperCase()} · ${site.host}`}
+                        {busy
+                          ? "Connecting…"
+                          : `${site.protocol === "ftps" ? "FTP" : site.protocol.toUpperCase()} · ${site.host}`}
                       </span>
                     </span>
                   </button>
 
                   {/* Action cluster — solid panel so it reads clearly over the row */}
-                  <div className={`absolute inset-y-0 right-1 flex items-center transition-opacity ${busy ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}>
+                  <div
+                    className={`absolute inset-y-0 right-1 flex items-center transition-opacity ${busy ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+                  >
                     <div className="flex items-center gap-0.5 rounded-md border border-border bg-elevated px-0.5 shadow-sm">
                       <RowBtn
                         title={bookmarked ? "Remove bookmark" : "Bookmark site"}
-                        onClick={(e) => { e.stopPropagation(); toggleBookmark(site.id); }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleBookmark(site.id);
+                        }}
                         className={bookmarked ? "text-accent" : ""}
                       >
                         <Bookmark size={12} className={bookmarked ? "fill-accent" : ""} />
@@ -639,7 +757,10 @@ export function Sidebar({
                       ) : connected ? (
                         <RowBtn
                           title="Disconnect"
-                          onClick={(e) => { e.stopPropagation(); onDisconnect(sessionId, site.id); }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onDisconnect(sessionId, site.id);
+                          }}
                           className="hover:text-danger"
                         >
                           <Unplug size={12} />
@@ -647,7 +768,10 @@ export function Sidebar({
                       ) : (
                         <RowBtn
                           title="Connect"
-                          onClick={(e) => { e.stopPropagation(); onConnectSite(site); }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onConnectSite(site);
+                          }}
                         >
                           <Plug size={12} />
                         </RowBtn>
@@ -655,7 +779,11 @@ export function Sidebar({
                       <RowBtn title="Edit" onClick={(e) => startEdit(site, e)}>
                         <Pencil size={12} />
                       </RowBtn>
-                      <RowBtn title="Delete" onClick={(e) => startDelete(site, e)} className="hover:text-danger">
+                      <RowBtn
+                        title="Delete"
+                        onClick={(e) => startDelete(site, e)}
+                        className="hover:text-danger"
+                      >
                         <Trash2 size={12} />
                       </RowBtn>
                     </div>
@@ -666,53 +794,72 @@ export function Sidebar({
           );
         })}
 
-        {ctxMenu && (() => {
-          const sessionId = connectedSiteSessions[ctxMenu.site.id];
-          const bookmarked = isBookmarked(ctxMenu.site.id);
-          return (
-            <div
-              ref={ctxRef}
-              className="fixed z-50 min-w-40 rounded-md border border-border bg-surface py-1 shadow-lg"
-              style={{ top: ctxMenu.y, left: ctxMenu.x }}
-            >
-              {sessionId ? (
-                <button
-                  className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-danger hover:bg-danger/10"
-                  onClick={() => { onDisconnect(sessionId, ctxMenu.site.id); setCtxMenu(null); }}
-                >
-                  <Unplug size={12} /> Disconnect
-                </button>
-              ) : (
+        {ctxMenu &&
+          (() => {
+            const sessionId = connectedSiteSessions[ctxMenu.site.id];
+            const bookmarked = isBookmarked(ctxMenu.site.id);
+            return (
+              <div
+                ref={ctxRef}
+                className="fixed z-50 min-w-40 rounded-md border border-border bg-surface py-1 shadow-lg"
+                style={{ top: ctxMenu.y, left: ctxMenu.x }}
+              >
+                {sessionId ? (
+                  <button
+                    className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-danger hover:bg-danger/10"
+                    onClick={() => {
+                      onDisconnect(sessionId, ctxMenu.site.id);
+                      setCtxMenu(null);
+                    }}
+                  >
+                    <Unplug size={12} /> Disconnect
+                  </button>
+                ) : (
+                  <button
+                    className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-fg hover:bg-muted"
+                    onClick={() => {
+                      onConnectSite(ctxMenu.site);
+                      setCtxMenu(null);
+                    }}
+                  >
+                    <Plug size={12} className="text-subtle" /> Connect
+                  </button>
+                )}
                 <button
                   className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-fg hover:bg-muted"
-                  onClick={() => { onConnectSite(ctxMenu.site); setCtxMenu(null); }}
+                  onClick={() => {
+                    toggleBookmark(ctxMenu.site.id);
+                    setCtxMenu(null);
+                  }}
                 >
-                  <Plug size={12} className="text-subtle" /> Connect
+                  <Bookmark
+                    size={12}
+                    className={bookmarked ? "fill-accent text-accent" : "text-subtle"}
+                  />
+                  {bookmarked ? "Remove bookmark" : "Bookmark"}
                 </button>
-              )}
-              <button
-                className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-fg hover:bg-muted"
-                onClick={() => { toggleBookmark(ctxMenu.site.id); setCtxMenu(null); }}
-              >
-                <Bookmark size={12} className={bookmarked ? "fill-accent text-accent" : "text-subtle"} />
-                {bookmarked ? "Remove bookmark" : "Bookmark"}
-              </button>
-              <button
-                className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-fg hover:bg-muted"
-                onClick={(e) => { startEdit(ctxMenu.site, e); setCtxMenu(null); }}
-              >
-                <Pencil size={12} className="text-subtle" /> Edit
-              </button>
-              <div className="my-1 border-t border-border" />
-              <button
-                className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-danger hover:bg-danger/10"
-                onClick={(e) => { startDelete(ctxMenu.site, e); setCtxMenu(null); }}
-              >
-                <Trash2 size={12} /> Delete
-              </button>
-            </div>
-          );
-        })()}
+                <button
+                  className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-fg hover:bg-muted"
+                  onClick={(e) => {
+                    startEdit(ctxMenu.site, e);
+                    setCtxMenu(null);
+                  }}
+                >
+                  <Pencil size={12} className="text-subtle" /> Edit
+                </button>
+                <div className="my-1 border-t border-border" />
+                <button
+                  className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-danger hover:bg-danger/10"
+                  onClick={(e) => {
+                    startDelete(ctxMenu.site, e);
+                    setCtxMenu(null);
+                  }}
+                >
+                  <Trash2 size={12} /> Delete
+                </button>
+              </div>
+            );
+          })()}
       </div>
 
       {/* Nav */}
@@ -733,7 +880,10 @@ export function Sidebar({
 }
 
 function RowBtn({
-  children, title, onClick, className = "",
+  children,
+  title,
+  onClick,
+  className = "",
 }: {
   children: React.ReactNode;
   title: string;

@@ -20,7 +20,9 @@ export interface CertTrustDialogProps {
 export function CertTrustDialog({ prompt, onResolve }: CertTrustDialogProps) {
   useEffect(() => {
     if (!prompt) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onResolve(false); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onResolve(false);
+    };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [prompt, onResolve]);
@@ -51,8 +53,8 @@ export function CertTrustDialog({ prompt, onResolve }: CertTrustDialogProps) {
 
         <div className="flex flex-col gap-3 px-4 py-3 text-xs">
           <p className="text-fg">
-            The server's TLS certificate for{" "}
-            <span className="font-medium">{prompt.host}</span> could not be verified.
+            The server's TLS certificate for <span className="font-medium">{prompt.host}</span>{" "}
+            could not be verified.
           </p>
 
           <div className="rounded-md border border-border bg-bg px-3 py-2">
@@ -61,10 +63,9 @@ export function CertTrustDialog({ prompt, onResolve }: CertTrustDialogProps) {
           </div>
 
           <p className="text-subtle">
-            This usually means a self-signed certificate or a hostname mismatch. Only continue
-            if you trust this server and your network — trusting bypasses both certificate and
-            hostname verification, which leaves the connection open to interception on a hostile
-            network.
+            This usually means a self-signed certificate or a hostname mismatch. Only continue if
+            you trust this server and your network — trusting bypasses both certificate and hostname
+            verification, which leaves the connection open to interception on a hostile network.
           </p>
 
           <p className="rounded-md border border-warning/30 bg-warning/5 px-3 py-2 text-[11px] text-fg">

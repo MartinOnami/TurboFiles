@@ -20,9 +20,7 @@ export function formatBytes(bytes: number, decimals = 1): string {
   if (bytes === 0) return "0 B";
   const binary = byteFormat === "binary";
   const k = binary ? 1024 : 1000;
-  const units = binary
-    ? ["B", "KiB", "MiB", "GiB", "TiB"]
-    : ["B", "KB", "MB", "GB", "TB"];
+  const units = binary ? ["B", "KiB", "MiB", "GiB", "TiB"] : ["B", "KB", "MB", "GB", "TB"];
   const i = Math.min(units.length - 1, Math.floor(Math.log(bytes) / Math.log(k)));
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(decimals))} ${units[i]}`;
 }
@@ -69,7 +67,9 @@ export function logDateLabel(ts?: string): string {
   const d = new Date(ts ?? "");
   if (isNaN(d.getTime())) return "Earlier";
   const sameDay = (a: Date, b: Date) =>
-    a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate();
   const today = new Date();
   if (sameDay(d, today)) return "Today";
   const yesterday = new Date(today);
@@ -80,8 +80,14 @@ export function logDateLabel(ts?: string): string {
 
 /** A deterministic accent color for a session scope (so each site reads distinctly). */
 const SCOPE_PALETTE = [
-  "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6",
-  "#ec4899", "#14b8a6", "#ef4444", "#6366f1",
+  "#3b82f6",
+  "#10b981",
+  "#f59e0b",
+  "#8b5cf6",
+  "#ec4899",
+  "#14b8a6",
+  "#ef4444",
+  "#6366f1",
 ];
 export function scopeColor(scope: string): string {
   let h = 0;

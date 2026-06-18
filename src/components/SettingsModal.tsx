@@ -1,5 +1,18 @@
 import { useEffect, useState } from "react";
-import { FileText, Monitor, ArrowDownUp, Download, Info, Moon, Pencil, Plug, ScrollText, Sparkles, Sun, X } from "lucide-react";
+import {
+  FileText,
+  Monitor,
+  ArrowDownUp,
+  Download,
+  Info,
+  Moon,
+  Pencil,
+  Plug,
+  ScrollText,
+  Sparkles,
+  Sun,
+  X,
+} from "lucide-react";
 import { useTheme, type Theme } from "@/lib/theme";
 import { useSettings } from "@/store/useSettings";
 import { api, isTauri } from "@/lib/api";
@@ -46,7 +59,9 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [open, onClose]);
@@ -154,19 +169,28 @@ function InterfacePanel() {
       <SelectField
         label="File size format"
         value={filesizeFormat}
-        options={[{ value: "binary", label: "Binary (KiB, MiB)" }, { value: "decimal", label: "Decimal (KB, MB)" }]}
+        options={[
+          { value: "binary", label: "Binary (KiB, MiB)" },
+          { value: "decimal", label: "Decimal (KB, MB)" },
+        ]}
         onChange={(v) => set("filesizeFormat", v as "binary" | "decimal")}
       />
       <SelectField
         label="Double-click a file"
         value={doubleClickFile}
-        options={[{ value: "transfer", label: "Transfer" }, { value: "none", label: "Do nothing" }]}
+        options={[
+          { value: "transfer", label: "Transfer" },
+          { value: "none", label: "Do nothing" },
+        ]}
         onChange={(v) => set("doubleClickFile", v as "transfer" | "none")}
       />
       <SelectField
         label="Double-click a folder"
         value={doubleClickDir}
-        options={[{ value: "enter", label: "Enter directory" }, { value: "none", label: "Do nothing" }]}
+        options={[
+          { value: "enter", label: "Enter directory" },
+          { value: "none", label: "Do nothing" },
+        ]}
         onChange={(v) => set("doubleClickDir", v as "enter" | "none")}
       />
       <Toggle
@@ -227,8 +251,16 @@ function InterfacePanel() {
 }
 
 function SelectField({
-  label, value, options, onChange,
-}: { label: string; value: string; options: { value: string; label: string }[]; onChange: (v: string) => void }) {
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  options: { value: string; label: string }[];
+  onChange: (v: string) => void;
+}) {
   return (
     <label className="flex items-center justify-between gap-3 rounded-md border border-border px-3 py-2.5">
       <span className="text-xs font-medium text-fg">{label}</span>
@@ -237,7 +269,11 @@ function SelectField({
         onChange={(e) => onChange(e.target.value)}
         className="h-7 rounded border border-border bg-bg px-2 text-xs text-fg focus:outline-none focus:ring-1 focus:ring-accent"
       >
-        {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+        {options.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
+        ))}
       </select>
     </label>
   );
@@ -266,23 +302,31 @@ function ConnectionPanel() {
       <NumberField
         label="Timeout (seconds)"
         hint="Give up establishing a connection after this many seconds (10–9999, 0 to disable)."
-        value={connectionTimeout} min={0} max={9999}
+        value={connectionTimeout}
+        min={0}
+        max={9999}
         onChange={(v) => set("connectionTimeout", v)}
       />
       <NumberField
         label="Maximum retries"
         hint="How many times to retry a failed connection (not authentication)."
-        value={connectionRetries} min={0} max={99}
+        value={connectionRetries}
+        min={0}
+        max={99}
         onChange={(v) => set("connectionRetries", v)}
       />
       <NumberField
         label="Delay between retries (seconds)"
         hint="Wait this long before retrying a failed connection."
-        value={retryDelay} min={0} max={999}
+        value={retryDelay}
+        min={0}
+        max={999}
         onChange={(v) => set("retryDelay", v)}
       />
 
-      <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-subtle">FTPS / SFTP</p>
+      <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-subtle">
+        FTPS / SFTP
+      </p>
       <SelectField
         label="Minimum TLS version"
         value={minTlsVersion}
@@ -335,7 +379,9 @@ function ConnectionPanel() {
       />
       <div className="flex gap-2">
         <label className="flex flex-1 flex-col gap-1">
-          <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">FTP proxy (USER user@host)</span>
+          <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">
+            FTP proxy (USER user@host)
+          </span>
           <input
             value={ftpProxyHost}
             onChange={(e) => set("ftpProxyHost", e.target.value)}
@@ -347,7 +393,10 @@ function ConnectionPanel() {
           <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">Port</span>
           <input
             value={String(ftpProxyPort)}
-            onChange={(e) => { const n = parseInt(e.target.value.replace(/\D/g, ""), 10); set("ftpProxyPort", isNaN(n) ? 0 : n); }}
+            onChange={(e) => {
+              const n = parseInt(e.target.value.replace(/\D/g, ""), 10);
+              set("ftpProxyPort", isNaN(n) ? 0 : n);
+            }}
             className="h-7 rounded border border-border bg-bg px-2 text-xs text-fg focus:outline-none focus:ring-1 focus:ring-accent"
           />
         </label>
@@ -369,7 +418,9 @@ function ConnectionPanel() {
         <>
           <div className="flex gap-2">
             <label className="flex flex-1 flex-col gap-1">
-              <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">Proxy host</span>
+              <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">
+                Proxy host
+              </span>
               <input
                 value={proxyHost}
                 onChange={(e) => set("proxyHost", e.target.value)}
@@ -378,17 +429,24 @@ function ConnectionPanel() {
               />
             </label>
             <label className="flex w-20 flex-col gap-1">
-              <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">Port</span>
+              <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">
+                Port
+              </span>
               <input
                 value={String(proxyPort)}
-                onChange={(e) => { const n = parseInt(e.target.value.replace(/\D/g, ""), 10); set("proxyPort", isNaN(n) ? 0 : n); }}
+                onChange={(e) => {
+                  const n = parseInt(e.target.value.replace(/\D/g, ""), 10);
+                  set("proxyPort", isNaN(n) ? 0 : n);
+                }}
                 className="h-7 rounded border border-border bg-bg px-2 text-xs text-fg focus:outline-none focus:ring-1 focus:ring-accent"
               />
             </label>
           </div>
           <div className="flex gap-2">
             <label className="flex flex-1 flex-col gap-1">
-              <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">Proxy user</span>
+              <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">
+                Proxy user
+              </span>
               <input
                 value={proxyUser}
                 onChange={(e) => set("proxyUser", e.target.value)}
@@ -397,7 +455,9 @@ function ConnectionPanel() {
               />
             </label>
             <label className="flex flex-1 flex-col gap-1">
-              <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">Proxy password</span>
+              <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">
+                Proxy password
+              </span>
               <input
                 type="password"
                 value={proxyPass}
@@ -408,7 +468,8 @@ function ConnectionPanel() {
             </label>
           </div>
           <p className="text-[11px] text-subtle">
-            The proxy password is kept in memory only and is never written to disk; you'll re-enter it after restarting.
+            The proxy password is kept in memory only and is never written to disk; you'll re-enter
+            it after restarting.
           </p>
         </>
       )}
@@ -450,7 +511,9 @@ function FileListsPanel() {
         <NumberField
           label="Size difference threshold (bytes)"
           hint="Ignore size differences at or below this many bytes when comparing (0 = exact)."
-          value={dirCompareThreshold} min={0} max={1000000000}
+          value={dirCompareThreshold}
+          min={0}
+          max={1000000000}
           onChange={(v) => set("dirCompareThreshold", v)}
         />
       )}
@@ -461,23 +524,33 @@ function FileListsPanel() {
         onChange={(v) => set("synchronizedBrowsing", v)}
       />
 
-      <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-subtle">Sorting & filtering</p>
+      <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-subtle">
+        Sorting & filtering
+      </p>
       <SelectField
         label="Sorting mode"
         value={sortDirsFirst ? "dirs" : "mixed"}
-        options={[{ value: "dirs", label: "Directories first" }, { value: "mixed", label: "Mixed (alphabetical)" }]}
+        options={[
+          { value: "dirs", label: "Directories first" },
+          { value: "mixed", label: "Mixed (alphabetical)" },
+        ]}
         onChange={(v) => set("sortDirsFirst", v === "dirs")}
       />
       <SelectField
         label="Name sorting"
         value={nameSortCaseSensitive ? "sensitive" : "insensitive"}
-        options={[{ value: "insensitive", label: "Case-insensitive" }, { value: "sensitive", label: "Case-sensitive" }]}
+        options={[
+          { value: "insensitive", label: "Case-insensitive" },
+          { value: "sensitive", label: "Case-sensitive" },
+        ]}
         onChange={(v) => set("nameSortCaseSensitive", v === "sensitive")}
       />
       <label className="flex items-center justify-between gap-3 rounded-md border border-border px-3 py-2.5">
         <span className="flex flex-col">
           <span className="text-xs font-medium text-fg">Filename filter</span>
-          <span className="mt-0.5 text-[11px] text-subtle">Show only files whose name contains this text (directories always shown).</span>
+          <span className="mt-0.5 text-[11px] text-subtle">
+            Show only files whose name contains this text (directories always shown).
+          </span>
         </span>
         <input
           value={filenameFilter}
@@ -513,7 +586,9 @@ function TransfersPanel() {
   ];
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-[10px] font-medium uppercase tracking-wide text-subtle">When a target file exists</p>
+      <p className="text-[10px] font-medium uppercase tracking-wide text-subtle">
+        When a target file exists
+      </p>
       <SelectField
         label="Downloads"
         value={overwriteDownload}
@@ -543,25 +618,33 @@ function TransfersPanel() {
           <NumberField
             label="Download limit (KiB/s)"
             hint="0 means no limit."
-            value={downloadLimitKib} min={0} max={1000000}
+            value={downloadLimitKib}
+            min={0}
+            max={1000000}
             onChange={(v) => set("downloadLimitKib", v)}
           />
           <NumberField
             label="Upload limit (KiB/s)"
             hint="0 means no limit."
-            value={uploadLimitKib} min={0} max={1000000}
+            value={uploadLimitKib}
+            min={0}
+            max={1000000}
             onChange={(v) => set("uploadLimitKib", v)}
           />
           <NumberField
             label="Burst tolerance (seconds)"
             hint="Allow a transfer to briefly exceed the limit by this many seconds' worth of data (0 = strict)."
-            value={speedBurstSecs} min={0} max={30}
+            value={speedBurstSecs}
+            min={0}
+            max={30}
             onChange={(v) => set("speedBurstSecs", v)}
           />
         </>
       )}
 
-      <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-subtle">Downloaded files</p>
+      <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-subtle">
+        Downloaded files
+      </p>
       <Toggle
         label="Preallocate space"
         hint="Reserve the full file size on disk before an SFTP download to reduce fragmentation."
@@ -577,7 +660,9 @@ function TransfersPanel() {
       {filenameFilterEnabled && (
         <div className="flex gap-2">
           <label className="flex flex-1 flex-col gap-1">
-            <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">Characters to replace</span>
+            <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">
+              Characters to replace
+            </span>
             <input
               value={filenameFilterChars}
               onChange={(e) => set("filenameFilterChars", e.target.value)}
@@ -586,7 +671,9 @@ function TransfersPanel() {
             />
           </label>
           <label className="flex w-24 flex-col gap-1">
-            <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">Replace with</span>
+            <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">
+              Replace with
+            </span>
             <input
               value={filenameReplacement}
               maxLength={1}
@@ -597,16 +684,20 @@ function TransfersPanel() {
           </label>
         </div>
       )}
-      <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-subtle">Concurrency</p>
+      <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-subtle">
+        Concurrency
+      </p>
       <NumberField
         label="Max simultaneous transfers"
         hint="Transfers per session that run at once. Above 1 opens extra connections (a site's own limit, if set, still applies)."
-        value={maxConcurrentTransfers} min={1} max={10}
+        value={maxConcurrentTransfers}
+        min={1}
+        max={10}
         onChange={(v) => set("maxConcurrentTransfers", v)}
       />
       <p className="rounded-md border border-border bg-bg px-3 py-2 text-[11px] text-subtle">
-        Each session keeps one interactive connection for browsing; transfers use
-        a pool sized by this limit. Different sessions always transfer in parallel.
+        Each session keeps one interactive connection for browsing; transfers use a pool sized by
+        this limit. Different sessions always transfer in parallel.
       </p>
     </div>
   );
@@ -626,7 +717,9 @@ function FileEditingPanel() {
         onChange={(v) => set("watchEdits", v)}
       />
       <label className="flex flex-col gap-1">
-        <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">Default editor</span>
+        <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">
+          Default editor
+        </span>
         <input
           value={defaultEditor}
           onChange={(e) => set("defaultEditor", e.target.value)}
@@ -638,7 +731,9 @@ function FileEditingPanel() {
         </span>
       </label>
       <label className="flex flex-col gap-1">
-        <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">Filetype associations</span>
+        <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">
+          Filetype associations
+        </span>
         <textarea
           value={fileAssociations}
           onChange={(e) => set("fileAssociations", e.target.value)}
@@ -672,7 +767,10 @@ function AssistantSettingsPanel() {
 
   useEffect(() => {
     if (!isTauri()) return;
-    api.llmHasKey(agentProvider).then(setHasKey).catch(() => setHasKey(false));
+    api
+      .llmHasKey(agentProvider)
+      .then(setHasKey)
+      .catch(() => setHasKey(false));
     setModels([]);
     setModelError(null);
   }, [agentProvider]);
@@ -718,7 +816,9 @@ function AssistantSettingsPanel() {
       // Only auto-fill when nothing is chosen yet — never override the user's pick.
       if (list.length > 0 && !agentModel) set("agentModel", list[0]);
     } catch (e) {
-      setModelError(e instanceof Error ? e.message : String((e as { message?: string })?.message ?? e));
+      setModelError(
+        e instanceof Error ? e.message : String((e as { message?: string })?.message ?? e),
+      );
     } finally {
       setLoadingModels(false);
     }
@@ -727,8 +827,8 @@ function AssistantSettingsPanel() {
   return (
     <div className="flex flex-col gap-3">
       <div className="rounded-md border border-border bg-bg px-3 py-2 text-[11px] text-subtle">
-        Each provider keeps its own API key in your OS keychain, and the call is proxied
-        through TurboFiles so the key never touches the web layer. Local servers need no key.
+        Each provider keeps its own API key in your OS keychain, and the call is proxied through
+        TurboFiles so the key never touches the web layer. Local servers need no key.
       </div>
 
       <SelectField
@@ -740,7 +840,9 @@ function AssistantSettingsPanel() {
 
       {info.kind === "openai" && (
         <label className="flex flex-col gap-1">
-          <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">Base URL</span>
+          <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">
+            Base URL
+          </span>
           <input
             value={agentBaseUrl}
             onChange={(e) => set("agentBaseUrl", e.target.value)}
@@ -787,11 +889,15 @@ function AssistantSettingsPanel() {
         {modelError ? (
           <span className="text-[11px] text-danger">{modelError}</span>
         ) : models.length ? (
-          <span className="text-[11px] text-subtle">{models.length} models available — pick one.</span>
+          <span className="text-[11px] text-subtle">
+            {models.length} models available — pick one.
+          </span>
         ) : loadingModels ? (
           <span className="text-[11px] text-subtle">Loading models…</span>
         ) : (
-          <span className="text-[11px] text-subtle">Add a key (or start your local server), then models load automatically.</span>
+          <span className="text-[11px] text-subtle">
+            Add a key (or start your local server), then models load automatically.
+          </span>
         )}
       </label>
 
@@ -804,7 +910,13 @@ function AssistantSettingsPanel() {
             type="password"
             value={keyInput}
             onChange={(e) => setKeyInput(e.target.value)}
-            placeholder={hasKey ? "•••••••• (stored in keychain)" : isLocal ? "leave blank for local models" : `Paste your ${info.label} API key`}
+            placeholder={
+              hasKey
+                ? "•••••••• (stored in keychain)"
+                : isLocal
+                  ? "leave blank for local models"
+                  : `Paste your ${info.label} API key`
+            }
             className="h-7 flex-1 rounded border border-border bg-bg px-2 text-xs text-fg focus:outline-none focus:ring-1 focus:ring-accent"
           />
           <button
@@ -815,7 +927,10 @@ function AssistantSettingsPanel() {
             Save
           </button>
           {hasKey && (
-            <button onClick={clearKey} className="rounded-md border border-border px-3 text-xs text-fg hover:bg-muted">
+            <button
+              onClick={clearKey}
+              className="rounded-md border border-border px-3 text-xs text-fg hover:bg-muted"
+            >
               Clear
             </button>
           )}
@@ -836,8 +951,18 @@ function renderChangelogInline(text: string): React.ReactNode[] {
   while ((m = re.exec(text)) !== null) {
     if (m.index > last) out.push(text.slice(last, m.index));
     if (m[1] !== undefined) out.push(<span key={k++}>{m[1]}</span>);
-    else if (m[2] !== undefined) out.push(<strong key={k++} className="font-semibold text-fg">{m[2]}</strong>);
-    else if (m[3] !== undefined) out.push(<code key={k++} className="rounded bg-muted px-1 font-mono text-[11px]">{m[3]}</code>);
+    else if (m[2] !== undefined)
+      out.push(
+        <strong key={k++} className="font-semibold text-fg">
+          {m[2]}
+        </strong>,
+      );
+    else if (m[3] !== undefined)
+      out.push(
+        <code key={k++} className="rounded bg-muted px-1 font-mono text-[11px]">
+          {m[3]}
+        </code>,
+      );
     last = re.lastIndex;
   }
   if (last < text.length) out.push(text.slice(last));
@@ -851,8 +976,8 @@ function ChangelogPanel() {
       <div className="rounded-md border border-border bg-bg px-3 py-2 text-xs text-subtle">
         <p className="font-medium text-fg">What's new</p>
         <p className="mt-0.5">
-          You're running <span className="font-mono text-fg">v{APP_VERSION}</span>. The full
-          release history is below (also on GitHub).
+          You're running <span className="font-mono text-fg">v{APP_VERSION}</span>. The full release
+          history is below (also on GitHub).
         </p>
       </div>
       <div className="flex flex-col gap-0.5 text-xs leading-relaxed">
@@ -861,13 +986,19 @@ function ChangelogPanel() {
           if (/^#\s+/.test(line)) return null; // skip the top-level title
           if (/^##\s+/.test(line))
             return (
-              <h3 key={i} className="mt-3 border-b border-border pb-1 text-sm font-semibold text-fg">
+              <h3
+                key={i}
+                className="mt-3 border-b border-border pb-1 text-sm font-semibold text-fg"
+              >
                 {line.replace(/^##\s+/, "")}
               </h3>
             );
           if (/^###\s+/.test(line))
             return (
-              <p key={i} className="mt-2 text-[10px] font-semibold uppercase tracking-wide text-accent">
+              <p
+                key={i}
+                className="mt-2 text-[10px] font-semibold uppercase tracking-wide text-accent"
+              >
                 {line.replace(/^###\s+/, "")}
               </p>
             );
@@ -879,7 +1010,11 @@ function ChangelogPanel() {
               </p>
             );
           if (line === "") return <div key={i} className="h-1.5" />;
-          return <p key={i} className="text-subtle">{renderChangelogInline(line)}</p>;
+          return (
+            <p key={i} className="text-subtle">
+              {renderChangelogInline(line)}
+            </p>
+          );
         })}
       </div>
     </div>
@@ -897,7 +1032,10 @@ function AboutPanel() {
 
   useEffect(() => {
     if (!isTauri()) return;
-    api.debugInfo().then(setInfo).catch(() => undefined);
+    api
+      .debugInfo()
+      .then(setInfo)
+      .catch(() => undefined);
   }, []);
 
   const checkNow = () => {
@@ -920,11 +1058,13 @@ function AboutPanel() {
       <div className="rounded-md border border-border bg-bg px-3 py-2 text-xs text-subtle">
         <div className="flex items-center justify-between">
           <p className="font-medium text-fg">TurboFiles</p>
-          <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-[11px] text-fg">v{APP_VERSION}</span>
+          <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-[11px] text-fg">
+            v{APP_VERSION}
+          </span>
         </div>
         <p className="mt-0.5">
-          A modern, fast and secure SFTP/FTP/FTPS client. Secrets are stored in your
-          OS keychain — never on disk or in logs.
+          A modern, fast and secure SFTP/FTP/FTPS client. Secrets are stored in your OS keychain —
+          never on disk or in logs.
         </p>
       </div>
 
@@ -937,7 +1077,9 @@ function AboutPanel() {
       />
       {logToFile && (
         <label className="flex flex-col gap-1">
-          <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">Log file path</span>
+          <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">
+            Log file path
+          </span>
           <input
             value={logFilePath}
             onChange={(e) => set("logFilePath", e.target.value)}
@@ -957,13 +1099,15 @@ function AboutPanel() {
           >
             {checking ? "Checking…" : "Check for updates"}
           </button>
-          {checked && !checking && (
-            hasUpdate ? (
-              <span className="text-xs font-medium text-accent">Version {rel!.version} is available.</span>
+          {checked &&
+            !checking &&
+            (hasUpdate ? (
+              <span className="text-xs font-medium text-accent">
+                Version {rel!.version} is available.
+              </span>
             ) : (
               <span className="text-xs text-subtle">You're on the latest version.</span>
-            )
-          )}
+            ))}
         </div>
         {hasUpdate && (
           <button
@@ -991,17 +1135,29 @@ function AboutPanel() {
 
       <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-subtle">Debug</p>
       <div className="rounded-md border border-border bg-bg px-3 py-2 font-mono text-[11px] text-subtle">
-        {info
-          ? Object.entries(info).map(([k, v]) => (
-              <div key={k}><span className="text-fg">{k}</span>: {v}</div>
-            ))
-          : <span>Debug info is available in the desktop app.</span>}
+        {info ? (
+          Object.entries(info).map(([k, v]) => (
+            <div key={k}>
+              <span className="text-fg">{k}</span>: {v}
+            </div>
+          ))
+        ) : (
+          <span>Debug info is available in the desktop app.</span>
+        )}
       </div>
     </div>
   );
 }
 
-function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex flex-col gap-1.5">
       <p className="text-xs font-medium text-fg">{label}</p>
@@ -1012,8 +1168,20 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
 }
 
 function NumberField({
-  label, hint, value, min, max, onChange,
-}: { label: string; hint?: string; value: number; min: number; max: number; onChange: (v: number) => void }) {
+  label,
+  hint,
+  value,
+  min,
+  max,
+  onChange,
+}: {
+  label: string;
+  hint?: string;
+  value: number;
+  min: number;
+  max: number;
+  onChange: (v: number) => void;
+}) {
   return (
     <div className="flex items-start justify-between gap-3 rounded-md border border-border px-3 py-2.5">
       <span className="flex flex-col">
@@ -1036,8 +1204,16 @@ function NumberField({
 }
 
 function Toggle({
-  label, hint, checked, onChange,
-}: { label: string; hint?: string; checked: boolean; onChange: (v: boolean) => void }) {
+  label,
+  hint,
+  checked,
+  onChange,
+}: {
+  label: string;
+  hint?: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+}) {
   return (
     <label className="flex cursor-pointer items-start justify-between gap-3 rounded-md border border-border px-3 py-2.5 hover:bg-muted/50">
       <span className="flex flex-col">

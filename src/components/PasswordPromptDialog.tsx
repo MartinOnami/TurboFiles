@@ -30,7 +30,9 @@ export function PasswordPromptDialog({ prompt, onResolve }: PasswordPromptDialog
     if (!prompt) return;
     setPassword("");
     setRemember(false);
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onResolve(null); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onResolve(null);
+    };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [prompt, onResolve]);
@@ -79,12 +81,18 @@ export function PasswordPromptDialog({ prompt, onResolve }: PasswordPromptDialog
             autoFocus
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter") submit(); }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") submit();
+            }}
             placeholder="Password"
             className="h-8 rounded border border-border bg-bg px-2 text-sm text-fg focus:outline-none focus:ring-1 focus:ring-accent"
           />
           <label className="flex items-center gap-2 text-subtle">
-            <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={remember}
+              onChange={(e) => setRemember(e.target.checked)}
+            />
             Remember in this device's keychain
           </label>
         </div>

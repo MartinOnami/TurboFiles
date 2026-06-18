@@ -1,5 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ArrowLeftRight, ArrowRight, ChevronDown, ChevronUp, Download, Folder, Lock, Pencil, Plug, Plus, Sparkles, Trash2, Unplug, X } from "lucide-react";
+import {
+  ArrowLeftRight,
+  ArrowRight,
+  ChevronDown,
+  ChevronUp,
+  Download,
+  Folder,
+  Lock,
+  Pencil,
+  Plug,
+  Plus,
+  Sparkles,
+  Trash2,
+  Unplug,
+  X,
+} from "lucide-react";
 import { Sidebar } from "./components/Sidebar";
 import { ConnectionBar } from "./components/ConnectionBar";
 import { FileBrowser } from "./components/FileBrowser";
@@ -9,13 +24,29 @@ import { GlobalLogsPanel, GlobalQueuePanel } from "./components/GlobalPanels";
 import { SettingsModal } from "./components/SettingsModal";
 import { Onboarding } from "./components/Onboarding";
 import { AssistantPanel } from "./components/AssistantPanel";
-import { OverwriteDialog, type ConflictResolution, type FileConflict } from "./components/OverwriteDialog";
+import {
+  OverwriteDialog,
+  type ConflictResolution,
+  type FileConflict,
+} from "./components/OverwriteDialog";
 import { CertTrustDialog, type CertPrompt } from "./components/CertTrustDialog";
-import { PasswordPromptDialog, type PasswordPrompt, type PasswordResult } from "./components/PasswordPromptDialog";
+import {
+  PasswordPromptDialog,
+  type PasswordPrompt,
+  type PasswordResult,
+} from "./components/PasswordPromptDialog";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { BrandMark } from "./components/BrandMark";
 import { APP_VERSION, GITHUB_REPO, isNewerVersion } from "./lib/appInfo";
-import { api, asApiError, isTauri, onEditorEvent, onTransferProgress, pickApplication, pickXmlFile } from "./lib/api";
+import {
+  api,
+  asApiError,
+  isTauri,
+  onEditorEvent,
+  onTransferProgress,
+  pickApplication,
+  pickXmlFile,
+} from "./lib/api";
 import { parseFileZillaSites } from "./lib/filezillaImport";
 import { useStore } from "./store/useStore";
 import { useSettings } from "./store/useSettings";
@@ -36,7 +67,10 @@ function fmtErr(err: unknown): string {
 }
 
 function cleanHost(h: string): string {
-  return h.replace(/^(sftp|ftp|ftps|ssh):\/\//i, "").replace(/\/$/, "").trim();
+  return h
+    .replace(/^(sftp|ftp|ftps|ssh):\/\//i, "")
+    .replace(/\/$/, "")
+    .trim();
 }
 
 function parentPath(p: string): string {
@@ -85,11 +119,23 @@ function uniqueName(name: string, taken: Set<string>): string {
 
 export default function App() {
   const {
-    sites, setSites,
-    localEntries, localPath, setLocal,
-    transfers, setTransfers, upsertTransfer,
-    logs, log, setLogs,
-    tabs, activeTabId, addTab, closeTab, setActiveTab, updateTab,
+    sites,
+    setSites,
+    localEntries,
+    localPath,
+    setLocal,
+    transfers,
+    setTransfers,
+    upsertTransfer,
+    logs,
+    log,
+    setLogs,
+    tabs,
+    activeTabId,
+    addTab,
+    closeTab,
+    setActiveTab,
+    updateTab,
     requestEditSite,
   } = useStore();
 
@@ -117,7 +163,10 @@ export default function App() {
   const [bottomExpanded, setBottomExpanded] = useState(true);
   // Global Logs / Queue views opened as their own closable top tabs.
   const [activePanel, setActivePanel] = useState<"logs" | "queue" | null>(null);
-  const [openPanels, setOpenPanels] = useState<{ logs: boolean; queue: boolean }>({ logs: false, queue: false });
+  const [openPanels, setOpenPanels] = useState<{ logs: boolean; queue: boolean }>({
+    logs: false,
+    queue: false,
+  });
   // Per-tab dropdown (Edit / Delete / Disconnect) anchored to the tab caret.
   const [tabMenu, setTabMenu] = useState<{ tabId: string; x: number; y: number } | null>(null);
   const [conflict, setConflict] = useState<FileConflict | null>(null);
@@ -129,32 +178,87 @@ export default function App() {
   const certResolver = useRef<((trust: boolean) => void) | null>(null);
   const passwordResolver = useRef<((r: PasswordResult | null) => void) | null>(null);
 
-  const { showHiddenFiles, autoOpenQueue, directoryComparison, synchronizedBrowsing,
-    connectionTimeout, connectionRetries, retryDelay,
-    speedLimitEnabled, downloadLimitKib, uploadLimitKib,
-    filesizeFormat, swapPanes,
-    sortDirsFirst, nameSortCaseSensitive, filenameFilter, overwriteDownload, overwriteUpload,
-    minTlsVersion, sftpCompression, useSshAgent, ftpTransferMode, ftpKeepAlive, ftpDataType,
-    ftpProxyHost, ftpProxyPort, preallocate,
-    filenameFilterEnabled, filenameFilterChars, filenameReplacement, speedBurstSecs,
-    maxConcurrentTransfers, dateTimeFormat, momentarySpeed, preventSleep,
-    messageLogPosition, onStartup, watchEdits, defaultEditor, fileAssociations,
-    logToFile, logFilePath, dirCompareThreshold, language, openWithApps, set,
-    proxyType, proxyHost, proxyPort, proxyUser, proxyPass } = useSettings();
+  const {
+    showHiddenFiles,
+    autoOpenQueue,
+    directoryComparison,
+    synchronizedBrowsing,
+    connectionTimeout,
+    connectionRetries,
+    retryDelay,
+    speedLimitEnabled,
+    downloadLimitKib,
+    uploadLimitKib,
+    filesizeFormat,
+    swapPanes,
+    sortDirsFirst,
+    nameSortCaseSensitive,
+    filenameFilter,
+    overwriteDownload,
+    overwriteUpload,
+    minTlsVersion,
+    sftpCompression,
+    useSshAgent,
+    ftpTransferMode,
+    ftpKeepAlive,
+    ftpDataType,
+    ftpProxyHost,
+    ftpProxyPort,
+    preallocate,
+    filenameFilterEnabled,
+    filenameFilterChars,
+    filenameReplacement,
+    speedBurstSecs,
+    maxConcurrentTransfers,
+    dateTimeFormat,
+    momentarySpeed,
+    preventSleep,
+    messageLogPosition,
+    onStartup,
+    watchEdits,
+    defaultEditor,
+    fileAssociations,
+    logToFile,
+    logFilePath,
+    dirCompareThreshold,
+    language,
+    openWithApps,
+    set,
+    proxyType,
+    proxyHost,
+    proxyPort,
+    proxyUser,
+    proxyPass,
+  } = useSettings();
   // Apply the byte/date-format and locale preferences before any child renders.
   setByteFormat(filesizeFormat);
   setDateTimeFormat(dateTimeFormat);
   setLocale(language);
-  const proxy = proxyType === "none" || !proxyHost ? undefined : {
-    type: proxyType, host: proxyHost, port: proxyPort,
-    username: proxyUser || undefined, password: proxyPass || undefined,
-  };
+  const proxy =
+    proxyType === "none" || !proxyHost
+      ? undefined
+      : {
+          type: proxyType,
+          host: proxyHost,
+          port: proxyPort,
+          username: proxyUser || undefined,
+          password: proxyPass || undefined,
+        };
   const connOpts = {
-    timeoutSecs: connectionTimeout, retries: connectionRetries, retryDelaySecs: retryDelay, proxy,
-    minTlsVersion, sftpCompression, useAgent: useSshAgent,
-    ftpKeepAlive, ftpMode: ftpTransferMode, preallocate,
-    maxConcurrent: maxConcurrentTransfers, ftpDataType,
-    ftpProxyHost: ftpProxyHost || undefined, ftpProxyPort,
+    timeoutSecs: connectionTimeout,
+    retries: connectionRetries,
+    retryDelaySecs: retryDelay,
+    proxy,
+    minTlsVersion,
+    sftpCompression,
+    useAgent: useSshAgent,
+    ftpKeepAlive,
+    ftpMode: ftpTransferMode,
+    preallocate,
+    maxConcurrent: maxConcurrentTransfers,
+    ftpDataType,
+    ftpProxyHost: ftpProxyHost || undefined,
+    ftpProxyPort,
   };
   // Filename sanitizer passed to downloads when enabled.
   const downloadFilter = filenameFilterEnabled
@@ -180,7 +284,10 @@ export default function App() {
   const visibleLocal = processEntries(localEntries);
   const visibleRemote = processEntries(remoteEntries);
 
-  const revealQueue = () => { setBottomTab("queue"); setBottomExpanded(true); };
+  const revealQueue = () => {
+    setBottomTab("queue");
+    setBottomExpanded(true);
+  };
 
   // Promise-based file-conflict prompt (resolved by the OverwriteDialog buttons).
   const askConflict = (info: FileConflict) =>
@@ -241,7 +348,12 @@ export default function App() {
   // Tag logs/transfers with the session they relate to, for per-site filtering.
   const sessionLabel = (s: Session | null) => (s ? `${s.username}@${s.host}` : "System");
   const addLog = (level: LogLevel, message: string, scope?: string) => {
-    const entry = { timestamp: now(), level, message, scope: scope ?? sessionLabel(sessionRef.current) };
+    const entry = {
+      timestamp: now(),
+      level,
+      message,
+      scope: scope ?? sessionLabel(sessionRef.current),
+    };
     log(entry);
     // Persist to durable history (fire-and-forget).
     if (isTauri()) api.appendLog(entry).catch(() => undefined);
@@ -257,10 +369,13 @@ export default function App() {
     setOpenPanels((p) => ({ ...p, [which]: false }));
     setActivePanel((cur) => (cur === which ? null : cur));
   };
-  const selectSessionTab = (id: string) => { setActivePanel(null); setActiveTab(id); };
+  const selectSessionTab = (id: string) => {
+    setActivePanel(null);
+    setActiveTab(id);
+  };
 
   // Tab dropdown actions (Edit / Delete / Disconnect on a session tab).
-  const tabMenuTab = tabMenu ? tabs.find((t) => t.id === tabMenu.tabId) ?? null : null;
+  const tabMenuTab = tabMenu ? (tabs.find((t) => t.id === tabMenu.tabId) ?? null) : null;
   const tabEditSite = () => {
     if (tabMenuTab?.siteId) requestEditSite(tabMenuTab.siteId);
     setTabMenu(null);
@@ -271,7 +386,10 @@ export default function App() {
     setTabMenu(null);
     if (!siteId) return;
     const site = sites.find((s) => s.id === siteId);
-    if (!window.confirm(`Delete the saved site "${site?.name ?? siteId}"? This also disconnects it.`)) return;
+    if (
+      !window.confirm(`Delete the saved site "${site?.name ?? siteId}"? This also disconnects it.`)
+    )
+      return;
     if (tabId) handleCloseTab(tabId);
     handleDeleteSite(siteId).catch((err) => addLog("error", fmtErr(err), "System"));
   };
@@ -327,7 +445,9 @@ export default function App() {
     if (!isTauri()) return;
     const dl = speedLimitEnabled ? downloadLimitKib : 0;
     const ul = speedLimitEnabled ? uploadLimitKib : 0;
-    api.setSpeedLimits(dl, ul, speedLimitEnabled ? speedBurstSecs : 0, momentarySpeed).catch(() => undefined);
+    api
+      .setSpeedLimits(dl, ul, speedLimitEnabled ? speedBurstSecs : 0, momentarySpeed)
+      .catch(() => undefined);
   }, [speedLimitEnabled, downloadLimitKib, uploadLimitKib, speedBurstSecs, momentarySpeed]);
 
   // OS drag-in: dropping files/folders from Finder uploads them to the active
@@ -349,7 +469,8 @@ export default function App() {
           const scope = sessionLabel(sess);
           for (const p of event.payload.paths) {
             const dest = joinPath(rp, baseName(p));
-            api.enqueueUpload(sess.id, p, dest)
+            api
+              .enqueueUpload(sess.id, p, dest)
               .then((queued) => queued.forEach((t) => upsertTransfer({ ...t, scope })))
               .catch((err) => addLog("error", fmtErr(err), scope));
           }
@@ -357,9 +478,15 @@ export default function App() {
           if (autoOpenQueue) revealQueue();
         }),
       )
-      .then((fn) => { if (cancelled) fn(); else unlisten = fn; })
+      .then((fn) => {
+        if (cancelled) fn();
+        else unlisten = fn;
+      })
       .catch(() => undefined);
-    return () => { cancelled = true; unlisten?.(); };
+    return () => {
+      cancelled = true;
+      unlisten?.();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -376,9 +503,15 @@ export default function App() {
         addLog("error", `Edit re-upload failed: ${message}`, "System");
       }
     })
-      .then((fns) => { if (cancelled) fns.forEach((f) => f()); else unlisten = fns; })
+      .then((fns) => {
+        if (cancelled) fns.forEach((f) => f());
+        else unlisten = fns;
+      })
       .catch(() => undefined);
-    return () => { cancelled = true; unlisten?.forEach((f) => f()); };
+    return () => {
+      cancelled = true;
+      unlisten?.forEach((f) => f());
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -406,13 +539,23 @@ export default function App() {
 
   useEffect(() => {
     if (isTauri()) {
-      api.listSites().then(setSites).catch(() => undefined);
-      api.homeDir()
+      api
+        .listSites()
+        .then(setSites)
+        .catch(() => undefined);
+      api
+        .homeDir()
         .then((home) => api.listLocal(home).then((e) => setLocal(home, e)))
         .catch(() => undefined);
       // Restore durable history so past logs/transfers are referenceable.
-      api.listLogs().then(setLogs).catch(() => undefined);
-      api.listTransferHistory().then(setTransfers).catch(() => undefined);
+      api
+        .listLogs()
+        .then(setLogs)
+        .catch(() => undefined);
+      api
+        .listTransferHistory()
+        .then(setTransfers)
+        .catch(() => undefined);
 
       const TERMINAL = new Set(["completed", "failed", "cancelled"]);
       const unlisten = onTransferProgress((e) => {
@@ -426,16 +569,20 @@ export default function App() {
           const sess = sessionRef.current;
           const tabId = activeTabIdRef.current;
           if (sess && tabId) {
-            api.listRemote(sess.id, remotePathRef.current)
+            api
+              .listRemote(sess.id, remotePathRef.current)
               .then((ents) => updateTab(tabId, { remoteEntries: ents }))
               .catch(() => undefined);
           }
-          api.listLocal(localPathRef.current)
+          api
+            .listLocal(localPathRef.current)
             .then((ents) => setLocal(localPathRef.current, ents))
             .catch(() => undefined);
         }
       });
-      return () => { unlisten.then((fn) => fn()); };
+      return () => {
+        unlisten.then((fn) => fn());
+      };
     }
     // Demo mode — seed with a pre-connected session tab.
     setSites(demoSites);
@@ -443,7 +590,13 @@ export default function App() {
     addTab({
       id: "demo",
       title: "demo@wpengine.com",
-      session: { id: "demo", protocol: "sftp", host: "demo.wpengine.com", username: "demo", cwd: "/home/john_doe/public_html" },
+      session: {
+        id: "demo",
+        protocol: "sftp",
+        host: "demo.wpengine.com",
+        username: "demo",
+        cwd: "/home/john_doe/public_html",
+      },
       remotePath: "/home/john_doe/public_html",
       remoteEntries: demoRemote,
     });
@@ -479,7 +632,10 @@ export default function App() {
       // Open the site's default local directory in the left pane if set.
       if (site?.defaultLocalPath) {
         const dir = site.defaultLocalPath;
-        api.listLocal(dir).then((e) => setLocal(dir, e)).catch(() => undefined);
+        api
+          .listLocal(dir)
+          .then((e) => setLocal(dir, e))
+          .catch(() => undefined);
       }
     } catch (err) {
       addLog("error", fmtErr(err));
@@ -495,10 +651,20 @@ export default function App() {
   };
 
   const handleConnect = async (req: ConnReq, acceptInvalidCert = false) => {
-    if (!isTauri()) { addLog("info", `Demo: connect to ${req.host}`); return; }
+    if (!isTauri()) {
+      addLog("info", `Demo: connect to ${req.host}`);
+      return;
+    }
     setConnecting(true);
     try {
-      await applySession(await api.connect({ ...req, host: cleanHost(req.host), acceptInvalidCert: acceptInvalidCert || req.acceptInvalidCert, ...connOpts }));
+      await applySession(
+        await api.connect({
+          ...req,
+          host: cleanHost(req.host),
+          acceptInvalidCert: acceptInvalidCert || req.acceptInvalidCert,
+          ...connOpts,
+        }),
+      );
     } catch (err) {
       const apiErr = asApiError(err);
       if (apiErr?.code === "CERT_UNTRUSTED" && !acceptInvalidCert) {
@@ -516,7 +682,9 @@ export default function App() {
       } else {
         addLog("error", fmtErr(err));
       }
-    } finally { setConnecting(false); }
+    } finally {
+      setConnecting(false);
+    }
   };
 
   // Password-based logon types need a secret; key auth uses an (optional) passphrase
@@ -526,7 +694,9 @@ export default function App() {
   // Persist a newly-entered password to the keychain by re-saving the site.
   const persistSitePassword = async (site: Site, password: string) => {
     const { id, createdAt, updatedAt, hasStoredSecret, ...rest } = site;
-    void createdAt; void updatedAt; void hasStoredSecret;
+    void createdAt;
+    void updatedAt;
+    void hasStoredSecret;
     await api.saveSite({ id, ...rest } as Parameters<typeof api.saveSite>[0], password);
     setSites(await api.listSites());
   };
@@ -539,7 +709,10 @@ export default function App() {
     reason?: string,
     forcePrompt = false,
   ): Promise<ConnectResult> => {
-    if (!isTauri()) { addLog("info", `Demo: connect to ${site.host}`); return { ok: false, reason: "demo mode" }; }
+    if (!isTauri()) {
+      addLog("info", `Demo: connect to ${site.host}`);
+      return { ok: false, reason: "demo mode" };
+    }
     const scope = `${site.username}@${site.host}`;
 
     // Already connected to this site → focus its tab instead of opening a duplicate.
@@ -590,12 +763,21 @@ export default function App() {
       } else if (apiErr?.code === "AUTH" && siteNeedsPassword(site)) {
         // Wrong or missing password → ask again (forcing a prompt) and retry.
         setConnecting(false);
-        return handleConnectSite(site, acceptInvalidCert, undefined, "Authentication failed — check the password and try again.", true);
+        return handleConnectSite(
+          site,
+          acceptInvalidCert,
+          undefined,
+          "Authentication failed — check the password and try again.",
+          true,
+        );
       } else {
         addLog("error", fmtErr(err));
         return { ok: false, reason: apiErr?.message ?? fmtErr(err) };
       }
-    } finally { setConnecting(false); setBusySiteId(null); }
+    } finally {
+      setConnecting(false);
+      setBusySiteId(null);
+    }
   };
 
   // Disconnect from a Site Manager row, showing a spinner on that row while it
@@ -610,7 +792,10 @@ export default function App() {
     }
   };
 
-  const handleSaveSite: React.ComponentProps<typeof Sidebar>["onSaveSite"] = async (site, password) => {
+  const handleSaveSite: React.ComponentProps<typeof Sidebar>["onSaveSite"] = async (
+    site,
+    password,
+  ) => {
     if (!isTauri()) return;
     try {
       const saved = await api.saveSite(site as Parameters<typeof api.saveSite>[0], password);
@@ -628,16 +813,27 @@ export default function App() {
     setSaving(true);
     try {
       const host = cleanHost(req.host);
-      const displayName = req.logonType === "anonymous" ? `anonymous@${host}` : `${req.username}@${host}`;
+      const displayName =
+        req.logonType === "anonymous" ? `anonymous@${host}` : `${req.username}@${host}`;
       const site = await api.saveSite(
-        { name: displayName, protocol: req.protocol, host, port: req.port, username: req.username, logonType: req.logonType, ftpEncryption: req.ftpEncryption },
+        {
+          name: displayName,
+          protocol: req.protocol,
+          host,
+          port: req.port,
+          username: req.username,
+          logonType: req.logonType,
+          ftpEncryption: req.ftpEncryption,
+        },
         req.password || undefined,
       );
       setSites(await api.listSites());
       addLog("info", `Saved site: ${site.name}`, "System");
     } catch (err) {
       addLog("error", fmtErr(err), "System");
-    } finally { setSaving(false); }
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleDeleteSite = async (siteId: string) => {
@@ -654,13 +850,18 @@ export default function App() {
     try {
       const xml = await api.readKeyFile(path); // reads any UTF-8 text file
       const imported = parseFileZillaSites(xml);
-      if (imported.length === 0) { addLog("warn", "No sites found in that file", "System"); return; }
+      if (imported.length === 0) {
+        addLog("warn", "No sites found in that file", "System");
+        return;
+      }
       let ok = 0;
       for (const { site, password } of imported) {
         try {
           await api.saveSite(site as Parameters<typeof api.saveSite>[0], password || undefined);
           ok++;
-        } catch { /* skip individual failures, keep importing the rest */ }
+        } catch {
+          /* skip individual failures, keep importing the rest */
+        }
       }
       setSites(await api.listSites());
       addLog("info", `Imported ${ok} of ${imported.length} site(s) from FileZilla`, "System");
@@ -686,34 +887,42 @@ export default function App() {
   const openLocalDir = (p: string) => {
     if (!isTauri()) return;
     navigateLocal(p).catch(() => undefined);
-    if (synchronizedBrowsing && session) navigateRemote(joinPath(remotePath, baseName(p))).catch(() => undefined);
+    if (synchronizedBrowsing && session)
+      navigateRemote(joinPath(remotePath, baseName(p))).catch(() => undefined);
     setSelectedLocal(null);
   };
   const openRemoteDir = (p: string) => {
     if (!isTauri()) return;
     navigateRemote(p).catch(() => undefined);
-    if (synchronizedBrowsing) navigateLocal(joinPath(localPath, baseName(p))).catch(() => undefined);
+    if (synchronizedBrowsing)
+      navigateLocal(joinPath(localPath, baseName(p))).catch(() => undefined);
     setSelectedRemote(null);
   };
   const navUpLocal = () => {
     if (!isTauri() || !localPath) return;
     navigateLocal(parentPath(localPath)).catch(() => undefined);
-    if (synchronizedBrowsing && session && remotePath) navigateRemote(parentPath(remotePath)).catch(() => undefined);
+    if (synchronizedBrowsing && session && remotePath)
+      navigateRemote(parentPath(remotePath)).catch(() => undefined);
     setSelectedLocal(null);
   };
   const navUpRemote = () => {
     if (!isTauri() || !remotePath) return;
     navigateRemote(parentPath(remotePath)).catch(() => undefined);
-    if (synchronizedBrowsing && localPath) navigateLocal(parentPath(localPath)).catch(() => undefined);
+    if (synchronizedBrowsing && localPath)
+      navigateLocal(parentPath(localPath)).catch(() => undefined);
     setSelectedRemote(null);
   };
 
   const handleRefreshLocal = async () => {
     if (!isTauri() || !localPath) return;
     setLocalRefreshing(true);
-    try { await navigateLocal(localPath); }
-    catch (err) { addLog("error", fmtErr(err)); }
-    finally { setLocalRefreshing(false); }
+    try {
+      await navigateLocal(localPath);
+    } catch (err) {
+      addLog("error", fmtErr(err));
+    } finally {
+      setLocalRefreshing(false);
+    }
   };
 
   // Force-refresh both panes on F5 (re-fetches listings; nothing is cached).
@@ -735,9 +944,11 @@ export default function App() {
     try {
       const entries = await api.listRemote(session.id, remotePath);
       updateTab(activeTabId, { remoteEntries: entries });
+    } catch (err) {
+      addLog("error", fmtErr(err));
+    } finally {
+      setRemoteRefreshing(false);
     }
-    catch (err) { addLog("error", fmtErr(err)); }
-    finally { setRemoteRefreshing(false); }
   };
 
   // ─── Transfers ─────────────────────────────────────────────────────────────
@@ -753,16 +964,22 @@ export default function App() {
     if (!isDir) {
       const existing = remoteEntries.find((e) => e.name === file.name && e.kind !== "directory");
       if (existing) {
-        const res = overwriteUpload === "ask"
-          ? await askConflict({
-              name: file.name, direction: "upload", destLabel: "on the server",
-              sourceSize: file.size, sourceModified: file.modified,
-              destSize: existing.size, destModified: existing.modified,
-            })
-          : defaultResolution(overwriteUpload);
+        const res =
+          overwriteUpload === "ask"
+            ? await askConflict({
+                name: file.name,
+                direction: "upload",
+                destLabel: "on the server",
+                sourceSize: file.size,
+                sourceModified: file.modified,
+                destSize: existing.size,
+                destModified: existing.modified,
+              })
+            : defaultResolution(overwriteUpload);
         if (res.action === "skip") return;
         if (res.action === "rename") destName = res.newName;
-        if (res.action === "keepBoth") destName = uniqueName(file.name, new Set(remoteEntries.map((e) => e.name)));
+        if (res.action === "keepBoth")
+          destName = uniqueName(file.name, new Set(remoteEntries.map((e) => e.name)));
         if (res.action === "resume") resume = true;
       }
     }
@@ -771,9 +988,15 @@ export default function App() {
       const scope = sessionLabel(session);
       const queued = await api.enqueueUpload(session.id, file.path, dest, resume);
       queued.forEach((t) => upsertTransfer({ ...t, scope }));
-      addLog("info", `Upload queued: ${file.name} → ${dest} (${queued.length} file${queued.length !== 1 ? "s" : ""})`, scope);
+      addLog(
+        "info",
+        `Upload queued: ${file.name} → ${dest} (${queued.length} file${queued.length !== 1 ? "s" : ""})`,
+        scope,
+      );
       if (autoOpenQueue) revealQueue();
-    } catch (err) { addLog("error", fmtErr(err)); }
+    } catch (err) {
+      addLog("error", fmtErr(err));
+    }
   };
 
   const handleDownload = async (entry?: DirEntry) => {
@@ -785,27 +1008,46 @@ export default function App() {
     if (!isDir) {
       const existing = localEntries.find((e) => e.name === file.name && e.kind !== "directory");
       if (existing) {
-        const res = overwriteDownload === "ask"
-          ? await askConflict({
-              name: file.name, direction: "download", destLabel: "in this folder",
-              sourceSize: file.size, sourceModified: file.modified,
-              destSize: existing.size, destModified: existing.modified,
-            })
-          : defaultResolution(overwriteDownload);
+        const res =
+          overwriteDownload === "ask"
+            ? await askConflict({
+                name: file.name,
+                direction: "download",
+                destLabel: "in this folder",
+                sourceSize: file.size,
+                sourceModified: file.modified,
+                destSize: existing.size,
+                destModified: existing.modified,
+              })
+            : defaultResolution(overwriteDownload);
         if (res.action === "skip") return;
         if (res.action === "rename") destName = res.newName;
-        if (res.action === "keepBoth") destName = uniqueName(file.name, new Set(localEntries.map((e) => e.name)));
+        if (res.action === "keepBoth")
+          destName = uniqueName(file.name, new Set(localEntries.map((e) => e.name)));
         if (res.action === "resume") resume = true;
       }
     }
     const dest = joinPath(localPath, destName);
     try {
       const scope = sessionLabel(session);
-      const queued = await api.enqueueDownload(session.id, file.path, dest, isDir, resume, downloadFilter);
+      const queued = await api.enqueueDownload(
+        session.id,
+        file.path,
+        dest,
+        isDir,
+        resume,
+        downloadFilter,
+      );
       queued.forEach((t) => upsertTransfer({ ...t, scope }));
-      addLog("info", `Download queued: ${file.name} → ${dest} (${queued.length} file${queued.length !== 1 ? "s" : ""})`, scope);
+      addLog(
+        "info",
+        `Download queued: ${file.name} → ${dest} (${queued.length} file${queued.length !== 1 ? "s" : ""})`,
+        scope,
+      );
       if (autoOpenQueue) revealQueue();
-    } catch (err) { addLog("error", fmtErr(err)); }
+    } catch (err) {
+      addLog("error", fmtErr(err));
+    }
   };
 
   const handleClearCompleted = () => {
@@ -817,13 +1059,23 @@ export default function App() {
     if (!isTauri() || !session) return;
     try {
       // Retried items are always single files (the queue holds expanded files).
-      const queued = t.direction === "upload"
-        ? await api.enqueueUpload(session.id, t.localPath, t.remotePath)
-        : await api.enqueueDownload(session.id, t.remotePath, t.localPath, false, false, downloadFilter);
+      const queued =
+        t.direction === "upload"
+          ? await api.enqueueUpload(session.id, t.localPath, t.remotePath)
+          : await api.enqueueDownload(
+              session.id,
+              t.remotePath,
+              t.localPath,
+              false,
+              false,
+              downloadFilter,
+            );
       const scope = t.scope ?? sessionLabel(session);
       queued.forEach((q) => upsertTransfer({ ...q, scope }));
       revealQueue();
-    } catch (err) { addLog("error", fmtErr(err)); }
+    } catch (err) {
+      addLog("error", fmtErr(err));
+    }
   };
 
   // ─── File management ───────────────────────────────────────────────────────
@@ -984,7 +1236,9 @@ export default function App() {
             onClick={() => setShowAssistant((v) => !v)}
             title="Ask TurboFiles"
             className={`flex items-center gap-1.5 rounded-md px-2 py-1 text-xs transition-colors ${
-              showAssistant ? "bg-accent/15 text-accent" : "text-subtle hover:bg-muted hover:text-fg"
+              showAssistant
+                ? "bg-accent/15 text-accent"
+                : "text-subtle hover:bg-muted hover:text-fg"
             }`}
           >
             <Sparkles size={14} /> Ask
@@ -1044,7 +1298,10 @@ export default function App() {
                       <ChevronDown size={12} />
                     </button>
                     <button
-                      onClick={(e) => { e.stopPropagation(); handleCloseTab(tab.id); }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCloseTab(tab.id);
+                      }}
                       title="Disconnect and close"
                       className="shrink-0 rounded p-0.5 opacity-0 transition-opacity hover:bg-muted hover:text-fg group-hover:opacity-100"
                     >
@@ -1086,7 +1343,11 @@ export default function App() {
               {showNewMenu && (
                 <div className="absolute right-0 top-full z-50 mt-1 w-60 rounded-md border border-border bg-surface py-1 shadow-lg">
                   <button
-                    onClick={() => { setShowNewMenu(false); setActivePanel(null); setActiveTab(null); }}
+                    onClick={() => {
+                      setShowNewMenu(false);
+                      setActivePanel(null);
+                      setActiveTab(null);
+                    }}
                     className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-fg hover:bg-muted"
                   >
                     <Plug size={13} className="shrink-0 text-accent" />
@@ -1103,7 +1364,11 @@ export default function App() {
                         {sites.map((site) => (
                           <button
                             key={site.id}
-                            onClick={() => { setShowNewMenu(false); setActivePanel(null); handleConnectSite(site); }}
+                            onClick={() => {
+                              setShowNewMenu(false);
+                              setActivePanel(null);
+                              handleConnectSite(site);
+                            }}
                             className="flex w-full min-w-0 items-center gap-2 px-3 py-1.5 text-left hover:bg-muted"
                             title={`Connect to ${site.host}`}
                           >
@@ -1111,7 +1376,8 @@ export default function App() {
                             <span className="min-w-0 flex-1 overflow-hidden">
                               <span className="block truncate text-xs text-fg">{site.name}</span>
                               <span className="block truncate text-[10px] text-subtle">
-                                {site.protocol === "ftps" ? "FTP" : site.protocol.toUpperCase()} · {site.host}
+                                {site.protocol === "ftps" ? "FTP" : site.protocol.toUpperCase()} ·{" "}
+                                {site.host}
                               </span>
                             </span>
                           </button>
@@ -1133,7 +1399,10 @@ export default function App() {
             >
               {tabMenuTab.siteId ? (
                 <>
-                  <MenuItem onClick={tabEditSite} icon={<Pencil size={12} className="text-subtle" />}>
+                  <MenuItem
+                    onClick={tabEditSite}
+                    icon={<Pencil size={12} className="text-subtle" />}
+                  >
                     Edit site
                   </MenuItem>
                   <MenuItem onClick={tabDeleteSite} icon={<Trash2 size={12} />} danger>
@@ -1145,7 +1414,11 @@ export default function App() {
                 <p className="px-3 pb-1 pt-0.5 text-[10px] text-subtle">Quick-connect session</p>
               )}
               <MenuItem
-                onClick={() => { const id = tabMenu.tabId; setTabMenu(null); handleCloseTab(id); }}
+                onClick={() => {
+                  const id = tabMenu.tabId;
+                  setTabMenu(null);
+                  handleCloseTab(id);
+                }}
                 icon={<Unplug size={12} />}
                 danger
               >
@@ -1166,140 +1439,167 @@ export default function App() {
           ) : activePanel === "logs" ? (
             <GlobalLogsPanel logs={logs} />
           ) : (
-          <>
-          <ConnectionBar
-            onConnect={handleConnect}
-            onSave={handleSaveFromBar}
-            connecting={connecting}
-            saving={saving}
-          />
+            <>
+              <ConnectionBar
+                onConnect={handleConnect}
+                onSave={handleSaveFromBar}
+                connecting={connecting}
+                saving={saving}
+              />
 
-          <div className={`flex min-h-0 flex-1 flex-col ${messageLogPosition === "top" ? "flex-col-reverse" : ""}`}>
-          <div className="flex min-h-0 flex-1 gap-2 p-3">
-            <div className="flex min-w-0 flex-1" style={{ order: swapPanes ? 3 : 1 }}>
-            <FileBrowser
-              title="Local site"
-              path={localPath}
-              entries={visibleLocal}
-              selected={selectedLocal?.path}
-              isRefreshing={localRefreshing}
-              onSelect={setSelectedLocal}
-              onOpenDir={openLocalDir}
-              onNavigateUp={navUpLocal}
-              onTransfer={(e) => handleUpload(e)}
-              onRefresh={handleRefreshLocal}
-              onDelete={handleDeleteLocal}
-              onRename={handleRenameLocal}
-              onMkdir={handleMkdirLocal}
-              onRevealInFinder={handleRevealInFinder}
-              onOpenFile={handleOpenLocalFile}
-              onOpenFileWith={handleOpenLocalFileWith}
-              paneKind="local"
-              onDropEntry={(e) => handleDownload(e)}
-              compareWith={directoryComparison ? visibleRemote : undefined}
-              compareThreshold={dirCompareThreshold}
-            />
-            </div>
-            <div className="flex shrink-0 flex-col items-center justify-center gap-2" style={{ order: 2 }}>
-              <button
-                onClick={() => handleUpload()}
-                disabled={!selectedLocal || !session}
-                className="rounded-md border border-border bg-surface p-2 text-subtle hover:bg-muted disabled:cursor-not-allowed disabled:opacity-30"
-                title={selectedLocal ? `Upload ${selectedLocal.name}${selectedLocal.kind === "directory" ? " (folder)" : ""}` : "Select a local file or folder to upload"}
+              <div
+                className={`flex min-h-0 flex-1 flex-col ${messageLogPosition === "top" ? "flex-col-reverse" : ""}`}
               >
-                <ArrowRight size={16} className={swapPanes ? "rotate-180" : ""} />
-              </button>
-              <button
-                onClick={() => handleDownload()}
-                disabled={!selectedRemote || !session}
-                className="rounded-md border border-border bg-surface p-2 text-subtle hover:bg-muted disabled:cursor-not-allowed disabled:opacity-30"
-                title={selectedRemote ? `Download ${selectedRemote.name}${selectedRemote.kind === "directory" ? " (folder)" : ""}` : "Select a remote file or folder to download"}
-              >
-                <ArrowRight size={16} className={swapPanes ? "" : "rotate-180"} />
-              </button>
-              <button className="rounded-md border border-border bg-surface p-2 text-subtle hover:bg-muted" title="Sync">
-                <ArrowLeftRight size={16} />
-              </button>
-            </div>
-            <div className="flex min-w-0 flex-1" style={{ order: swapPanes ? 1 : 3 }}>
-            <FileBrowser
-              title="Remote site"
-              path={remotePath}
-              entries={visibleRemote}
-              remote
-              selected={selectedRemote?.path}
-              isRefreshing={remoteRefreshing}
-              onSelect={setSelectedRemote}
-              onOpenDir={openRemoteDir}
-              onNavigateUp={navUpRemote}
-              onTransfer={(e) => handleDownload(e)}
-              onRefresh={handleRefreshRemote}
-              onDelete={handleDeleteRemote}
-              onRename={handleRenameRemote}
-              onMkdir={handleMkdirRemote}
-              onOpenFile={handleOpenRemoteFile}
-              onOpenFileWith={handleOpenRemoteFileWith}
-              paneKind="remote"
-              onDropEntry={(e) => handleUpload(e)}
-              compareWith={directoryComparison ? visibleLocal : undefined}
-              compareThreshold={dirCompareThreshold}
-            />
-            </div>
-          </div>
+                <div className="flex min-h-0 flex-1 gap-2 p-3">
+                  <div className="flex min-w-0 flex-1" style={{ order: swapPanes ? 3 : 1 }}>
+                    <FileBrowser
+                      title="Local site"
+                      path={localPath}
+                      entries={visibleLocal}
+                      selected={selectedLocal?.path}
+                      isRefreshing={localRefreshing}
+                      onSelect={setSelectedLocal}
+                      onOpenDir={openLocalDir}
+                      onNavigateUp={navUpLocal}
+                      onTransfer={(e) => handleUpload(e)}
+                      onRefresh={handleRefreshLocal}
+                      onDelete={handleDeleteLocal}
+                      onRename={handleRenameLocal}
+                      onMkdir={handleMkdirLocal}
+                      onRevealInFinder={handleRevealInFinder}
+                      onOpenFile={handleOpenLocalFile}
+                      onOpenFileWith={handleOpenLocalFileWith}
+                      paneKind="local"
+                      onDropEntry={(e) => handleDownload(e)}
+                      compareWith={directoryComparison ? visibleRemote : undefined}
+                      compareThreshold={dirCompareThreshold}
+                    />
+                  </div>
+                  <div
+                    className="flex shrink-0 flex-col items-center justify-center gap-2"
+                    style={{ order: 2 }}
+                  >
+                    <button
+                      onClick={() => handleUpload()}
+                      disabled={!selectedLocal || !session}
+                      className="rounded-md border border-border bg-surface p-2 text-subtle hover:bg-muted disabled:cursor-not-allowed disabled:opacity-30"
+                      title={
+                        selectedLocal
+                          ? `Upload ${selectedLocal.name}${selectedLocal.kind === "directory" ? " (folder)" : ""}`
+                          : "Select a local file or folder to upload"
+                      }
+                    >
+                      <ArrowRight size={16} className={swapPanes ? "rotate-180" : ""} />
+                    </button>
+                    <button
+                      onClick={() => handleDownload()}
+                      disabled={!selectedRemote || !session}
+                      className="rounded-md border border-border bg-surface p-2 text-subtle hover:bg-muted disabled:cursor-not-allowed disabled:opacity-30"
+                      title={
+                        selectedRemote
+                          ? `Download ${selectedRemote.name}${selectedRemote.kind === "directory" ? " (folder)" : ""}`
+                          : "Select a remote file or folder to download"
+                      }
+                    >
+                      <ArrowRight size={16} className={swapPanes ? "" : "rotate-180"} />
+                    </button>
+                    <button
+                      className="rounded-md border border-border bg-surface p-2 text-subtle hover:bg-muted"
+                      title="Sync"
+                    >
+                      <ArrowLeftRight size={16} />
+                    </button>
+                  </div>
+                  <div className="flex min-w-0 flex-1" style={{ order: swapPanes ? 1 : 3 }}>
+                    <FileBrowser
+                      title="Remote site"
+                      path={remotePath}
+                      entries={visibleRemote}
+                      remote
+                      selected={selectedRemote?.path}
+                      isRefreshing={remoteRefreshing}
+                      onSelect={setSelectedRemote}
+                      onOpenDir={openRemoteDir}
+                      onNavigateUp={navUpRemote}
+                      onTransfer={(e) => handleDownload(e)}
+                      onRefresh={handleRefreshRemote}
+                      onDelete={handleDeleteRemote}
+                      onRename={handleRenameRemote}
+                      onMkdir={handleMkdirRemote}
+                      onOpenFile={handleOpenRemoteFile}
+                      onOpenFileWith={handleOpenRemoteFileWith}
+                      paneKind="remote"
+                      onDropEntry={(e) => handleUpload(e)}
+                      compareWith={directoryComparison ? visibleLocal : undefined}
+                      compareThreshold={dirCompareThreshold}
+                    />
+                  </div>
+                </div>
 
-          <div className={`flex flex-col border-t border-border bg-surface ${bottomExpanded ? "h-56" : "shrink-0"}`}>
-            <div className="flex items-center gap-4 border-b border-border px-3">
-              <TabButton
-                active={bottomExpanded && bottomTab === "queue"}
-                onClick={() => { setBottomTab("queue"); setBottomExpanded(true); }}
-              >
-                Transfer Queue
-                {transfers.length > 0 && (
-                  <span className="ml-1.5 rounded-full bg-accent px-1.5 text-[10px] text-accent-fg">
-                    {transfers.length}
-                  </span>
-                )}
-              </TabButton>
-              <TabButton
-                active={bottomExpanded && bottomTab === "logs"}
-                onClick={() => { setBottomTab("logs"); setBottomExpanded(true); }}
-              >
-                Logs
-              </TabButton>
-              <div className="flex-1" />
-              <button
-                onClick={() => setBottomExpanded((v) => !v)}
-                title={bottomExpanded ? "Collapse panel" : "Expand panel"}
-                className="rounded p-1 text-subtle hover:bg-muted hover:text-fg"
-              >
-                {bottomExpanded ? <ChevronDown size={15} /> : <ChevronUp size={15} />}
-              </button>
-            </div>
-            {bottomExpanded && (
-              <div className="min-h-0 flex-1">
-                {bottomTab === "queue" ? (
-                  <TransferQueue
-                    transfers={transfers}
-                    onPause={(id) => isTauri() && api.pauseTransfer(id)}
-                    onResume={(id) => isTauri() && api.resumeTransfer(id)}
-                    onCancel={(id) => isTauri() && api.cancelTransfer(id)}
-                    onRetry={handleRetry}
-                    onClearCompleted={handleClearCompleted}
-                  />
-                ) : (
-                  <LogsPanel logs={logs} />
-                )}
+                <div
+                  className={`flex flex-col border-t border-border bg-surface ${bottomExpanded ? "h-56" : "shrink-0"}`}
+                >
+                  <div className="flex items-center gap-4 border-b border-border px-3">
+                    <TabButton
+                      active={bottomExpanded && bottomTab === "queue"}
+                      onClick={() => {
+                        setBottomTab("queue");
+                        setBottomExpanded(true);
+                      }}
+                    >
+                      Transfer Queue
+                      {transfers.length > 0 && (
+                        <span className="ml-1.5 rounded-full bg-accent px-1.5 text-[10px] text-accent-fg">
+                          {transfers.length}
+                        </span>
+                      )}
+                    </TabButton>
+                    <TabButton
+                      active={bottomExpanded && bottomTab === "logs"}
+                      onClick={() => {
+                        setBottomTab("logs");
+                        setBottomExpanded(true);
+                      }}
+                    >
+                      Logs
+                    </TabButton>
+                    <div className="flex-1" />
+                    <button
+                      onClick={() => setBottomExpanded((v) => !v)}
+                      title={bottomExpanded ? "Collapse panel" : "Expand panel"}
+                      className="rounded p-1 text-subtle hover:bg-muted hover:text-fg"
+                    >
+                      {bottomExpanded ? <ChevronDown size={15} /> : <ChevronUp size={15} />}
+                    </button>
+                  </div>
+                  {bottomExpanded && (
+                    <div className="min-h-0 flex-1">
+                      {bottomTab === "queue" ? (
+                        <TransferQueue
+                          transfers={transfers}
+                          onPause={(id) => isTauri() && api.pauseTransfer(id)}
+                          onResume={(id) => isTauri() && api.resumeTransfer(id)}
+                          onCancel={(id) => isTauri() && api.cancelTransfer(id)}
+                          onRetry={handleRetry}
+                          onClearCompleted={handleClearCompleted}
+                        />
+                      ) : (
+                        <LogsPanel logs={logs} />
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
-          </div>
-          </div>
-          </>
+            </>
           )}
         </main>
         <AssistantPanel
           open={showAssistant}
           onClose={() => setShowAssistant(false)}
-          onOpenSettings={() => { setShowAssistant(false); setShowSettings(true); }}
+          onOpenSettings={() => {
+            setShowAssistant(false);
+            setShowSettings(true);
+          }}
           onConnectSite={async (siteId) => {
             const site = sites.find((s) => s.id === siteId);
             if (!site) return { ok: false, reason: "site not found" };
@@ -1313,7 +1613,9 @@ export default function App() {
           <Lock size={12} className={`shrink-0 ${session ? "text-green-500" : ""}`} />
           {session ? (
             <>
-              <span className="shrink-0">{tabs.length} session{tabs.length !== 1 ? "s" : ""}</span>
+              <span className="shrink-0">
+                {tabs.length} session{tabs.length !== 1 ? "s" : ""}
+              </span>
               <span className="shrink-0 text-border">·</span>
               <span className="truncate" title={`${session.username}@${session.host}`}>
                 {session.username}@{session.host}
@@ -1323,7 +1625,9 @@ export default function App() {
             "Not connected"
           )}
         </span>
-        <span className="shrink-0 whitespace-nowrap">{sites.length} saved sites · Queue: {transfers.length}</span>
+        <span className="shrink-0 whitespace-nowrap">
+          {sites.length} saved sites · Queue: {transfers.length}
+        </span>
       </footer>
 
       <SettingsModal open={showSettings} onClose={() => setShowSettings(false)} />
@@ -1336,8 +1640,16 @@ export default function App() {
 
 /** A single row in a dropdown menu. */
 function MenuItem({
-  children, icon, onClick, danger,
-}: { children: React.ReactNode; icon: React.ReactNode; onClick: () => void; danger?: boolean }) {
+  children,
+  icon,
+  onClick,
+  danger,
+}: {
+  children: React.ReactNode;
+  icon: React.ReactNode;
+  onClick: () => void;
+  danger?: boolean;
+}) {
   return (
     <button
       onClick={onClick}
@@ -1353,15 +1665,27 @@ function MenuItem({
 
 /** A closable global-panel tab (Logs / Transfer Queue) in the top tab strip. */
 function PanelTab({
-  label, badge, active, onSelect, onClose,
-}: { label: string; badge?: number; active: boolean; onSelect: () => void; onClose: () => void }) {
+  label,
+  badge,
+  active,
+  onSelect,
+  onClose,
+}: {
+  label: string;
+  badge?: number;
+  active: boolean;
+  onSelect: () => void;
+  onClose: () => void;
+}) {
   return (
     <div
       role="tab"
       aria-selected={active}
       onClick={onSelect}
       className={`group flex shrink-0 cursor-pointer items-center gap-1.5 rounded-t-md border border-b-0 px-3 py-1.5 text-xs transition-colors ${
-        active ? "border-border bg-bg text-fg" : "border-transparent text-subtle hover:bg-muted hover:text-fg"
+        active
+          ? "border-border bg-bg text-fg"
+          : "border-transparent text-subtle hover:bg-muted hover:text-fg"
       }`}
     >
       <span>{label}</span>
@@ -1369,7 +1693,10 @@ function PanelTab({
         <span className="rounded-full bg-accent px-1.5 text-[10px] text-accent-fg">{badge}</span>
       )}
       <button
-        onClick={(e) => { e.stopPropagation(); onClose(); }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
         title="Close tab"
         className="ml-0.5 shrink-0 rounded p-0.5 opacity-0 transition-opacity hover:bg-muted hover:text-fg group-hover:opacity-100"
       >
@@ -1380,8 +1707,14 @@ function PanelTab({
 }
 
 function TabButton({
-  active, onClick, children,
-}: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
   return (
     <button
       onClick={onClick}

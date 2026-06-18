@@ -34,6 +34,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      # `tauri::generate_context!` reads frontendDist (../dist) at compile time,
+      # so clippy/test won't compile until the frontend is built.
+      - name: Build frontend (creates dist/ for generate_context!)
+        run: |
+          npm ci
+          npm run build
       - name: Install Linux deps
         run: |
           sudo apt-get update

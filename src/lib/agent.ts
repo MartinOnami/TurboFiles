@@ -24,15 +24,71 @@ export interface ProviderInfo {
 
 /** The provider picker. Each entry is its own keychain-scoped credential. */
 export const PROVIDERS: ProviderInfo[] = [
-  { id: "anthropic", label: "Anthropic (Claude)", kind: "anthropic", baseUrl: "", defaultModel: "claude-3-5-sonnet-latest" },
-  { id: "openai", label: "OpenAI", kind: "openai", baseUrl: "https://api.openai.com/v1", defaultModel: "gpt-4o" },
-  { id: "deepseek", label: "DeepSeek", kind: "openai", baseUrl: "https://api.deepseek.com/v1", defaultModel: "deepseek-chat" },
-  { id: "moonshot", label: "Moonshot (Kimi)", kind: "openai", baseUrl: "https://api.moonshot.ai/v1", defaultModel: "kimi-k2-0711-preview" },
-  { id: "groq", label: "Groq", kind: "openai", baseUrl: "https://api.groq.com/openai/v1", defaultModel: "llama-3.3-70b-versatile" },
-  { id: "openrouter", label: "OpenRouter", kind: "openai", baseUrl: "https://openrouter.ai/api/v1", defaultModel: "openai/gpt-4o" },
-  { id: "ollama", label: "Ollama (local)", kind: "openai", baseUrl: "http://localhost:11434/v1", local: true, defaultModel: "llama3.1" },
-  { id: "lmstudio", label: "LM Studio (local)", kind: "openai", baseUrl: "http://localhost:1234/v1", local: true, defaultModel: "" },
-  { id: "custom", label: "Custom (OpenAI-compatible)", kind: "openai", baseUrl: "", defaultModel: "" },
+  {
+    id: "anthropic",
+    label: "Anthropic (Claude)",
+    kind: "anthropic",
+    baseUrl: "",
+    defaultModel: "claude-3-5-sonnet-latest",
+  },
+  {
+    id: "openai",
+    label: "OpenAI",
+    kind: "openai",
+    baseUrl: "https://api.openai.com/v1",
+    defaultModel: "gpt-4o",
+  },
+  {
+    id: "deepseek",
+    label: "DeepSeek",
+    kind: "openai",
+    baseUrl: "https://api.deepseek.com/v1",
+    defaultModel: "deepseek-chat",
+  },
+  {
+    id: "moonshot",
+    label: "Moonshot (Kimi)",
+    kind: "openai",
+    baseUrl: "https://api.moonshot.ai/v1",
+    defaultModel: "kimi-k2-0711-preview",
+  },
+  {
+    id: "groq",
+    label: "Groq",
+    kind: "openai",
+    baseUrl: "https://api.groq.com/openai/v1",
+    defaultModel: "llama-3.3-70b-versatile",
+  },
+  {
+    id: "openrouter",
+    label: "OpenRouter",
+    kind: "openai",
+    baseUrl: "https://openrouter.ai/api/v1",
+    defaultModel: "openai/gpt-4o",
+  },
+  {
+    id: "ollama",
+    label: "Ollama (local)",
+    kind: "openai",
+    baseUrl: "http://localhost:11434/v1",
+    local: true,
+    defaultModel: "llama3.1",
+  },
+  {
+    id: "lmstudio",
+    label: "LM Studio (local)",
+    kind: "openai",
+    baseUrl: "http://localhost:1234/v1",
+    local: true,
+    defaultModel: "",
+  },
+  {
+    id: "custom",
+    label: "Custom (OpenAI-compatible)",
+    kind: "openai",
+    baseUrl: "",
+    defaultModel: "",
+  },
 ];
 
 /** Look up a provider by id, falling back to the first entry (Anthropic). */
@@ -76,7 +132,8 @@ export const TOOLS: ToolDef[] = [
   },
   {
     name: "list_sites",
-    description: "List the saved sites/connections in the Site Manager (name, protocol, host, user).",
+    description:
+      "List the saved sites/connections in the Site Manager (name, protocol, host, user).",
     parameters: obj({}),
   },
   {
@@ -118,7 +175,11 @@ export const TOOLS: ToolDef[] = [
     description: "Read recent application log entries (connections, transfers, errors).",
     parameters: obj({
       sinceMinutes: { type: "number", description: "Only entries from the last N minutes." },
-      level: { type: "string", enum: ["info", "warn", "error", "debug"], description: "Filter by level." },
+      level: {
+        type: "string",
+        enum: ["info", "warn", "error", "debug"],
+        description: "Filter by level.",
+      },
     }),
   },
   {
@@ -143,7 +204,10 @@ export const TOOLS: ToolDef[] = [
     description:
       "Run a heuristic WordPress security inventory at a root path: detect the core version, enumerate plugin and theme versions, and flag exposed/over-permissive sensitive files (wp-config.php, debug.log, .env, backups, readme.html). Returns evidence for you to compare against known vulnerabilities.",
     parameters: obj({
-      rootPath: { type: "string", description: "WordPress root (defaults to the current remote directory)." },
+      rootPath: {
+        type: "string",
+        description: "WordPress root (defaults to the current remote directory).",
+      },
     }),
   },
   {
@@ -151,8 +215,15 @@ export const TOOLS: ToolDef[] = [
     description: "Download one or more remote files/folders to a local directory.",
     parameters: obj(
       {
-        remotePaths: { type: "array", items: { type: "string" }, description: "Absolute remote paths." },
-        localDir: { type: "string", description: "Destination local directory (defaults to the current local directory)." },
+        remotePaths: {
+          type: "array",
+          items: { type: "string" },
+          description: "Absolute remote paths.",
+        },
+        localDir: {
+          type: "string",
+          description: "Destination local directory (defaults to the current local directory).",
+        },
       },
       ["remotePaths"],
     ),
@@ -163,8 +234,15 @@ export const TOOLS: ToolDef[] = [
     description: "Upload one or more local files/folders to a remote directory.",
     parameters: obj(
       {
-        localPaths: { type: "array", items: { type: "string" }, description: "Absolute local paths." },
-        remoteDir: { type: "string", description: "Destination remote directory (defaults to the current remote directory)." },
+        localPaths: {
+          type: "array",
+          items: { type: "string" },
+          description: "Absolute local paths.",
+        },
+        remoteDir: {
+          type: "string",
+          description: "Destination remote directory (defaults to the current remote directory).",
+        },
       },
       ["localPaths"],
     ),
@@ -216,10 +294,21 @@ export const TOOLS: ToolDef[] = [
         protocol: { type: "string", enum: ["sftp", "ftp", "ftps"] },
         host: { type: "string", description: "Hostname or IP." },
         name: { type: "string", description: "Display name (optional; defaults to user@host)." },
-        port: { type: "number", description: "Optional; defaults to 22 for SFTP, 21 for FTP/FTPS." },
+        port: {
+          type: "number",
+          description: "Optional; defaults to 22 for SFTP, 21 for FTP/FTPS.",
+        },
         username: { type: "string", description: "Optional." },
-        password: { type: "string", description: "Optional — omit to save without a stored password. Pass it verbatim if the user gave one; never invent it." },
-        remotePath: { type: "string", description: "Optional default remote directory to open on connect (e.g. /www/site/public)." },
+        password: {
+          type: "string",
+          description:
+            "Optional — omit to save without a stored password. Pass it verbatim if the user gave one; never invent it.",
+        },
+        remotePath: {
+          type: "string",
+          description:
+            "Optional default remote directory to open on connect (e.g. /www/site/public).",
+        },
       },
       ["protocol", "host"],
     ),
@@ -255,12 +344,15 @@ export function validateToolArgs(name: string, a: Record<string, unknown>): void
     return v;
   };
   const scope = () => {
-    if (a.scope !== "remote" && a.scope !== "local") throw new Error('scope must be "remote" or "local"');
+    if (a.scope !== "remote" && a.scope !== "local")
+      throw new Error('scope must be "remote" or "local"');
   };
   const strList = (k: string) => {
-    if (!Array.isArray(a[k]) || (a[k] as unknown[]).length === 0) throw new Error(`"${k}" must be a non-empty list`);
+    if (!Array.isArray(a[k]) || (a[k] as unknown[]).length === 0)
+      throw new Error(`"${k}" must be a non-empty list`);
     if ((a[k] as unknown[]).length > 200) throw new Error(`"${k}" has too many entries`);
-    for (const v of a[k] as unknown[]) if (typeof v !== "string" || !v.trim()) throw new Error(`"${k}" has an invalid entry`);
+    for (const v of a[k] as unknown[])
+      if (typeof v !== "string" || !v.trim()) throw new Error(`"${k}" has an invalid entry`);
   };
   switch (name) {
     case "open_remote_directory":
@@ -291,9 +383,11 @@ export function validateToolArgs(name: string, a: Record<string, unknown>): void
       strList("localPaths");
       break;
     case "add_site":
-      if (!["sftp", "ftp", "ftps"].includes(String(a.protocol))) throw new Error("protocol must be sftp, ftp, or ftps");
+      if (!["sftp", "ftp", "ftps"].includes(String(a.protocol)))
+        throw new Error("protocol must be sftp, ftp, or ftps");
       str("host");
-      if (a.port != null && (typeof a.port !== "number" || a.port < 1 || a.port > 65535)) throw new Error("port out of range");
+      if (a.port != null && (typeof a.port !== "number" || a.port < 1 || a.port > 65535))
+        throw new Error("port out of range");
       break;
     // no-arg / read-only tools need no validation.
   }
@@ -373,7 +467,11 @@ export function parseResponse(
       .join("");
     const toolCalls = blocks
       .filter((b) => b.type === "tool_use")
-      .map((b) => ({ id: b.id ?? "", name: b.name ?? "", args: (b.input as Record<string, unknown>) ?? {} }));
+      .map((b) => ({
+        id: b.id ?? "",
+        name: b.name ?? "",
+        args: (b.input as Record<string, unknown>) ?? {},
+      }));
     return { text, toolCalls };
   }
   const choices = json.choices as Array<{ message?: OpenAIMessage }> | undefined;
@@ -419,7 +517,10 @@ function toAnthropic(msgs: AgentMsg[]): unknown[] {
       for (const tc of m.toolCalls) {
         content.push({ type: "tool_use", id: tc.id, name: tc.name, input: tc.args });
       }
-      out.push({ role: "assistant", content: content.length ? content : [{ type: "text", text: "…" }] });
+      out.push({
+        role: "assistant",
+        content: content.length ? content : [{ type: "text", text: "…" }],
+      });
     } else {
       // Merge consecutive tool results into the previous user turn if it already
       // holds tool_result blocks; otherwise start a new user turn.

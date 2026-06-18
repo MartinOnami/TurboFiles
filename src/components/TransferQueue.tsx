@@ -13,12 +13,12 @@ export interface TransferQueueProps {
 }
 
 const STATUS_COLOR: Record<TransferStatus, string> = {
-  queued:       "text-subtle",
+  queued: "text-subtle",
   transferring: "text-accent",
-  paused:       "text-warning",
-  completed:    "text-success",
-  failed:       "text-danger",
-  cancelled:    "text-subtle",
+  paused: "text-warning",
+  completed: "text-success",
+  failed: "text-danger",
+  cancelled: "text-subtle",
 };
 
 const ACTIVE = new Set<TransferStatus>(["queued", "transferring", "paused"]);
@@ -27,10 +27,10 @@ const ACTIVE = new Set<TransferStatus>(["queued", "transferring", "paused"]);
 type Filter = "all" | "queued" | "active" | "failed" | "completed";
 
 const FILTERS: { value: Filter; label: string; match: (s: TransferStatus) => boolean }[] = [
-  { value: "all",       label: "All",       match: () => true },
-  { value: "queued",    label: "Queued",    match: (s) => s === "queued" },
-  { value: "active",    label: "Active",    match: (s) => s === "transferring" || s === "paused" },
-  { value: "failed",    label: "Failed",    match: (s) => s === "failed" },
+  { value: "all", label: "All", match: () => true },
+  { value: "queued", label: "Queued", match: (s) => s === "queued" },
+  { value: "active", label: "Active", match: (s) => s === "transferring" || s === "paused" },
+  { value: "failed", label: "Failed", match: (s) => s === "failed" },
   { value: "completed", label: "Completed", match: (s) => s === "completed" || s === "cancelled" },
 ];
 
@@ -44,10 +44,13 @@ export function TransferQueue({
 }: TransferQueueProps) {
   const [filter, setFilter] = useState<Filter>("all");
 
-  const counts = FILTERS.reduce<Record<Filter, number>>((acc, f) => {
-    acc[f.value] = transfers.filter((t) => f.match(t.status)).length;
-    return acc;
-  }, { all: 0, queued: 0, active: 0, failed: 0, completed: 0 });
+  const counts = FILTERS.reduce<Record<Filter, number>>(
+    (acc, f) => {
+      acc[f.value] = transfers.filter((t) => f.match(t.status)).length;
+      return acc;
+    },
+    { all: 0, queued: 0, active: 0, failed: 0, completed: 0 },
+  );
 
   const activeFilter = FILTERS.find((f) => f.value === filter)!;
   const visible = transfers.filter((t) => activeFilter.match(t.status));
@@ -109,13 +112,18 @@ export function TransferQueue({
               </tr>
             )}
             {visible.map((t) => {
-              const pct = t.totalBytes > 0
-                ? Math.round((t.bytesTransferred / t.totalBytes) * 100)
-                : t.status === "completed" ? 100 : 0;
+              const pct =
+                t.totalBytes > 0
+                  ? Math.round((t.bytesTransferred / t.totalBytes) * 100)
+                  : t.status === "completed"
+                    ? 100
+                    : 0;
               const barColor =
-                t.status === "failed" ? "bg-danger"
-                : t.status === "completed" ? "bg-success"
-                : "bg-accent";
+                t.status === "failed"
+                  ? "bg-danger"
+                  : t.status === "completed"
+                    ? "bg-success"
+                    : "bg-accent";
               return (
                 <tr key={t.id} className="border-b border-border/50">
                   <td className="max-w-[220px] truncate px-3 py-1.5 text-fg" title={t.name}>
@@ -124,13 +132,18 @@ export function TransferQueue({
                   <td className={`px-3 py-1.5 capitalize ${STATUS_COLOR[t.status]}`}>
                     {t.status}
                     {t.error && (
-                      <span className="ml-1 text-[10px] text-danger" title={t.error}>⚠</span>
+                      <span className="ml-1 text-[10px] text-danger" title={t.error}>
+                        ⚠
+                      </span>
                     )}
                   </td>
                   <td className="px-3 py-1.5">
                     <div className="flex items-center gap-2">
                       <div className="h-1.5 w-28 overflow-hidden rounded-full bg-muted">
-                        <div className={`h-full ${barColor} transition-all`} style={{ width: `${pct}%` }} />
+                        <div
+                          className={`h-full ${barColor} transition-all`}
+                          style={{ width: `${pct}%` }}
+                        />
                       </div>
                       <span className="text-xs text-subtle">{pct}%</span>
                     </div>
@@ -141,7 +154,10 @@ export function TransferQueue({
                   <td className="px-3 py-1.5 text-subtle">
                     {formatBytes(t.bytesTransferred)} / {formatBytes(t.totalBytes)}
                   </td>
-                  <td className="max-w-[200px] truncate px-3 py-1.5 text-subtle" title={t.remotePath}>
+                  <td
+                    className="max-w-[200px] truncate px-3 py-1.5 text-subtle"
+                    title={t.remotePath}
+                  >
                     {t.remotePath || "—"}
                   </td>
                   <td className="px-3 py-1.5">

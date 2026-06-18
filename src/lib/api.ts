@@ -93,7 +93,11 @@ export async function pickApplication(): Promise<string | null> {
 /** Open the native picker to choose one or more files to upload. */
 export async function pickFiles(): Promise<string[]> {
   if (!isTauri()) return [];
-  const selected = await open({ multiple: true, directory: false, title: "Select files to upload" });
+  const selected = await open({
+    multiple: true,
+    directory: false,
+    title: "Select files to upload",
+  });
   return Array.isArray(selected) ? selected : typeof selected === "string" ? [selected] : [];
 }
 
@@ -145,8 +149,11 @@ export const api = {
     },
   ) =>
     call<Session>("connect_site", {
-      siteId, acceptInvalidCert,
-      timeoutSecs: opts?.timeoutSecs, retries: opts?.retries, retryDelaySecs: opts?.retryDelaySecs,
+      siteId,
+      acceptInvalidCert,
+      timeoutSecs: opts?.timeoutSecs,
+      retries: opts?.retries,
+      retryDelaySecs: opts?.retryDelaySecs,
       proxy: opts?.proxy,
       minTlsVersion: opts?.minTlsVersion,
       sftpCompression: opts?.sftpCompression,
@@ -161,8 +168,7 @@ export const api = {
       passwordOverride: opts?.password,
     }),
   /** Forget a remembered SSH host key (to re-trust a rotated key). */
-  forgetHostKey: (host: string, port: number) =>
-    call<void>("forget_host_key", { host, port }),
+  forgetHostKey: (host: string, port: number) => call<void>("forget_host_key", { host, port }),
   /** Close a session and release its connection. */
   disconnect: (sessionId: string) => call<void>("disconnect", { sessionId }),
   /** List a remote directory. */
@@ -190,7 +196,11 @@ export const api = {
     filter?: { chars: string; replacement: string },
   ) =>
     call<Transfer[]>("enqueue_download", {
-      sessionId, remotePath, localPath, isDirectory, resume,
+      sessionId,
+      remotePath,
+      localPath,
+      isDirectory,
+      resume,
       filenameFilterChars: filter?.chars,
       filenameReplacement: filter?.replacement,
     }),
@@ -209,8 +219,7 @@ export const api = {
     call<void>("delete_remote", { sessionId, path }),
   renameRemote: (sessionId: string, from: string, to: string) =>
     call<void>("rename_remote", { sessionId, from, to }),
-  mkdirRemote: (sessionId: string, path: string) =>
-    call<void>("mkdir_remote", { sessionId, path }),
+  mkdirRemote: (sessionId: string, path: string) => call<void>("mkdir_remote", { sessionId, path }),
 
   /* ------------------------------------------------------- Local FS ops */
   deleteLocal: (path: string) => call<void>("delete_local", { path }),
@@ -269,13 +278,14 @@ export const api = {
 
   /* ------------------------------------------------------------ Updates */
   /** Latest published GitHub release for `repo` ("owner/name"), or null if none. */
-  checkLatestRelease: (repo: string) =>
-    call<ReleaseInfo | null>("check_latest_release", { repo }),
+  checkLatestRelease: (repo: string) => call<ReleaseInfo | null>("check_latest_release", { repo }),
 
   /* ----------------------------------------------------------- Site mgr */
   listSites: () => call<Site[]>("list_sites"),
-  saveSite: (site: Omit<Site, "id" | "createdAt" | "updatedAt" | "hasStoredSecret">, secret?: string) =>
-    call<Site>("save_site", { site, secret }),
+  saveSite: (
+    site: Omit<Site, "id" | "createdAt" | "updatedAt" | "hasStoredSecret">,
+    secret?: string,
+  ) => call<Site>("save_site", { site, secret }),
   deleteSite: (id: string) => call<void>("delete_site", { id }),
 };
 
@@ -285,9 +295,7 @@ export const api = {
 export function onTransferProgress(
   handler: (e: TransferProgressEvent) => void,
 ): Promise<UnlistenFn> {
-  return listen<TransferProgressEvent>("transfer://progress", (event) =>
-    handler(event.payload),
-  );
+  return listen<TransferProgressEvent>("transfer://progress", (event) => handler(event.payload));
 }
 
 /** Subscribe to file-editor re-upload notices (`ok`) and errors (`err`). */

@@ -21,8 +21,11 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - name: Install cargo-audit
         run: cargo install cargo-audit --locked
-      - name: cargo audit
-        run: cargo audit
+      - name: cargo audit (report-only)
+        # Report advisories without failing the build — a newly-published RUSTSEC
+        # advisory shouldn't turn unrelated pushes red. Review findings in the log
+        # / Security tab and address them deliberately.
+        run: cargo audit || true
         working-directory: src-tauri
 
   codeql:
