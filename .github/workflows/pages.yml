@@ -7,10 +7,11 @@ on:
   push:
     branches: [main]
     paths: ["website/**", ".github/workflows/pages.yml"]
-  # Redeploy when a release is published so the version shown on the page
-  # (and the download links) always reflect the newest release.
-  release:
-    types: [published]
+  # Manually re-run (or via the release process) to refresh the version baked
+  # into the page. NOTE: we deliberately do NOT trigger on `release: published`
+  # — that event runs on the tag ref (e.g. v0.1.3), which the `github-pages`
+  # environment's branch protection rejects ("not allowed to deploy"). The
+  # release flow triggers this workflow on `main` via workflow_dispatch instead.
   workflow_dispatch:
 
 permissions:
