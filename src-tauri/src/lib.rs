@@ -25,6 +25,10 @@ pub fn run() {
 
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
+        // In-app self-update: the updater verifies a signed `latest.json` and the
+        // process plugin relaunches the app after the new version is installed.
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
         .setup(|app| {
             let data_dir = app.path().app_data_dir()?;
             let db_path = std::env::var("TURBOFILES_DB_PATH")

@@ -1029,6 +1029,8 @@ function AboutPanel() {
   const [rel, setRel] = useState<ReleaseInfo | null>(null);
   const [checking, setChecking] = useState(false);
   const [checked, setChecked] = useState(false);
+  // null = idle; 0..1 = download progress; "error" = install failed
+  const [installing, setInstalling] = useState<number | "error" | null>(null);
 
   useEffect(() => {
     if (!isTauri()) return;
@@ -1037,6 +1039,22 @@ function AboutPanel() {
       .then(setInfo)
       .catch(() => undefined);
   }, []);
+
+  const installUpdate = async () => {
+    if (!isTauri() || installing !== null) return;
+    setInstalling(0);
+    try {
+      // On success the app downloads, installs, and relaunches — code after this
+      // never runs. `false` means no signed artifact yet (fall back to the page).
+      const ok = await api.installUpdate((f) => setInstalling(f));
+      if (!ok) {
+        setInstalling(null);
+        if (rel) await api.openPath(rel.url);
+      }
+    } catch {
+      setInstalling("error");
+    }
+  };
 
   const checkNow = () => {
     if (!isTauri() || checking) return;
@@ -1110,12 +1128,37 @@ function AboutPanel() {
             ))}
         </div>
         {hasUpdate && (
-          <button
-            onClick={() => isTauri() && api.openPath(rel!.url).catch(() => undefined)}
-            className="flex items-center gap-1.5 self-start rounded-md bg-accent px-3 py-1.5 text-xs font-medium text-accent-fg hover:opacity-90"
-          >
-            <Download size={13} /> Download v{rel!.version}
-          </button>
+          <div className="flex flex-col gap-1.5 self-start">
+            <button
+              onClick={() => void installUpdate()}
+              disabled={typeof installing === "number"}
+              className="flex items-center gap-1.5 rounded-md bg-accent px-3 py-1.5 text-xs font-medium text-accent-fg hover:opacity-90 disabled:opacity-70"
+            >
+              <Download size={13} />
+              {typeof installing === "number"
+                ? `Installing… ${Math.round(installing * 100)}%`
+                : `Update to v${rel!.version}`}
+            </button>
+            {typeof installing === "number" && (
+              <div className="h-1 w-44 overflow-hidden rounded-full bg-muted">
+                <div
+                  className="h-full rounded-full bg-accent transition-[width] duration-150"
+                  style={{ width: `${Math.round(installing * 100)}%` }}
+                />
+              </div>
+            )}
+            {installing === "error" && (
+              <span className="text-[11px] text-danger">
+                Update failed.{" "}
+                <button
+                  className="underline hover:text-fg"
+                  onClick={() => isTauri() && api.openPath(rel!.url).catch(() => undefined)}
+                >
+                  Download manually
+                </button>
+              </span>
+            )}
+          </div>
         )}
         <a
           href={RELEASES_URL}

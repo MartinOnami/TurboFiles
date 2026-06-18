@@ -41,12 +41,16 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # NOTE: code-signing env vars are intentionally omitted. The Tauri
-          # bundler treats a *present* APPLE_CERTIFICATE (even empty) as "sign
-          # this", then fails on `security import` with no real cert. With the
-          # vars absent, macOS produces an ad-hoc-signed (unsigned) build that
-          # bundles cleanly. To enable real signing later, add the APPLE_* /
-          # TAURI_SIGNING_* secrets in repo settings and re-introduce them here.
+          # Updater signing: signs the .sig artifacts + latest.json so the in-app
+          # updater can verify and install new versions. These are the free,
+          # self-generated Tauri updater keys (NOT an Apple/Windows code-signing
+          # cert) — the public half is pinned in tauri.conf.json > plugins.updater.
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          # NOTE: Apple/Windows OS code-signing env is still intentionally omitted —
+          # a *present* but empty APPLE_CERTIFICATE makes the bundler attempt (and
+          # fail) `security import`. Add those secrets + vars when real OS signing
+          # is set up; until then macOS ad-hoc signs and builds cleanly.
         with:
           tagName: ${{ github.ref_name }}
           releaseName: "TurboFiles ${{ github.ref_name }}"

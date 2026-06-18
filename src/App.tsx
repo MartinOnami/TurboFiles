@@ -158,6 +158,8 @@ export default function App() {
   const [showAssistant, setShowAssistant] = useState(false);
   // Available app update (newer GitHub release than the running version), or null.
   const [update, setUpdate] = useState<ReleaseInfo | null>(null);
+  // null = idle; 0..1 = in-app update download progress
+  const [updateProgress, setUpdateProgress] = useState<number | null>(null);
   // TEMP: always show onboarding on launch. For once-only, init from `!onboardingSeen`.
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [bottomExpanded, setBottomExpanded] = useState(true);
@@ -1225,11 +1227,31 @@ export default function App() {
         <div className="flex items-center gap-1">
           {update && (
             <button
-              onClick={() => void api.openPath(update.url)}
-              title={`Version ${update.version} is available — click to download`}
-              className="flex items-center gap-1.5 rounded-md bg-accent/15 px-2 py-1 text-xs font-medium text-accent hover:bg-accent/25"
+              onClick={() => {
+                if (updateProgress !== null) return;
+                setUpdateProgress(0);
+                void api
+                  .installUpdate((f) => setUpdateProgress(f))
+                  .then((ok) => {
+                    // ok === true relaunches the app; false/throw → open the page.
+                    if (!ok) {
+                      setUpdateProgress(null);
+                      void api.openPath(update.url);
+                    }
+                  })
+                  .catch(() => {
+                    setUpdateProgress(null);
+                    void api.openPath(update.url);
+                  });
+              }}
+              title={`Version ${update.version} is available — click to update`}
+              className="flex items-center gap-1.5 rounded-md bg-accent/15 px-2 py-1 text-xs font-medium text-accent hover:bg-accent/25 disabled:opacity-70"
+              disabled={updateProgress !== null}
             >
-              <Download size={14} /> Update available
+              <Download size={14} />
+              {updateProgress !== null
+                ? `Updating… ${Math.round(updateProgress * 100)}%`
+                : "Update available"}
             </button>
           )}
           <button

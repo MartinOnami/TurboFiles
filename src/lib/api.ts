@@ -8,6 +8,8 @@
 import { invoke } from "@tauri-apps/api/core";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import { open } from "@tauri-apps/plugin-dialog";
+import { check as checkTauriUpdate } from "@tauri-apps/plugin-updater";
+import { relaunch } from "@tauri-apps/plugin-process";
 import type {
   ConnectionRequest,
   DirEntry,
@@ -279,6 +281,33 @@ export const api = {
   /* ------------------------------------------------------------ Updates */
   /** Latest published GitHub release for `repo` ("owner/name"), or null if none. */
   checkLatestRelease: (repo: string) => call<ReleaseInfo | null>("check_latest_release", { repo }),
+
+  /**
+   * Download and install the available signed update in-app, reporting download
+   * progress as a 0..1 fraction, then relaunch into the new version. Resolves
+   * `false` when no signed update is available (e.g. the published release has
+   * no updater artifacts yet) so callers can fall back to opening the page.
+   * On success the app relaunches, so the returned promise never resolves.
+   */
+  installUpdate: async (onProgress?: (fraction: number) => void): Promise<boolean> => {
+    const update = await checkTauriUpdate();
+    if (!update) return false;
+    let total = 0;
+    let downloaded = 0;
+    await update.downloadAndInstall((event) => {
+      if (event.event === "Started") {
+        total = event.data.contentLength ?? 0;
+        onProgress?.(0);
+      } else if (event.event === "Progress") {
+        downloaded += event.data.chunkLength;
+        if (total > 0) onProgress?.(Math.min(1, downloaded / total));
+      } else if (event.event === "Finished") {
+        onProgress?.(1);
+      }
+    });
+    await relaunch();
+    return true;
+  },
 
   /* ----------------------------------------------------------- Site mgr */
   listSites: () => call<Site[]>("list_sites"),
