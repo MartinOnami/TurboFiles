@@ -276,6 +276,129 @@ section { padding: 64px 0; }
 .download__hint { margin-top: 20px; font-size: 13px; color: #cdddff; }
 .download__hint a { text-decoration: underline; }
 
+/* first launch (how to open an unsigned build) */
+.fl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.fl-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 22px 20px;
+}
+.fl-card__head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; color: var(--accent); }
+.fl-card__head h3 { margin: 0; font-size: 17px; font-weight: 700; color: var(--fg); }
+.fl-steps { margin: 0; padding: 0; list-style: none; counter-reset: fl; display: grid; gap: 11px; }
+.fl-steps li {
+  position: relative;
+  counter-increment: fl;
+  padding-left: 34px;
+  font-size: 14px;
+  color: var(--subtle);
+  min-height: 24px;
+}
+.fl-steps li b { color: var(--fg); font-weight: 600; }
+.fl-steps li::before {
+  content: counter(fl);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(20, 86, 204, 0.1);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fl-alt { margin: 16px 0 0; font-size: 12.5px; color: var(--subtle); opacity: 0.85; }
+.fl-card code { font-family: var(--mono); font-size: 0.92em; background: var(--muted); padding: 1px 5px; border-radius: 5px; }
+.fl-foot { text-align: center; max-width: 46em; margin: 28px auto 0; font-size: 13.5px; color: var(--subtle); }
+.fl-foot a { color: var(--accent); text-decoration: underline; }
+
+/* first-launch modal */
+.lh {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+.lh[hidden] { display: none; }
+.lh.is-open { opacity: 1; }
+.lh__backdrop { position: absolute; inset: 0; background: rgba(8, 16, 34, 0.55); backdrop-filter: blur(2px); }
+.lh__panel {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-lg);
+  padding: 26px 26px 22px;
+  text-align: center;
+  transform: translateY(10px) scale(0.98);
+  transition: transform 0.18s ease;
+}
+.lh.is-open .lh__panel { transform: none; }
+.lh__x {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  border: 0;
+  background: transparent;
+  color: var(--subtle);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+}
+.lh__x:hover { color: var(--fg); }
+.lh__badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  margin: 2px auto 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 86, 204, 0.12);
+  color: var(--accent);
+}
+.lh__panel h3 { margin: 0 0 6px; font-size: 19px; font-weight: 800; }
+.lh__sub { margin: 0 0 16px; font-size: 14px; color: var(--subtle); }
+.lh__tabs { display: inline-flex; gap: 4px; padding: 4px; background: var(--muted); border-radius: 11px; margin-bottom: 18px; }
+.lh__tab {
+  border: 0;
+  background: transparent;
+  color: var(--subtle);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.lh__tab.is-active { background: var(--surface); color: var(--accent); box-shadow: var(--shadow-md); }
+.lh__steps { text-align: left; margin: 0 0 4px; padding: 0; list-style: none; counter-reset: lh; display: grid; gap: 12px; }
+.lh__steps li { position: relative; counter-increment: lh; padding-left: 34px; font-size: 14px; color: var(--fg); }
+.lh__steps li b { font-weight: 700; }
+.lh__steps li code { font-family: var(--mono); font-size: 0.92em; background: var(--muted); padding: 1px 5px; border-radius: 5px; }
+.lh__steps li::before {
+  content: counter(lh);
+  position: absolute; left: 0; top: -1px;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--accent); color: #fff;
+  font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.lh__note { margin: 14px 0 18px; font-size: 12.5px; color: var(--subtle); }
+.lh__ok { width: 100%; justify-content: center; }
+
 /* footer */
 footer { padding: 40px 0; border-top: 1px solid var(--border); color: var(--subtle); font-size: 13px; }
 .footer__inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }

@@ -14,9 +14,9 @@ node -e "const f='$ROOT/package.json';const p=require(f);p.version='$VERSION';re
 # tauri.conf.json
 node -e "const f='$ROOT/src-tauri/tauri.conf.json';const p=require(f);p.version='$VERSION';require('fs').writeFileSync(f,JSON.stringify(p,null,2)+'\n')"
 
-# Cargo.toml (first version = line under [package])
-sed -i.bak "0,/^version = \".*\"/s//version = \"$VERSION\"/" "$ROOT/src-tauri/Cargo.toml"
-rm -f "$ROOT/src-tauri/Cargo.toml.bak"
+# Cargo.toml (first `version =` line, i.e. the one under [package]).
+# Use perl for portability — BSD/macOS sed doesn't support the GNU `0,/re/` range.
+V="$VERSION" perl -i -pe 'if (!$done && /^version = ".*"/) { s/^version = ".*"/version = "$ENV{V}"/; $done = 1 }' "$ROOT/src-tauri/Cargo.toml"
 
 # Frontend APP_VERSION constant (shown in Settings, used for the update check).
 sed -i.bak "s/export const APP_VERSION = \".*\"/export const APP_VERSION = \"$VERSION\"/" "$ROOT/src/lib/appInfo.ts"

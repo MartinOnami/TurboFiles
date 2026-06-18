@@ -284,7 +284,86 @@
           </div>
         </div>
       </section>
+
+      <!-- ====================================================== FIRST LAUNCH -->
+      <section id="first-run">
+        <div class="wrap">
+          <div class="section-head">
+            <span class="eyebrow">First launch</span>
+            <h2>Opening TurboFiles the first time</h2>
+            <p>
+              TurboFiles is open-source and not yet code-signed, so your system asks you to confirm
+              once. Here's the 10-second approval for each platform — after that, it opens like any
+              other app.
+            </p>
+          </div>
+          <div class="fl-grid">
+            <article class="fl-card" data-os="macos">
+              <header class="fl-card__head">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.9c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.8-3.5.8s-1.8-.8-3-.8c-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.8 1.1 9 .7 1.1 1.6 2.3 2.7 2.2 1.1 0 1.5-.7 2.8-.7s1.7.7 2.8.7c1.2 0 1.9-1.1 2.6-2.2.8-1.2 1.2-2.4 1.2-2.5-.1 0-2.3-.9-2.3-3.4zM14.3 5.8c.6-.7 1-1.7.9-2.8-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.6-1 2.6 1 .1 2-.5 2.7-1.1z"/></svg>
+                <h3>macOS</h3>
+              </header>
+              <ol class="fl-steps">
+                <li>Double-click <b>TurboFiles</b> — a warning appears. Click <b>Done</b>.</li>
+                <li>Open  → <b>System Settings</b> → <b>Privacy &amp; Security</b>.</li>
+                <li>Scroll to <b>Security</b>, find "TurboFiles was blocked", click <b>Open Anyway</b>, then confirm with your password or Touch ID.</li>
+              </ol>
+              <p class="fl-alt">macOS 14 or earlier: Control-click the app → <b>Open</b> → <b>Open</b>.</p>
+            </article>
+            <article class="fl-card" data-os="windows">
+              <header class="fl-card__head">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.7 10.3 4.7v7.2H3zM3 18.3l7.3 1V12H3zM11.3 4.6 21 3v8.9h-9.7zM11.3 19.4 21 21v-9.1h-9.7z"/></svg>
+                <h3>Windows</h3>
+              </header>
+              <ol class="fl-steps">
+                <li>Run the installer — <b>"Windows protected your PC"</b> appears.</li>
+                <li>Click <b>More info</b>.</li>
+                <li>Click <b>Run anyway</b>, then install as usual.</li>
+              </ol>
+              <p class="fl-alt">SmartScreen stops warning once the app builds reputation.</p>
+            </article>
+            <article class="fl-card" data-os="linux">
+              <header class="fl-card__head">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-2 0-3 2-2.9 4.5.1 1.4-.4 2.2-1.2 3.4-1 1.4-2.2 2.8-2.2 5 0 .9.3 1.6.8 2.2-.2.6-.1 1.3.4 1.7.6.5 1.6.4 2.4.5.7.1 1.2.6 2.7.6s2-.5 2.7-.6c.8-.1 1.8 0 2.4-.5.5-.4.6-1.1.4-1.7.5-.6.8-1.3.8-2.2 0-2.2-1.2-3.6-2.2-5-.8-1.2-1.3-2-1.2-3.4C15 4 14 2 12 2z"/></svg>
+                <h3>Linux</h3>
+              </header>
+              <ol class="fl-steps">
+                <li><b>AppImage:</b> right-click → <b>Properties</b> → allow executing (or <code>chmod +x</code>).</li>
+                <li>Double-click to run — no system prompt.</li>
+                <li><b>.deb / .rpm:</b> install with your package manager as normal.</li>
+              </ol>
+              <p class="fl-alt">Most desktops run AppImages straight away.</p>
+            </article>
+          </div>
+          <p class="fl-foot">
+            Why the prompt? Signing certificates cost money to maintain. The entire app is public on
+            <a href="https://github.com/MartinOnami/TurboFiles" target="_blank" rel="noopener">GitHub</a>,
+            so you can verify exactly what you're running.
+          </p>
+        </div>
+      </section>
     </main>
+
+    <!-- ============================================= FIRST-LAUNCH HELP MODAL -->
+    <div id="launch-help" class="lh" hidden role="dialog" aria-modal="true" aria-labelledby="lh-title">
+      <div class="lh__backdrop" data-lh-close></div>
+      <div class="lh__panel" role="document">
+        <button class="lh__x" type="button" data-lh-close aria-label="Close">&times;</button>
+        <div class="lh__badge">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+        </div>
+        <h3 id="lh-title">Your download is starting…</h3>
+        <p class="lh__sub">First time opening TurboFiles? Your <span data-lh-osname>computer</span> asks you to confirm once — here's how:</p>
+        <div class="lh__tabs" role="tablist" aria-label="Choose your operating system">
+          <button type="button" class="lh__tab" data-lh-tab="macos" role="tab">macOS</button>
+          <button type="button" class="lh__tab" data-lh-tab="windows" role="tab">Windows</button>
+          <button type="button" class="lh__tab" data-lh-tab="linux" role="tab">Linux</button>
+        </div>
+        <ol class="lh__steps" data-lh-steps></ol>
+        <p class="lh__note" data-lh-note></p>
+        <button class="btn btn--primary lh__ok" type="button" data-lh-close>Got it</button>
+      </div>
+    </div>
 
     <!-- ============================================================ FOOTER -->
     <footer>
