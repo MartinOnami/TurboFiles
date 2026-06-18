@@ -9,22 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  changelog:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-      - name: Generate changelog
-        uses: orhun/git-cliff-action@v3
-        with:
-          args: --latest --strip header
-        env:
-          OUTPUT: RELEASE_NOTES.md
-      - uses: actions/upload-artifact@v4
-        with: { name: release-notes, path: RELEASE_NOTES.md }
-
   release:
-    needs: changelog
     strategy:
       fail-fast: false
       matrix:
@@ -68,6 +53,7 @@ jobs:
         with:
           tagName: ${{ github.ref_name }}
           releaseName: "TurboFiles ${{ github.ref_name }}"
+          releaseBody: "Desktop installers for macOS, Windows and Linux. See CHANGELOG.md (and the in-app Settings → Changelog) for what's new."
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
