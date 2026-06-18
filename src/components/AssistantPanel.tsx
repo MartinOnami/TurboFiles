@@ -62,8 +62,8 @@ function fmtErr(e: unknown): string {
 
 /**
  * A tool ran but the action did not succeed (e.g. not connected, site not found,
- * connect failed). Throwing this marks the chain-of-thought step — and therefore
- * the turn's status badge — as Failed, while still handing the model a readable
+ * connect failed). Throwing this marks the chain-of-thought step - and therefore
+ * the turn's status badge - as Failed, while still handing the model a readable
  * message (without an "Error:" prefix) so it can explain or recover.
  */
 class ToolFailure extends Error {}
@@ -171,7 +171,7 @@ async function wordpressAudit(sessionId: string, rootArg: string): Promise<strin
     out.push(`wp-config.php permissions: ${cfg.permissions ?? "?"}`);
     if (worldReadable(cfg.permissions))
       issues.push(
-        "wp-config.php is world-readable — database credentials and secret keys are exposed.",
+        "wp-config.php is world-readable - database credentials and secret keys are exposed.",
       );
     if (worldWritable(cfg.permissions)) issues.push("wp-config.php is world-writable.");
   }
@@ -247,7 +247,7 @@ async function wordpressAudit(sessionId: string, rootArg: string): Promise<strin
   out.push(
     issues.length ? issues.map((i) => `- ${i}`).join("\n") : "- None obvious from file inspection.",
   );
-  out.push("\n(Heuristic inventory from file inspection — compare versions against known CVEs.)");
+  out.push("\n(Heuristic inventory from file inspection - compare versions against known CVEs.)");
   return out.join("\n");
 }
 
@@ -268,7 +268,7 @@ export function AssistantPanel({
 
   const [items, setItems] = useState<ChatItem[]>([]);
   const [input, setInput] = useState("");
-  // Local files staged in the composer (NOT yet uploaded — the user says where).
+  // Local files staged in the composer (NOT yet uploaded - the user says where).
   const [attachments, setAttachments] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const [hasKey, setHasKey] = useState<boolean | null>(null);
@@ -384,7 +384,7 @@ export function AssistantPanel({
         const sites = useStore.getState().sites;
         return sites.length
           ? sites
-              .map((s) => `${s.name} — ${s.protocol} ${s.username}@${s.host}:${s.port}`)
+              .map((s) => `${s.name} - ${s.protocol} ${s.username}@${s.host}:${s.port}`)
               .join("\n")
           : "No saved sites yet.";
       }
@@ -403,12 +403,12 @@ export function AssistantPanel({
           throw new ToolFailure(
             `No saved site matches "${a.name}". Use list_sites to see the names.`,
           );
-        // Idempotent: if already connected to this site, just focus its tab —
+        // Idempotent: if already connected to this site, just focus its tab -
         // never open a duplicate session/tab.
         const open = st.tabs.find((t) => t.siteId === site.id && t.session);
         if (open) {
           st.setActiveTab(open.id);
-          return `Already connected to ${site.name} — switched to its tab (current directory ${open.session!.cwd}).`;
+          return `Already connected to ${site.name} - switched to its tab (current directory ${open.session!.cwd}).`;
         }
         const res = await onConnectSite(site.id);
         const t = useStore.getState();
@@ -554,7 +554,7 @@ export function AssistantPanel({
         st.setSites(await api.listSites());
         return `Saved site "${saved.name}" (${protocol} ${host}:${port}${
           defaultRemotePath ? `, path ${defaultRemotePath}` : ""
-        })${password ? "" : " — no password stored; you'll be asked at connect time"}.`;
+        })${password ? "" : " - no password stored; you'll be asked at connect time"}.`;
       }
       case "delete_site": {
         let sites = st.sites;
@@ -604,11 +604,11 @@ export function AssistantPanel({
       case "rename_item":
         return `Rename ${a.scope}: ${a.from} → ${a.to}`;
       case "add_site":
-        return `Add saved site “${a.name || `${a.username || "site"}@${a.host}`}” (${a.protocol} ${a.host})${
-          a.password ? "" : " — no password stored"
+        return `Add saved site "${a.name || `${a.username || "site"}@${a.host}`}" (${a.protocol} ${a.host})${
+          a.password ? "" : " - no password stored"
         }`;
       case "delete_site":
-        return `Delete saved site “${a.name}” from the Site Manager`;
+        return `Delete saved site "${a.name}" from the Site Manager`;
       default:
         return tc.name;
     }
@@ -626,9 +626,9 @@ export function AssistantPanel({
     if (attached.length)
       push({ kind: "tool", text: `📎 attached: ${attached.map(baseName).join(", ")}` });
     // Give the model the attached local paths as context (data, not an instruction
-    // to upload — it uploads only when the user says where, via upload_items).
+    // to upload - it uploads only when the user says where, via upload_items).
     const note = attached.length
-      ? `\n\n[Attached local files, staged for upload — upload them with upload_items(localPaths) only when I say the remote destination: ${attached.join(", ")}]`
+      ? `\n\n[Attached local files, staged for upload - upload them with upload_items(localPaths) only when I say the remote destination: ${attached.join(", ")}]`
       : "";
     convo.current.push({ role: "user", text: userText + note });
     // One collapsible chain-of-thought for this turn.
@@ -740,7 +740,7 @@ export function AssistantPanel({
           <div className="rounded-md border border-border bg-bg p-3 text-xs text-subtle">
             <p className="mb-2 font-medium text-fg">Connect your model</p>
             <p>
-              Add an API key for your provider to start — or point the provider at a local model
+              Add an API key for your provider to start - or point the provider at a local model
               (Ollama / LM Studio), which needs no key. Keys are stored in the OS keychain and never
               leave your device.
             </p>
@@ -755,11 +755,11 @@ export function AssistantPanel({
           <div className="px-1 text-xs text-subtle">
             <p>Ask me to help with files and transfers. For example:</p>
             <ul className="mt-2 list-disc space-y-1 pl-4">
-              <li>“List the files in /var/www”</li>
-              <li>“Download everything in the logs folder here”</li>
-              <li>“Show me errors from the last 30 minutes”</li>
-              <li>“Audit this WordPress site for known vulnerabilities”</li>
-              <li>“Add a site: sftp to 10.0.0.5 as deploy” (paste creds; password optional)</li>
+              <li>"List the files in /var/www"</li>
+              <li>"Download everything in the logs folder here"</li>
+              <li>"Show me errors from the last 30 minutes"</li>
+              <li>"Audit this WordPress site for known vulnerabilities"</li>
+              <li>"Add a site: sftp to 10.0.0.5 as deploy" (paste creds; password optional)</li>
             </ul>
             <p className="mt-2">
               Attach files with the 📎 clip, then tell me where to upload them.

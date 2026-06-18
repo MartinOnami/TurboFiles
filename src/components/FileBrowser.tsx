@@ -249,7 +249,7 @@ export function FileBrowser({
       <header className="flex items-center gap-2 border-b border-border px-3 py-2">
         <span className="shrink-0 text-xs font-medium text-subtle">{title}</span>
         <code className="min-w-0 flex-1 truncate rounded bg-elevated px-2 py-1 text-xs text-fg">
-          {path || "—"}
+          {path || "-"}
         </code>
         {onMkdir && (
           <button
@@ -358,7 +358,7 @@ export function FileBrowser({
       </div>
 
       <footer className="border-t border-border px-3 py-1.5 text-xs text-subtle">
-        {folders} folders, {files.length} files — {formatBytes(totalSize)}
+        {folders} folders, {files.length} files - {formatBytes(totalSize)}
       </footer>
 
       {ctxMenu && (
@@ -459,7 +459,7 @@ export function FileBrowser({
   );
 }
 
-// ─── Extracted row components — array children ensure no whitespace text nodes ──
+// ─── Extracted row components - array children ensure no whitespace text nodes ──
 
 function ParentRow({
   onNavigateUp,

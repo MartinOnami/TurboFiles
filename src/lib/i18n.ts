@@ -35,7 +35,7 @@ const en: Dict = {
   "common.disconnect": "Disconnect",
 };
 
-// Starter translations — extended over time. Missing keys fall back to English.
+// Starter translations - extended over time. Missing keys fall back to English.
 const es: Dict = {
   "settings.title": "Ajustes",
   "settings.interface": "Interfaz",

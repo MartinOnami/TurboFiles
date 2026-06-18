@@ -40,7 +40,7 @@ export interface Settings {
   proxyHost: string;
   proxyPort: number;
   proxyUser: string;
-  /** Proxy password — kept in memory only, never persisted to disk. */
+  /** Proxy password - kept in memory only, never persisted to disk. */
   proxyPass: string;
   /** What double-clicking a file does. */
   doubleClickFile: "transfer" | "none";

@@ -26,8 +26,8 @@ import { Input } from "./ui/Input";
 
 // UI only shows sftp and ftp; "ftps" sites are loaded as ftp + encryption.
 const PROTOCOLS: { value: Protocol; label: string; defaultPort: number }[] = [
-  { value: "sftp", label: "SFTP – SSH File Transfer", defaultPort: 22 },
-  { value: "ftp", label: "FTP – File Transfer", defaultPort: 21 },
+  { value: "sftp", label: "SFTP - SSH File Transfer", defaultPort: 22 },
+  { value: "ftp", label: "FTP - File Transfer", defaultPort: 21 },
 ];
 
 const FTP_ENCRYPTION: { value: FtpEncryption; label: string; port: number }[] = [
@@ -547,7 +547,7 @@ export function Sidebar({
                 )}
               </div>
 
-              {/* Advanced — default directories opened on connect, and per-site options */}
+              {/* Advanced - default directories opened on connect, and per-site options */}
               <div className="grid grid-cols-3 gap-x-3 gap-y-2.5 border-t border-border pt-3">
                 <FormField label="Default local directory" className="col-span-2">
                   <div className="flex gap-1">
@@ -684,7 +684,7 @@ export function Sidebar({
                         onChange={(e) => setDisconnectOnDelete(e.target.checked)}
                         className="h-3 w-3"
                       />
-                      It's connected — disconnect the session too
+                      It's connected - disconnect the session too
                     </label>
                   )}
                 </div>
@@ -735,7 +735,7 @@ export function Sidebar({
                     </span>
                   </button>
 
-                  {/* Action cluster — solid panel so it reads clearly over the row */}
+                  {/* Action cluster - solid panel so it reads clearly over the row */}
                   <div
                     className={`absolute inset-y-0 right-1 flex items-center transition-opacity ${busy ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
                   >

@@ -68,7 +68,7 @@ export const useStore = create<AppState>((set) => ({
       const next = [...s.transfers];
       next[idx] = {
         ...e,
-        // Preserve name/path fields — progress events don't carry them
+        // Preserve name/path fields - progress events don't carry them
         name: t.name || e.name,
         localPath: t.localPath || e.localPath,
         remotePath: t.remotePath || e.remotePath,
@@ -78,7 +78,7 @@ export const useStore = create<AppState>((set) => ({
         error: t.error !== undefined ? t.error : e.error,
         etaSeconds: t.etaSeconds !== undefined ? t.etaSeconds : e.etaSeconds,
         speed: t.speed ?? e.speed,
-        // Never regress progress — picks up real totalBytes once the worker knows it
+        // Never regress progress - picks up real totalBytes once the worker knows it
         bytesTransferred: Math.max(e.bytesTransferred, t.bytesTransferred ?? 0),
         totalBytes: Math.max(e.totalBytes, t.totalBytes ?? 0),
         // Never step backwards from a terminal status

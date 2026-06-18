@@ -6,8 +6,8 @@ import { Button } from "./ui/Button";
 import { Input } from "./ui/Input";
 
 const PROTOCOLS: { value: Protocol; label: string; defaultPort: number }[] = [
-  { value: "sftp", label: "SFTP – SSH File Transfer", defaultPort: 22 },
-  { value: "ftp", label: "FTP – File Transfer", defaultPort: 21 },
+  { value: "sftp", label: "SFTP - SSH File Transfer", defaultPort: 22 },
+  { value: "ftp", label: "FTP - File Transfer", defaultPort: 21 },
 ];
 
 const FTP_ENCRYPTION: { value: FtpEncryption; label: string; port: number }[] = [
@@ -96,7 +96,7 @@ export function ConnectionBar({ onConnect, onSave, connecting, saving }: Connect
       setKeyPath(path);
       setPrivateKey(c);
     } catch {
-      alert("Could not read key file — check the path.");
+      alert("Could not read key file. Check the path.");
     }
   };
 
@@ -170,7 +170,7 @@ export function ConnectionBar({ onConnect, onSave, connecting, saving }: Connect
         />
       </Field>
 
-      {/* Port — plain text, no number spinner */}
+      {/* Port - plain text, no number spinner */}
       <Field label="Port" className="shrink-0">
         <Input
           className="h-8 w-14 text-xs"

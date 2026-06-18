@@ -1,4 +1,4 @@
-/* TurboFiles landing page — progressive enhancement only.
+/* TurboFiles landing page - progressive enhancement only.
    With JS disabled every Download button still works: it points at the GitHub
    releases page. With JS, the buttons are upgraded to link DIRECTLY at the right
    installer for each OS/format, resolved from the latest GitHub release (no need
@@ -82,7 +82,7 @@
         setVersion(rel && (rel.tag_name || rel.name));
       })
       .catch(function () {
-        /* no release yet — buttons keep their releases-page fallback */
+        /* no release yet - buttons keep their releases-page fallback */
       });
   }
 
@@ -137,7 +137,7 @@
           document.execCommand("copy");
           done();
         } catch (e) {
-          /* clipboard blocked — leave the command visible to select manually */
+          /* clipboard blocked - leave the command visible to select manually */
         }
         document.body.removeChild(ta);
       }

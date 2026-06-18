@@ -127,7 +127,7 @@ export function TransferQueue({
               return (
                 <tr key={t.id} className="border-b border-border/50">
                   <td className="max-w-[220px] truncate px-3 py-1.5 text-fg" title={t.name}>
-                    {t.name || "—"}
+                    {t.name || "-"}
                   </td>
                   <td className={`px-3 py-1.5 capitalize ${STATUS_COLOR[t.status]}`}>
                     {t.status}
@@ -149,7 +149,7 @@ export function TransferQueue({
                     </div>
                   </td>
                   <td className="px-3 py-1.5 text-subtle">
-                    {t.speed > 0 ? formatSpeed(t.speed) : "–"}
+                    {t.speed > 0 ? formatSpeed(t.speed) : "-"}
                   </td>
                   <td className="px-3 py-1.5 text-subtle">
                     {formatBytes(t.bytesTransferred)} / {formatBytes(t.totalBytes)}
@@ -158,7 +158,7 @@ export function TransferQueue({
                     className="max-w-[200px] truncate px-3 py-1.5 text-subtle"
                     title={t.remotePath}
                   >
-                    {t.remotePath || "—"}
+                    {t.remotePath || "-"}
                   </td>
                   <td className="px-3 py-1.5">
                     <div className="flex items-center gap-1">

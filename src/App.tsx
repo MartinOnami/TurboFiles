@@ -87,7 +87,7 @@ function joinPath(dir: string, name: string): string {
 function hostKeyPrompt(host: string, message: string): string {
   return (
     `⚠ WARNING: the SSH host key for ${host} has CHANGED.\n\n${message}\n\n` +
-    `This can mean the server's key was legitimately rotated — or that someone is ` +
+    `This can mean the server's key was legitimately rotated, or that someone is ` +
     `intercepting your connection (man-in-the-middle). Only continue if you are sure ` +
     `the key change is expected.\n\nForget the old key and trust the new one?`
   );
@@ -412,7 +412,7 @@ export default function App() {
         if (!cancelled && rel && isNewerVersion(rel.version, APP_VERSION)) setUpdate(rel);
       })
       .catch(() => {
-        /* offline / no release yet — no update shown */
+        /* offline / no release yet - no update shown */
       });
     return () => {
       cancelled = true;
@@ -586,7 +586,7 @@ export default function App() {
         unlisten.then((fn) => fn());
       };
     }
-    // Demo mode — seed with a pre-connected session tab.
+    // Demo mode - seed with a pre-connected session tab.
     setSites(demoSites);
     setLocal("/Users/johndoe/Documents/Projects", demoLocal);
     addTab({
@@ -673,14 +673,14 @@ export default function App() {
         setConnecting(false);
         const trust = await askCertTrust({ host: cleanHost(req.host), message: apiErr.message });
         if (trust) return handleConnect(req, true);
-        addLog("warn", `Connection cancelled — certificate not trusted (${req.host})`, req.host);
+        addLog("warn", `Connection cancelled - certificate not trusted (${req.host})`, req.host);
       } else if (apiErr?.code === "HOST_KEY_MISMATCH") {
         setConnecting(false);
         if (window.confirm(hostKeyPrompt(req.host, apiErr.message))) {
           await api.forgetHostKey(cleanHost(req.host), req.port).catch(() => undefined);
           return handleConnect(req, acceptInvalidCert);
         }
-        addLog("warn", `Connection blocked — SSH host key changed (${req.host})`, req.host);
+        addLog("warn", `Connection blocked - SSH host key changed (${req.host})`, req.host);
       } else {
         addLog("error", fmtErr(err));
       }
@@ -731,8 +731,8 @@ export default function App() {
     if (!password && siteNeedsPassword(site) && (forcePrompt || !site.hasStoredSecret)) {
       const res = await askPassword({ name: site.name, target: scope, reason });
       if (!res) {
-        addLog("warn", `Connection cancelled — no password entered (${site.host})`, scope);
-        return { ok: false, reason: "cancelled — no password entered" };
+        addLog("warn", `Connection cancelled - no password entered (${site.host})`, scope);
+        return { ok: false, reason: "cancelled - no password entered" };
       }
       password = res.password;
       if (res.remember) await persistSitePassword(site, res.password).catch(() => undefined);
@@ -752,7 +752,7 @@ export default function App() {
         setConnecting(false);
         const trust = await askCertTrust({ host: site.host, message: apiErr.message });
         if (trust) return handleConnectSite(site, true, password);
-        addLog("warn", `Connection cancelled — certificate not trusted (${site.host})`, scope);
+        addLog("warn", `Connection cancelled - certificate not trusted (${site.host})`, scope);
         return { ok: false, reason: "certificate not trusted" };
       } else if (apiErr?.code === "HOST_KEY_MISMATCH") {
         setConnecting(false);
@@ -760,8 +760,8 @@ export default function App() {
           await api.forgetHostKey(site.host, site.port).catch(() => undefined);
           return handleConnectSite(site, acceptInvalidCert, password);
         }
-        addLog("warn", `Connection blocked — SSH host key changed (${site.host})`, scope);
-        return { ok: false, reason: "SSH host key changed — connection blocked" };
+        addLog("warn", `Connection blocked - SSH host key changed (${site.host})`, scope);
+        return { ok: false, reason: "SSH host key changed - connection blocked" };
       } else if (apiErr?.code === "AUTH" && siteNeedsPassword(site)) {
         // Wrong or missing password → ask again (forcing a prompt) and retry.
         setConnecting(false);
@@ -769,7 +769,7 @@ export default function App() {
           site,
           acceptInvalidCert,
           undefined,
-          "Authentication failed — check the password and try again.",
+          "Authentication failed. Check the password and try again.",
           true,
         );
       } else {
@@ -1244,7 +1244,7 @@ export default function App() {
                     void api.openPath(update.url);
                   });
               }}
-              title={`Version ${update.version} is available — click to update`}
+              title={`Version ${update.version} is available - click to update`}
               className="flex items-center gap-1.5 rounded-md bg-accent/15 px-2 py-1 text-xs font-medium text-accent hover:bg-accent/25 disabled:opacity-70"
               disabled={updateProgress !== null}
             >
@@ -1284,7 +1284,7 @@ export default function App() {
         />
 
         <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
-          {/* Session tab bar — the scrollable tab strip and the "+" menu are
+          {/* Session tab bar - the scrollable tab strip and the "+" menu are
               siblings so the dropdown is never clipped by overflow-x-auto. */}
           <div className="flex items-end border-b border-border bg-surface pr-1 pt-2">
             <div className="flex min-w-0 flex-1 items-end gap-0 overflow-x-auto pl-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -1333,7 +1333,7 @@ export default function App() {
                 ))
               )}
 
-              {/* Global Logs / Queue panel tabs — opened from the sidebar, closable. */}
+              {/* Global Logs / Queue panel tabs - opened from the sidebar, closable. */}
               {openPanels.queue && (
                 <PanelTab
                   label="Transfer Queue"

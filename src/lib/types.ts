@@ -6,7 +6,7 @@
 export type Protocol = "sftp" | "ftp" | "ftps";
 
 /**
- * FTP/FTPS encryption mode — mirrors FileZilla's Encryption dropdown.
+ * FTP/FTPS encryption mode - mirrors FileZilla's Encryption dropdown.
  * Only relevant for Protocol "ftp" (and legacy "ftps").
  */
 export type FtpEncryption =
@@ -30,11 +30,11 @@ export interface ProxyConfig {
 }
 
 /**
- * How the client authenticates — matches FileZilla's logon types.
- * "normal"      — password with keyboard-interactive fallback (default)
- * "anonymous"   — FTP anonymous login
- * "interactive" — force SSH keyboard-interactive only
- * "key"         — SSH public-key auth (privateKey must be supplied)
+ * How the client authenticates - matches FileZilla's logon types.
+ * "normal"      - password with keyboard-interactive fallback (default)
+ * "anonymous"   - FTP anonymous login
+ * "interactive" - force SSH keyboard-interactive only
+ * "key"         - SSH public-key auth (privateKey must be supplied)
  */
 export type LogonType = "normal" | "anonymous" | "interactive" | "key";
 

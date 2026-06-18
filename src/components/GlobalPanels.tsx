@@ -295,7 +295,7 @@ function QueueRow({
         <span className="shrink-0 text-subtle">{t.direction === "upload" ? "⬆" : "⬇"}</span>
         {scope !== "System" && <SiteBadge scope={scope} />}
         <span className="min-w-0 flex-1 truncate text-fg" title={t.remotePath}>
-          {t.name || "—"}
+          {t.name || "-"}
         </span>
         <div className="hidden h-1.5 w-24 shrink-0 overflow-hidden rounded-full bg-muted sm:block">
           <div className={`h-full ${bar} transition-all`} style={{ width: `${pct}%` }} />

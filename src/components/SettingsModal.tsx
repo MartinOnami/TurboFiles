@@ -302,7 +302,7 @@ function ConnectionPanel() {
     <div className="flex flex-col gap-3">
       <NumberField
         label="Timeout (seconds)"
-        hint="Give up establishing a connection after this many seconds (10–9999, 0 to disable)."
+        hint="Give up establishing a connection after this many seconds (10-9999, 0 to disable)."
         value={connectionTimeout}
         min={0}
         max={9999}
@@ -728,7 +728,7 @@ function FileEditingPanel() {
           className="h-7 rounded border border-border bg-bg px-2 text-xs text-fg focus:outline-none focus:ring-1 focus:ring-accent"
         />
         <span className="text-[11px] text-subtle">
-          On macOS this is an application name (e.g. “Visual Studio Code”); elsewhere a command.
+          On macOS this is an application name (e.g. "Visual Studio Code"); elsewhere a command.
         </span>
       </label>
       <label className="flex flex-col gap-1">
@@ -814,7 +814,7 @@ function AssistantSettingsPanel() {
     try {
       const list = await api.llmListModels(agentProvider, baseUrl);
       setModels(list);
-      // Only auto-fill when nothing is chosen yet — never override the user's pick.
+      // Only auto-fill when nothing is chosen yet - never override the user's pick.
       if (list.length > 0 && !agentModel) set("agentModel", list[0]);
     } catch (e) {
       setModelError(
@@ -891,7 +891,7 @@ function AssistantSettingsPanel() {
           <span className="text-[11px] text-danger">{modelError}</span>
         ) : models.length ? (
           <span className="text-[11px] text-subtle">
-            {models.length} models available — pick one.
+            {models.length} models available. Pick one.
           </span>
         ) : loadingModels ? (
           <span className="text-[11px] text-subtle">Loading models…</span>
@@ -1093,7 +1093,7 @@ function AboutPanel() {
     if (!isTauri() || installing !== null) return;
     setInstalling(0);
     try {
-      // On success the app downloads, installs, and relaunches — code after this
+      // On success the app downloads, installs, and relaunches - code after this
       // never runs. `false` means no signed artifact yet (fall back to the page).
       const ok = await api.installUpdate((f) => setInstalling(f));
       if (!ok) {
@@ -1130,7 +1130,7 @@ function AboutPanel() {
           </span>
         </div>
         <p className="mt-0.5">
-          A modern, fast and secure SFTP/FTP/FTPS client. Secrets are stored in your OS keychain —
+          A modern, fast and secure SFTP/FTP/FTPS client. Secrets are stored in your OS keychain -
           never on disk or in logs.
         </p>
       </div>

@@ -64,7 +64,7 @@ export function CertTrustDialog({ prompt, onResolve }: CertTrustDialogProps) {
 
           <p className="text-subtle">
             This usually means a self-signed certificate or a hostname mismatch. Only continue if
-            you trust this server and your network — trusting bypasses both certificate and hostname
+            you trust this server and your network - trusting bypasses both certificate and hostname
             verification, which leaves the connection open to interception on a hostile network.
           </p>
 
