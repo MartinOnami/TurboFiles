@@ -3,7 +3,7 @@
 All notable changes to TurboFiles are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Changelog](https://keepachangelog.com).
 
-## [Unreleased]
+## [0.1.5] - 2026-06-20
 ### Changed
 - Updater: after an update is downloaded and installed, TurboFiles now asks
   whether to "Restart now" or do it "Later" instead of relaunching on its own.
