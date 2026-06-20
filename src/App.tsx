@@ -48,7 +48,7 @@ import {
   pickXmlFile,
 } from "./lib/api";
 import { parseFileZillaSites } from "./lib/filezillaImport";
-import { useStore } from "./store/useStore";
+import { NEW_SITE_REQUEST, useStore } from "./store/useStore";
 import { useSettings } from "./store/useSettings";
 import { setByteFormat, setDateTimeFormat } from "./lib/utils";
 import { setLocale } from "./lib/i18n";
@@ -1367,8 +1367,7 @@ export default function App() {
                   <button
                     onClick={() => {
                       setShowNewMenu(false);
-                      setActivePanel(null);
-                      setActiveTab(null);
+                      requestEditSite(NEW_SITE_REQUEST);
                     }}
                     className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-fg hover:bg-muted"
                   >

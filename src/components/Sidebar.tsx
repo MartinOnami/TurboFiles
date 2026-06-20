@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import {
   Bookmark,
   Check,
-  Download,
   Folder,
   FolderOpen,
   ListTree,
@@ -15,9 +14,10 @@ import {
   Settings,
   Trash2,
   Unplug,
+  UploadCloud,
   X,
 } from "lucide-react";
-import { useStore } from "@/store/useStore";
+import { NEW_SITE_REQUEST, useStore } from "@/store/useStore";
 import { useSettings } from "@/store/useSettings";
 import { pickDirectory, pickKeyFile } from "@/lib/api";
 import type { FtpEncryption, FtpMode, LogonType, Protocol, Site } from "@/lib/types";
@@ -211,13 +211,19 @@ export function Sidebar({
     return () => document.removeEventListener("mousedown", close);
   }, [ctxMenu]);
 
-  // Open the editor when another component (e.g. a session tab) requests it.
+  // Open the editor when another component (e.g. a session tab, or the top-bar
+  // "New connection" action) requests it.
   useEffect(() => {
     if (!editSiteRequest) return;
-    const site = sites.find((s) => s.id === editSiteRequest);
-    if (site) {
+    if (editSiteRequest === NEW_SITE_REQUEST) {
       setDeleting(null);
-      setEditing(siteToEdit(site));
+      setEditing(blankEdit());
+    } else {
+      const site = sites.find((s) => s.id === editSiteRequest);
+      if (site) {
+        setDeleting(null);
+        setEditing(siteToEdit(site));
+      }
     }
     requestEditSite(null);
   }, [editSiteRequest, sites, requestEditSite]);
@@ -343,7 +349,7 @@ export function Sidebar({
               className="rounded p-0.5 text-subtle hover:bg-muted hover:text-fg"
               title="Import from FileZilla (sitemanager.xml)"
             >
-              <Download size={14} />
+              <UploadCloud size={14} />
             </button>
             <button
               onClick={() => {

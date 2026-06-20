@@ -1,6 +1,13 @@
 import { create } from "zustand";
 import type { DirEntry, LogEntry, Session, Site, Transfer } from "@/lib/types";
 
+/**
+ * Sentinel for `editSiteRequest`: asks the Site Manager to open a blank
+ * "new site" editor (rather than editing an existing site by id). Lets the
+ * top-bar "New connection" action drive the Sidebar's editor.
+ */
+export const NEW_SITE_REQUEST = "__new__";
+
 /** A connection tab in the workspace (mirrors FileZilla's session tabs). */
 export interface Tab {
   id: string;
