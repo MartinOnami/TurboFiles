@@ -153,10 +153,11 @@ img { max-width: 100%; display: block; }
   padding: 6px 14px 6px 12px;
 }
 .badge__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; }
+.hero__head { text-align: center; }
 .hero h1 {
   font-family: var(--display); font-weight: 600;
-  font-size: clamp(33px, 6vw, 76px);
-  line-height: 0.98; letter-spacing: -0.04em; margin: 22px 0 0;
+  font-size: clamp(33px, 4.4vw, 56px);
+  line-height: 1.02; letter-spacing: -0.04em; margin: 22px 0 0;
   text-wrap: balance;
 }
 .hero h1 em { font-style: normal; color: var(--accent); }
@@ -311,6 +312,8 @@ footer { border-top: 1px solid var(--ink); }
 /* responsive -------------------------------------------------------------- */
 @media (max-width: 920px) {
   :root { --pad: 24px; }
+  .hero__head { text-align: left; }
+  .hero h1 .hb { display: none; }
   .hero__row { grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: start; }
   .asst { grid-template-columns: minmax(0, 1fr); gap: 32px; }
   .index__row { grid-template-columns: 44px minmax(0, 1fr); }
