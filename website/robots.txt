@@ -1,0 +1,6 @@
+# TurboFiles - https://martinonami.github.io/TurboFiles/
+# All crawlers welcome, including AI answer engines.
+User-agent: *
+Allow: /
+
+Sitemap: https://martinonami.github.io/TurboFiles/sitemap.xml

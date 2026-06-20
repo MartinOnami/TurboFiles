@@ -1,0 +1,34 @@
+# TurboFiles
+
+> TurboFiles is a fast, free and open-source SFTP, FTP and FTPS client for macOS, Windows and Linux. It pairs a dual-pane workspace and a live transfer queue with OS-keychain security and an agentic AI assistant that runs file-management tasks for you. It is a modern FileZilla alternative and can import existing FileZilla sites.
+
+## Key facts
+
+- Category: desktop file-transfer client (SFTP, FTP, FTPS).
+- Platforms: macOS (Apple silicon and Intel), Windows 10 and 11, Linux (AppImage, .deb, .rpm).
+- Price: free and open-source under the MIT license. No account, no subscription, no telemetry.
+- Built with: a Rust core in a Tauri shell.
+- Maintained by: xFusion. Source at https://github.com/MartinOnami/TurboFiles
+
+## Features
+
+- SFTP (over SSH), FTP and FTPS (FTP over TLS) in one client, with host-key verification, key-file and SSH-agent auth, and configurable TLS.
+- Dual-pane local and remote workspace with a live transfer queue: parallel transfers, resume after a dropped connection, drag and drop, and column sorting.
+- Agentic AI assistant: describe a task in plain English and it plans the work, calls real tools against the live session (list, read, move, edit, audit), shows each step, and asks for confirmation before any write. Bring your own key for Claude, OpenAI, DeepSeek, or local models via Ollama or LM Studio.
+- Security: passwords, passphrases and API keys are stored only in the OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service), never in SQLite, logs or the frontend. The UI is locked down by a strict Content Security Policy.
+- Site Manager with per-site defaults, bookmarks, time-offset and proxy rules, plus one-step import of FileZilla sites.
+- Native cross-platform build with light and dark themes.
+
+## TurboFiles vs FileZilla
+
+- Both are free, open-source, and support SFTP, FTP and FTPS with a dual-pane window, transfer queue and resume.
+- TurboFiles adds an agentic AI assistant, a modern light and dark interface, and stores secrets in the OS keychain by default.
+- TurboFiles can import existing FileZilla sites, so migrating takes one step.
+
+## Links
+
+- Home: https://martinonami.github.io/TurboFiles/
+- Download (latest release): https://github.com/MartinOnami/TurboFiles/releases/latest
+- Source code: https://github.com/MartinOnami/TurboFiles
+- Install guide: https://github.com/MartinOnami/TurboFiles/blob/main/docs/INSTALL.md
+- Privacy and permissions: https://github.com/MartinOnami/TurboFiles/blob/main/docs/PERMISSIONS.md

@@ -35,8 +35,7 @@
   if (os) {
     var card = document.querySelector('.os-card[data-os="' + os + '"]');
     if (card) {
-      card.style.outline = "2px solid #fff";
-      card.style.outlineOffset = "2px";
+      card.classList.add("is-current");
       var grid = document.getElementById("os-cards");
       if (grid && grid.firstChild !== card) grid.insertBefore(card, grid.firstChild);
     }
