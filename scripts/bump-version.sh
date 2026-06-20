@@ -22,6 +22,15 @@ V="$VERSION" perl -i -pe 'if (!$done && /^version = ".*"/) { s/^version = ".*"/v
 sed -i.bak "s/export const APP_VERSION = \".*\"/export const APP_VERSION = \"$VERSION\"/" "$ROOT/src/lib/appInfo.ts"
 rm -f "$ROOT/src/lib/appInfo.ts.bak"
 
+# Keep the edited manifests Prettier-clean. The node JSON.stringify rewrites above
+# do not match Prettier's style (e.g. tauri.conf.json), which would otherwise fail
+# `npm run format:check` in CI.
+if command -v npx >/dev/null 2>&1; then
+  npx --no-install prettier --write \
+    "$ROOT/package.json" "$ROOT/src-tauri/tauri.conf.json" "$ROOT/src/lib/appInfo.ts" \
+    >/dev/null 2>&1 || echo "warn: prettier unavailable; run 'npm run format' before committing"
+fi
+
 # Regenerate changelog if git-cliff is available.
 if command -v git-cliff >/dev/null 2>&1; then
   git-cliff --tag "v$VERSION" -o "$ROOT/CHANGELOG.md"
