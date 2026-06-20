@@ -39,8 +39,12 @@ jobs:
         run: |
           TAG=$(gh api "repos/${{ github.repository }}/releases/latest" --jq .tag_name 2>/dev/null || true)
           if [ -n "${TAG:-}" ]; then
-            sed -i "s|<span id=\"version-line\">latest release</span>|<span id=\"version-line\">current release ${TAG}</span>|" website/index.html
-            echo "Injected version: ${TAG}"
+            # Match the span by id regardless of other attributes (e.g. class), so a
+            # markup tweak to the version-line element does not silently break injection.
+            sed -i -E "s|(<span[^>]*id=\"version-line\"[^>]*>)latest release(</span>)|\1current release ${TAG}\2|" website/index.html
+            grep -q "current release ${TAG}" website/index.html \
+              && echo "Injected version: ${TAG}" \
+              || { echo "::error::version-line injection did not match"; exit 1; }
           else
             echo "No published release yet - leaving the JS fallback in place."
           fi
