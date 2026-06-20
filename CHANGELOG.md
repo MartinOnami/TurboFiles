@@ -3,6 +3,13 @@
 All notable changes to TurboFiles are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Changelog](https://keepachangelog.com).
 
+## [0.1.4] - 2026-06-20
+### Fixed
+- Site Manager: the top-bar "+" -> "New connection..." action now opens the
+  new-site editor instead of just clearing the active tab.
+### Changed
+- Site Manager: the FileZilla import button now uses a cloud-upload icon.
+
 ## [0.1.3] - 2026-06-18
 ### Changed
 - Settings → Changelog is now a collapsible accordion (the current release is

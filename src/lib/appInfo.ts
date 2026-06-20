@@ -1,7 +1,7 @@
 // Single source of truth for app identity in the frontend.
 // APP_VERSION is kept in sync with package.json / tauri.conf.json by
 // scripts/bump-version.sh.
-export const APP_VERSION = "0.1.3";
+export const APP_VERSION = "0.1.4";
 
 /** GitHub "owner/name" used for update checks and release links. */
 export const GITHUB_REPO = "MartinOnami/TurboFiles";
