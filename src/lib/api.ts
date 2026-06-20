@@ -7,7 +7,7 @@
  */
 import { invoke } from "@tauri-apps/api/core";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
-import { open } from "@tauri-apps/plugin-dialog";
+import { ask, open } from "@tauri-apps/plugin-dialog";
 import { check as checkTauriUpdate } from "@tauri-apps/plugin-updater";
 import { relaunch } from "@tauri-apps/plugin-process";
 import type {
@@ -284,10 +284,11 @@ export const api = {
 
   /**
    * Download and install the available signed update in-app, reporting download
-   * progress as a 0..1 fraction, then relaunch into the new version. Resolves
-   * `false` when no signed update is available (e.g. the published release has
-   * no updater artifacts yet) so callers can fall back to opening the page.
-   * On success the app relaunches, so the returned promise never resolves.
+   * progress as a 0..1 fraction. Resolves `true` once the update is installed
+   * (the caller then asks the user whether to relaunch, via `confirmRestart` /
+   * `relaunchApp`), or `false` when no signed update is available (e.g. the
+   * published release has no updater artifacts yet) so callers can fall back to
+   * opening the page. This no longer relaunches on its own.
    */
   installUpdate: async (onProgress?: (fraction: number) => void): Promise<boolean> => {
     const update = await checkTauriUpdate();
@@ -305,8 +306,23 @@ export const api = {
         onProgress?.(1);
       }
     });
-    await relaunch();
     return true;
+  },
+
+  /**
+   * Ask the user whether to restart now to finish applying an installed update.
+   * Returns `true` for "Restart now", `false` for "Later".
+   */
+  confirmRestart: async (version?: string): Promise<boolean> => {
+    return ask(
+      `The update${version ? ` to v${version}` : ""} has been installed. Restart TurboFiles now to finish?`,
+      { title: "Update ready", kind: "info", okLabel: "Restart now", cancelLabel: "Later" },
+    );
+  },
+
+  /** Relaunch the app to finish applying an installed update. */
+  relaunchApp: async (): Promise<void> => {
+    await relaunch();
   },
 
   /* ----------------------------------------------------------- Site mgr */

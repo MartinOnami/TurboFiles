@@ -3,6 +3,12 @@
 All notable changes to TurboFiles are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Changelog](https://keepachangelog.com).
 
+## [Unreleased]
+### Changed
+- Updater: after an update is downloaded and installed, TurboFiles now asks
+  whether to "Restart now" or do it "Later" instead of relaunching on its own.
+  If you choose Later, the update applies the next time you restart.
+
 ## [0.1.4] - 2026-06-20
 ### Fixed
 - Site Manager: the top-bar "+" -> "New connection..." action now opens the

@@ -160,6 +160,8 @@ export default function App() {
   const [update, setUpdate] = useState<ReleaseInfo | null>(null);
   // null = idle; 0..1 = in-app update download progress
   const [updateProgress, setUpdateProgress] = useState<number | null>(null);
+  // true once the update is installed and waiting for the user to restart.
+  const [updateReady, setUpdateReady] = useState(false);
   // TEMP: always show onboarding on launch. For once-only, init from `!onboardingSeen`.
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [bottomExpanded, setBottomExpanded] = useState(true);
@@ -1228,15 +1230,27 @@ export default function App() {
           {update && (
             <button
               onClick={() => {
+                // Already installed: clicking restarts to finish.
+                if (updateReady) {
+                  void api.relaunchApp();
+                  return;
+                }
                 if (updateProgress !== null) return;
                 setUpdateProgress(0);
                 void api
                   .installUpdate((f) => setUpdateProgress(f))
-                  .then((ok) => {
-                    // ok === true relaunches the app; false/throw → open the page.
+                  .then(async (ok) => {
+                    // ok === false/throw → no signed artifact, open the page.
                     if (!ok) {
                       setUpdateProgress(null);
                       void api.openPath(update.url);
+                      return;
+                    }
+                    // Installed: ask whether to restart now or later.
+                    setUpdateProgress(null);
+                    setUpdateReady(true);
+                    if (await api.confirmRestart(update.version)) {
+                      void api.relaunchApp();
                     }
                   })
                   .catch(() => {
@@ -1244,14 +1258,20 @@ export default function App() {
                     void api.openPath(update.url);
                   });
               }}
-              title={`Version ${update.version} is available - click to update`}
+              title={
+                updateReady
+                  ? "Update installed - restart to finish"
+                  : `Version ${update.version} is available - click to update`
+              }
               className="flex items-center gap-1.5 rounded-md bg-accent/15 px-2 py-1 text-xs font-medium text-accent hover:bg-accent/25 disabled:opacity-70"
               disabled={updateProgress !== null}
             >
               <Download size={14} />
-              {updateProgress !== null
-                ? `Updating… ${Math.round(updateProgress * 100)}%`
-                : "Update available"}
+              {updateReady
+                ? "Restart to update"
+                : updateProgress !== null
+                  ? `Updating… ${Math.round(updateProgress * 100)}%`
+                  : "Update available"}
             </button>
           )}
           <button

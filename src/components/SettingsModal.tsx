@@ -1080,6 +1080,8 @@ function AboutPanel() {
   const [checked, setChecked] = useState(false);
   // null = idle; 0..1 = download progress; "error" = install failed
   const [installing, setInstalling] = useState<number | "error" | null>(null);
+  // true once the update is installed and only a restart remains.
+  const [installed, setInstalled] = useState(false);
 
   useEffect(() => {
     if (!isTauri()) return;
@@ -1093,12 +1095,18 @@ function AboutPanel() {
     if (!isTauri() || installing !== null) return;
     setInstalling(0);
     try {
-      // On success the app downloads, installs, and relaunches - code after this
-      // never runs. `false` means no signed artifact yet (fall back to the page).
+      // `true` means installed (we then ask the user when to restart); `false`
+      // means no signed artifact yet (fall back to the releases page).
       const ok = await api.installUpdate((f) => setInstalling(f));
       if (!ok) {
         setInstalling(null);
         if (rel) await api.openPath(rel.url);
+        return;
+      }
+      setInstalling(null);
+      setInstalled(true);
+      if (await api.confirmRestart(rel?.version)) {
+        await api.relaunchApp();
       }
     } catch {
       setInstalling("error");
@@ -1176,7 +1184,21 @@ function AboutPanel() {
               <span className="text-xs text-subtle">You're on the latest version.</span>
             ))}
         </div>
-        {hasUpdate && (
+        {installed && (
+          <div className="flex flex-col gap-1.5 self-start">
+            <button
+              onClick={() => isTauri() && void api.relaunchApp()}
+              className="flex items-center gap-1.5 rounded-md bg-accent px-3 py-1.5 text-xs font-medium text-accent-fg hover:opacity-90"
+            >
+              <Download size={13} />
+              Restart now to finish
+            </button>
+            <span className="text-[11px] text-subtle">
+              Update installed. It applies the next time you restart TurboFiles.
+            </span>
+          </div>
+        )}
+        {!installed && hasUpdate && (
           <div className="flex flex-col gap-1.5 self-start">
             <button
               onClick={() => void installUpdate()}
