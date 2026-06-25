@@ -61,6 +61,7 @@ pub fn run() {
             commands::connection::download_to_temp,
             commands::connection::read_remote_text,
             commands::connection::start_file_edit,
+            commands::connection::upload_edited_file,
             commands::connection::delete_remote,
             commands::connection::rename_remote,
             commands::connection::mkdir_remote,

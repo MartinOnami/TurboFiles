@@ -706,6 +706,7 @@ function TransfersPanel() {
 
 function FileEditingPanel() {
   const watchEdits = useSettings((s) => s.watchEdits);
+  const confirmEditUpload = useSettings((s) => s.confirmEditUpload);
   const defaultEditor = useSettings((s) => s.defaultEditor);
   const fileAssociations = useSettings((s) => s.fileAssociations);
   const set = useSettings((s) => s.set);
@@ -713,10 +714,18 @@ function FileEditingPanel() {
     <div className="flex flex-col gap-3">
       <Toggle
         label="Watch opened files and re-upload on save"
-        hint="When you open a remote file, edits are uploaded back automatically each time you save."
+        hint="When you open a remote file, saving it locally re-uploads the changes to the server."
         checked={watchEdits}
         onChange={(v) => set("watchEdits", v)}
       />
+      {watchEdits && (
+        <Toggle
+          label="Confirm before uploading edits"
+          hint="When a watched file is saved, ask before uploading the new version (like FileZilla). Turn off to upload silently."
+          checked={confirmEditUpload}
+          onChange={(v) => set("confirmEditUpload", v)}
+        />
+      )}
       <label className="flex flex-col gap-1">
         <span className="text-[10px] font-medium uppercase tracking-wide text-subtle">
           Default editor

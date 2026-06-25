@@ -239,12 +239,23 @@ export const api = {
   readRemoteText: (sessionId: string, path: string, maxBytes = 65536) =>
     call<string>("read_remote_text", { sessionId, path, maxBytes }),
   /**
-   * Open a remote file for editing and watch it: each save is re-uploaded to the
-   * remote. `editor` is an optional editor command/app (empty = OS default).
-   * Returns the temp path. Listen via `onEditorEvent` for re-upload notices.
+   * Open a remote file for editing and watch it: each save emits `editor://changed`.
+   * `editor` is an optional editor command/app (empty = OS default). Returns the
+   * temp path. Listen via `onEditorChange`, then upload with `uploadEditedFile`.
    */
   startFileEdit: (sessionId: string, remotePath: string, editor?: string) =>
     call<string>("start_file_edit", { sessionId, remotePath, editor }),
+  /** Upload a locally-edited temp file back to its remote path. */
+  uploadEditedFile: (sessionId: string, localPath: string, remotePath: string) =>
+    call<void>("upload_edited_file", { sessionId, localPath, remotePath }),
+  /** Ask the user to confirm uploading a changed local file back to the server. */
+  confirmUploadEdit: async (filename: string, host?: string): Promise<boolean> =>
+    ask(`The file "${filename}" was changed. Upload the new version${host ? ` to ${host}` : ""}?`, {
+      title: "File changed",
+      kind: "info",
+      okLabel: "Upload",
+      cancelLabel: "Discard",
+    }),
 
   /* ------------------------------------------------------------- History */
   /** Append a log line to durable history. */
@@ -343,12 +354,14 @@ export function onTransferProgress(
   return listen<TransferProgressEvent>("transfer://progress", (event) => handler(event.payload));
 }
 
-/** Subscribe to file-editor re-upload notices (`ok`) and errors (`err`). */
-export function onEditorEvent(
-  handler: (kind: "ok" | "err", message: string) => void,
-): Promise<UnlistenFn[]> {
-  return Promise.all([
-    listen<string>("editor://reuploaded", (e) => handler("ok", e.payload)),
-    listen<string>("editor://error", (e) => handler("err", e.payload)),
-  ]);
+/** A watched file opened for editing was saved locally. */
+export interface EditorChange {
+  sessionId: string;
+  remotePath: string;
+  localPath: string;
+}
+
+/** Subscribe to "a watched edited file was saved" notices (`editor://changed`). */
+export function onEditorChange(handler: (info: EditorChange) => void): Promise<UnlistenFn[]> {
+  return Promise.all([listen<EditorChange>("editor://changed", (e) => handler(e.payload))]);
 }

@@ -4,6 +4,12 @@ All notable changes to TurboFiles are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Changelog](https://keepachangelog.com).
 
 ## [Unreleased]
+### Added
+- File editing: when a file you opened from the remote is saved, TurboFiles now
+  asks to confirm uploading the new version back to the server (like FileZilla),
+  instead of uploading silently. A new "Confirm before uploading edits" toggle in
+  Settings -> File editing controls it (on by default; turn off for silent
+  auto-upload).
 ### Fixed
 - Assistant: `connect_site` no longer fails with "site not found" right after the
   assistant creates a site with `add_site`. The connect handler now reads the

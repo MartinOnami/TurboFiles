@@ -348,6 +348,16 @@ pub async fn read_remote_text(
 ///
 /// `editor` is an optional editor command/app to open the file with; when absent
 /// the OS default application is used.
+///
+/// Payload emitted on `editor://changed` when a watched file is saved.
+#[derive(Clone, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+struct EditChanged {
+    session_id: String,
+    remote_path: String,
+    local_path: String,
+}
+
 #[tauri::command]
 pub async fn start_file_edit(
     session_id: String,
@@ -397,31 +407,49 @@ pub async fn start_file_edit(
             let Some(state) = app.try_state::<AppState>() else {
                 return;
             };
-            let Some(client) = state.client(&session_id) else {
+            if state.client(&session_id).is_none() {
                 return; // session gone - stop watching
-            };
+            }
             let current = file_mtime(&watch_dest);
             if current > last {
                 last = current;
-                let res = {
-                    let mut noop = |_: u64, _: u64| true;
-                    client
-                        .lock()
-                        .upload(&watch_dest, &watch_remote, false, &mut noop)
-                };
-                match res {
-                    Ok(()) => {
-                        let _ = app.emit("editor://reuploaded", watch_remote.clone());
-                    }
-                    Err(e) => {
-                        let _ = app.emit("editor://error", format!("{watch_remote}: {e}"));
-                    }
-                }
+                // Notify the UI that the opened file changed; the frontend decides
+                // whether to confirm with the user, then calls `upload_edited_file`.
+                let _ = app.emit(
+                    "editor://changed",
+                    EditChanged {
+                        session_id: session_id.clone(),
+                        remote_path: watch_remote.clone(),
+                        local_path: watch_dest.to_string_lossy().into_owned(),
+                    },
+                );
             }
         }
     });
 
     Ok(dest.to_string_lossy().into_owned())
+}
+
+/// Upload a locally-edited temp file back to its remote path. Called by the
+/// frontend after the user confirms an edit detected by the file-edit watcher.
+#[tauri::command]
+pub async fn upload_edited_file(
+    session_id: String,
+    local_path: String,
+    remote_path: String,
+    state: State<'_, AppState>,
+) -> Result<()> {
+    let client = state
+        .client(&session_id)
+        .ok_or_else(|| Error::SessionNotFound(session_id.clone()))?;
+    let local = std::path::PathBuf::from(local_path);
+    tauri::async_runtime::spawn_blocking(move || {
+        let mut noop = |_: u64, _: u64| true;
+        client.lock().upload(&local, &remote_path, false, &mut noop)
+    })
+    .await
+    .map_err(|e| Error::Remote(e.to_string()))??;
+    Ok(())
 }
 
 /// Most-recent-modification time of a file as seconds since the epoch (0 if unknown).

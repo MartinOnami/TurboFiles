@@ -42,7 +42,7 @@ import {
   api,
   asApiError,
   isTauri,
-  onEditorEvent,
+  onEditorChange,
   onTransferProgress,
   pickApplication,
   pickXmlFile,
@@ -494,17 +494,28 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Editor watch notices: log each re-upload (and refresh the remote pane).
+  // A watched edited file was saved: confirm (FileZilla-style) then re-upload.
   useEffect(() => {
     if (!isTauri()) return;
     let unlisten: Array<() => void> | undefined;
     let cancelled = false;
-    onEditorEvent((kind, message) => {
-      if (kind === "ok") {
-        addLog("info", `Re-uploaded edited file: ${message}`, "System");
+    onEditorChange(async ({ sessionId, remotePath, localPath }) => {
+      const name = remotePath.split("/").pop() || remotePath;
+      const host = useStore.getState().tabs.find((t) => t.session?.id === sessionId)?.session?.host;
+      // Read the setting live so toggling it does not require re-subscribing.
+      if (useSettings.getState().confirmEditUpload) {
+        const ok = await api.confirmUploadEdit(name, host);
+        if (!ok) {
+          addLog("info", `Kept local edits to ${name}; not uploaded.`, "System");
+          return;
+        }
+      }
+      try {
+        await api.uploadEditedFile(sessionId, localPath, remotePath);
+        addLog("info", `Re-uploaded edited file: ${remotePath}`, "System");
         handleRefreshRemote();
-      } else {
-        addLog("error", `Edit re-upload failed: ${message}`, "System");
+      } catch (err) {
+        addLog("error", `Edit re-upload failed: ${fmtErr(err)}`, "System");
       }
     })
       .then((fns) => {

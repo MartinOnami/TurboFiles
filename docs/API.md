@@ -76,10 +76,16 @@ Read a small remote text file (config/version/log) as UTF-8, capped at `maxBytes
 
 ### `startFileEdit(sessionId, remotePath, editor?) → string`
 Download a remote file to a temp dir, open it (with `editor` or the OS default
-app), and watch it: each time the local copy is saved, the change is re-uploaded
-to the remote. Returns the temp path. Emits `editor://reuploaded` (remote path)
-on success and `editor://error` on failure; the watcher stops when the session
-closes. Errors: `SESSION_NOT_FOUND`, `REMOTE`.
+app), and watch it: each time the local copy is saved, the backend emits
+`editor://changed` with `{ sessionId, remotePath, localPath }`. The frontend then
+confirms with the user (unless disabled) and uploads via `uploadEditedFile`. The
+watcher stops when the session closes. Returns the temp path. Errors:
+`SESSION_NOT_FOUND`, `REMOTE`.
+
+### `uploadEditedFile(sessionId, localPath, remotePath) → void`
+Upload a locally-edited temp file back to its remote path. Called after the user
+confirms an `editor://changed` notice (or immediately when the confirmation
+setting is off). Errors: `SESSION_NOT_FOUND`, `REMOTE`.
 
 ```ts
 type EntryKind = "file" | "directory" | "symlink";

@@ -104,6 +104,8 @@ export interface Settings {
   dirCompareThreshold: number;
   /** Watch files opened from the remote and re-upload them when saved. */
   watchEdits: boolean;
+  /** Ask for confirmation before uploading a changed edited file back to the server. */
+  confirmEditUpload: boolean;
   /** Default editor command/app for opened files (empty = OS default app). */
   defaultEditor: string;
   /** Per-extension editor overrides as "ext=command" lines (one per line). */
@@ -179,6 +181,7 @@ export const useSettings = create<Settings>()(
       logFilePath: "",
       dirCompareThreshold: 0,
       watchEdits: true,
+      confirmEditUpload: true,
       defaultEditor: "",
       fileAssociations: "",
       openWithApps: {},
