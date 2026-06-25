@@ -4,6 +4,7 @@ import {
   ArrowUp,
   X,
   ShieldAlert,
+  ShieldCheck,
   Settings as SettingsIcon,
   Paperclip,
   Loader2,
@@ -11,8 +12,16 @@ import {
   ChevronDown,
   Check,
   CircleX,
+  FolderSearch,
+  ArrowDownUp,
+  Plug,
+  History,
+  SquarePen,
+  Trash2,
 } from "lucide-react";
 import { api, pickFiles } from "../lib/api";
+import { BrandMark } from "./BrandMark";
+import { useChats, type StoredChat } from "../store/useChats";
 import { useStore } from "../store/useStore";
 import { useSettings } from "../store/useSettings";
 import {
@@ -35,13 +44,13 @@ export interface AssistantPanelProps {
   onConnectSite: (siteId: string) => Promise<{ ok: boolean; reason?: string }>;
 }
 
-interface Step {
+export interface Step {
   label: string;
   detail?: string;
   status: "active" | "done" | "error";
 }
 
-type ChatItem =
+export type ChatItem =
   | { kind: "user"; text: string }
   | { kind: "assistant"; text: string }
   | { kind: "tool"; text: string }
@@ -58,6 +67,24 @@ function fmtErr(e: unknown): string {
   if (typeof e === "object" && e !== null && "message" in e)
     return String((e as { message: unknown }).message);
   return String(e);
+}
+
+/** A short title for a saved chat: the first user message, trimmed. */
+function deriveTitle(items: ChatItem[]): string {
+  const first = items.find((i) => i.kind === "user") as { text: string } | undefined;
+  const t = (first?.text ?? "").trim().replace(/\s+/g, " ");
+  return t.length > 48 ? `${t.slice(0, 48)}…` : t || "New chat";
+}
+
+/** Compact relative time for the history list (e.g. "5m ago"). */
+function relTime(ts: number): string {
+  const s = Math.max(0, Math.floor((Date.now() - ts) / 1000));
+  if (s < 60) return "just now";
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
 }
 
 /**
@@ -277,6 +304,61 @@ export function AssistantPanel({
   const convo = useRef<AgentMsg[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const taRef = useRef<HTMLTextAreaElement>(null);
+
+  // Chat history (persisted to localStorage via useChats).
+  const chats = useChats((s) => s.chats);
+  const activeId = useChats((s) => s.activeId);
+  const [showHistory, setShowHistory] = useState(false);
+  const historyRef = useRef<HTMLDivElement>(null);
+
+  // Restore the last active chat once on mount (the panel stays mounted).
+  useEffect(() => {
+    const c = useChats.getState();
+    const chat = c.activeId ? c.chats.find((x) => x.id === c.activeId) : null;
+    if (chat) {
+      setItems(chat.items);
+      convo.current = chat.convo;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Persist the active chat once a turn settles (not on every streaming step).
+  useEffect(() => {
+    if (busy || items.length === 0) return;
+    const c = useChats.getState();
+    if (!c.activeId) c.newChat();
+    useChats.getState().saveActive(items, convo.current, deriveTitle(items));
+  }, [items, busy]);
+
+  // Close the history menu on any outside click.
+  useEffect(() => {
+    if (!showHistory) return;
+    const close = (e: MouseEvent) => {
+      if (historyRef.current && !historyRef.current.contains(e.target as Node))
+        setShowHistory(false);
+    };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, [showHistory]);
+
+  const startNewChat = () => {
+    // The outgoing chat is already saved by the persist effect above.
+    useChats.getState().newChat();
+    convo.current = [];
+    setItems([]);
+    setPending(null);
+    setInput("");
+    setAttachments([]);
+    setShowHistory(false);
+  };
+
+  const loadChat = (chat: StoredChat) => {
+    useChats.getState().setActive(chat.id);
+    convo.current = chat.convo;
+    setItems(chat.items);
+    setPending(null);
+    setShowHistory(false);
+  };
 
   // Auto-grow the composer with content, up to ~3 lines (then it scrolls).
   useEffect(() => {
@@ -730,6 +812,52 @@ export function AssistantPanel({
           {agentModel || agentProvider}
         </span>
         <div className="flex-1" />
+        <button
+          onClick={startNewChat}
+          title="New chat"
+          className="rounded p-1 text-subtle hover:bg-muted hover:text-fg"
+        >
+          <SquarePen size={15} />
+        </button>
+        <div className="relative" ref={historyRef}>
+          <button
+            onClick={() => setShowHistory((v) => !v)}
+            title="Chat history"
+            className={`rounded p-1 hover:bg-muted hover:text-fg ${
+              showHistory ? "bg-muted text-fg" : "text-subtle"
+            }`}
+          >
+            <History size={15} />
+          </button>
+          {showHistory && (
+            <div className="absolute right-0 top-full z-50 mt-1 max-h-80 w-64 overflow-auto rounded-md border border-border bg-surface py-1 shadow-lg">
+              {chats.length === 0 ? (
+                <p className="px-3 py-2 text-xs text-subtle">No past chats yet.</p>
+              ) : (
+                chats.map((c) => (
+                  <div key={c.id} className="group flex items-center gap-1 px-1">
+                    <button
+                      onClick={() => loadChat(c)}
+                      className={`min-w-0 flex-1 rounded px-2 py-1.5 text-left hover:bg-muted ${
+                        c.id === activeId ? "bg-muted" : ""
+                      }`}
+                    >
+                      <span className="block truncate text-xs text-fg">{c.title}</span>
+                      <span className="block text-[10px] text-subtle">{relTime(c.updatedAt)}</span>
+                    </button>
+                    <button
+                      onClick={() => useChats.getState().removeChat(c.id)}
+                      title="Delete chat"
+                      className="shrink-0 rounded p-1 text-subtle opacity-0 hover:text-danger group-hover:opacity-100"
+                    >
+                      <Trash2 size={12} />
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </div>
         <button onClick={onClose} className="rounded p-1 text-subtle hover:bg-muted hover:text-fg">
           <X size={15} />
         </button>
@@ -752,21 +880,45 @@ export function AssistantPanel({
             </button>
           </div>
         ) : items.length === 0 ? (
-          <div className="px-1 text-xs text-subtle">
-            <p>Ask me to help with files and transfers. For example:</p>
-            <ul className="mt-2 list-disc space-y-1 pl-4">
-              <li>"List the files in /var/www"</li>
-              <li>"Download everything in the logs folder here"</li>
-              <li>"Show me errors from the last 30 minutes"</li>
-              <li>"Audit this WordPress site for known vulnerabilities"</li>
-              <li>"Add a site: sftp to 10.0.0.5 as deploy" (paste creds; password optional)</li>
+          <div className="flex flex-col items-center px-2 pt-8 text-center">
+            <BrandMark size={38} />
+            <h2 className="mt-5 text-xl font-bold text-fg">Hey,</h2>
+            <p className="mt-1 text-base text-fg">How can I help you?</p>
+            <p className="mt-6 self-stretch text-left text-[13px] leading-relaxed text-subtle">
+              I'm your TurboFiles assistant. I can help you:
+            </p>
+            <ul className="mt-3 w-full space-y-3.5 text-left">
+              <li className="flex items-start gap-3">
+                <FolderSearch size={18} className="mt-0.5 shrink-0 text-fg" />
+                <span className="text-[13px] leading-snug text-fg">
+                  Browse, search and open your remote files
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <ArrowDownUp size={18} className="mt-0.5 shrink-0 text-fg" />
+                <span className="text-[13px] leading-snug text-fg">
+                  Download and upload files in bulk
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <ShieldCheck size={18} className="mt-0.5 shrink-0 text-fg" />
+                <span className="text-[13px] leading-snug text-fg">
+                  Audit sites and read logs for issues
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Plug size={18} className="mt-0.5 shrink-0 text-fg" />
+                <span className="text-[13px] leading-snug text-fg">
+                  Add and connect to your saved sites
+                </span>
+              </li>
             </ul>
-            <p className="mt-2">
-              Attach files with the 📎 clip, then tell me where to upload them.
-            </p>
-            <p className="mt-1">
-              Reads run automatically; anything that changes files asks you first.
-            </p>
+            <button
+              onClick={() => taRef.current?.focus()}
+              className="mt-7 w-full rounded-xl bg-accent py-2.5 text-sm font-semibold text-accent-fg hover:opacity-90"
+            >
+              Give it a try
+            </button>
           </div>
         ) : null}
 

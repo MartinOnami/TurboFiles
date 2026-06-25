@@ -245,9 +245,6 @@ export const api = {
    */
   startFileEdit: (sessionId: string, remotePath: string, editor?: string) =>
     call<string>("start_file_edit", { sessionId, remotePath, editor }),
-  /** Upload a locally-edited temp file back to its remote path. */
-  uploadEditedFile: (sessionId: string, localPath: string, remotePath: string) =>
-    call<void>("upload_edited_file", { sessionId, localPath, remotePath }),
   /** Ask the user to confirm uploading a changed local file back to the server. */
   confirmUploadEdit: async (filename: string, host?: string): Promise<boolean> =>
     ask(`The file "${filename}" was changed. Upload the new version${host ? ` to ${host}` : ""}?`, {

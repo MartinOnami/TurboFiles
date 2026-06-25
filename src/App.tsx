@@ -511,11 +511,12 @@ export default function App() {
         }
       }
       try {
-        await api.uploadEditedFile(sessionId, localPath, remotePath);
-        addLog("info", `Re-uploaded edited file: ${remotePath}`, "System");
-        handleRefreshRemote();
+        // Queue it like any other upload so it shows in the transfer queue with
+        // progress and retry (the worker re-uploads to the exact remote path).
+        await api.enqueueUpload(sessionId, localPath, remotePath, false);
+        addLog("info", `Queued edited file for upload: ${name}`, "System");
       } catch (err) {
-        addLog("error", `Edit re-upload failed: ${fmtErr(err)}`, "System");
+        addLog("error", `Could not queue ${name} for upload: ${fmtErr(err)}`, "System");
       }
     })
       .then((fns) => {

@@ -7,9 +7,11 @@ This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Ch
 ### Added
 - File editing: when a file you opened from the remote is saved, TurboFiles now
   asks to confirm uploading the new version back to the server (like FileZilla),
-  instead of uploading silently. A new "Confirm before uploading edits" toggle in
-  Settings -> File editing controls it (on by default; turn off for silent
-  auto-upload).
+  then queues the upload (with progress and retry) instead of uploading silently.
+  A new "Confirm before uploading edits" toggle in Settings -> File editing
+  controls it (on by default; turn off for silent auto-upload).
+- Assistant: a redesigned welcome screen, plus chat history - start a new chat
+  and revisit past conversations from the panel header (kept on this device).
 ### Fixed
 - Assistant: `connect_site` no longer fails with "site not found" right after the
   assistant creates a site with `add_site`. The connect handler now reads the
