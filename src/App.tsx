@@ -31,6 +31,11 @@ import {
 } from "./components/OverwriteDialog";
 import { CertTrustDialog, type CertPrompt } from "./components/CertTrustDialog";
 import {
+  AlreadyEditingDialog,
+  type EditConflict,
+  type EditConflictChoice,
+} from "./components/AlreadyEditingDialog";
+import {
   PasswordPromptDialog,
   type PasswordPrompt,
   type PasswordResult,
@@ -185,11 +190,13 @@ export default function App() {
   const [conflict, setConflict] = useState<FileConflict | null>(null);
   const [certPrompt, setCertPrompt] = useState<CertPrompt | null>(null);
   const [passwordPrompt, setPasswordPrompt] = useState<PasswordPrompt | null>(null);
+  const [editConflict, setEditConflict] = useState<EditConflict | null>(null);
   const newMenuRef = useRef<HTMLDivElement>(null);
   const tabMenuRef = useRef<HTMLDivElement>(null);
   const conflictResolver = useRef<((r: ConflictResolution) => void) | null>(null);
   const certResolver = useRef<((trust: boolean) => void) | null>(null);
   const passwordResolver = useRef<((r: PasswordResult | null) => void) | null>(null);
+  const editConflictResolver = useRef<((c: EditConflictChoice) => void) | null>(null);
 
   const {
     showHiddenFiles,
@@ -339,6 +346,19 @@ export default function App() {
     const fn = passwordResolver.current;
     passwordResolver.current = null;
     fn?.(r);
+  };
+
+  // Promise-based "file already being edited" prompt (reopen / re-download / cancel).
+  const askEditConflict = (info: EditConflict) =>
+    new Promise<EditConflictChoice>((resolve) => {
+      editConflictResolver.current = resolve;
+      setEditConflict(info);
+    });
+  const resolveEditConflict = (c: EditConflictChoice) => {
+    setEditConflict(null);
+    const fn = editConflictResolver.current;
+    editConflictResolver.current = null;
+    fn?.(c);
   };
 
   // Map of saved-site id → live session id, so the Site Manager can show which
@@ -1192,6 +1212,24 @@ export default function App() {
     }
   };
 
+  // Start a watched edit. If the file is already open for editing, ask whether to
+  // reopen the local copy or discard it and download a fresh one (FileZilla-style).
+  const startWatchedEdit = async (
+    sessionId: string,
+    entry: DirEntry,
+    editor: string | undefined,
+    scope: string,
+  ) => {
+    let fresh = false;
+    if (await api.isFileBeingEdited(entry.path)) {
+      const choice = await askEditConflict({ name: entry.name });
+      if (!choice) return; // cancelled
+      fresh = choice === "fresh";
+    }
+    addLog("info", `Editing ${entry.name} (changes re-upload on save)…`, scope);
+    await api.startFileEdit(sessionId, entry.path, editor, fresh);
+  };
+
   // "Open With…" for a remote file. With "watch edits" on, this watches the file
   // and re-uploads on save (same as the default-app path); otherwise it's a
   // one-shot download-and-open.
@@ -1203,8 +1241,7 @@ export default function App() {
       if (!chosen) return;
       rememberApp(entry.name, chosen);
       if (watchEdits) {
-        addLog("info", `Editing ${entry.name} (changes re-upload on save)…`, scope);
-        await api.startFileEdit(session.id, entry.path, chosen);
+        await startWatchedEdit(session.id, entry, chosen, scope);
       } else {
         addLog("info", `Opening ${entry.name}…`, scope);
         const tmp = await api.downloadToTemp(session.id, entry.path);
@@ -1236,8 +1273,7 @@ export default function App() {
     try {
       const editor = resolveEditor(entry.name);
       if (watchEdits) {
-        addLog("info", `Editing ${entry.name} (changes re-upload on save)…`, scope);
-        await api.startFileEdit(session.id, entry.path, editor);
+        await startWatchedEdit(session.id, entry, editor, scope);
       } else {
         addLog("info", `Opening ${entry.name}…`, scope);
         const tmp = await api.downloadToTemp(session.id, entry.path);
@@ -1723,6 +1759,7 @@ export default function App() {
       <OverwriteDialog conflict={conflict} onResolve={resolveConflict} />
       <CertTrustDialog prompt={certPrompt} onResolve={resolveCertTrust} />
       <PasswordPromptDialog prompt={passwordPrompt} onResolve={resolvePassword} />
+      <AlreadyEditingDialog conflict={editConflict} onResolve={resolveEditConflict} />
     </div>
   );
 }

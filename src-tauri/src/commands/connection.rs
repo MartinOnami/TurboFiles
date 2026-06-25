@@ -358,51 +358,70 @@ struct EditChanged {
     local_path: String,
 }
 
+/// The temp file a remote path is downloaded to for editing. Unique per remote
+/// path (hashed subdir) so two files that share a basename do not collide.
+fn edit_temp_dest(remote_path: &str) -> std::path::PathBuf {
+    use std::hash::{Hash, Hasher};
+    let name = std::path::Path::new(remote_path)
+        .file_name()
+        .map(|s| s.to_string_lossy().into_owned())
+        .unwrap_or_else(|| "download".into());
+    let mut hasher = std::collections::hash_map::DefaultHasher::new();
+    remote_path.hash(&mut hasher);
+    std::env::temp_dir()
+        .join("turbofiles-edit")
+        .join(format!("{:016x}", hasher.finish()))
+        .join(name)
+}
+
+/// Whether a remote file already has a local copy open for editing (a watcher).
+/// Lets the UI offer "reopen local" vs "discard and re-download" like FileZilla.
+#[tauri::command]
+pub fn is_file_being_edited(remote_path: String, state: State<'_, AppState>) -> bool {
+    let key = edit_temp_dest(&remote_path).to_string_lossy().into_owned();
+    state.edit_watches.lock().contains_key(&key)
+}
+
+/// Open a remote file for editing and watch it for changes.
+///
+/// `fresh = Some(true)` discards any existing local copy and re-downloads; any
+/// other value reopens the existing local copy when one is already being edited.
 #[tauri::command]
 pub async fn start_file_edit(
     session_id: String,
     remote_path: String,
     editor: Option<String>,
+    fresh: Option<bool>,
     state: State<'_, AppState>,
     app: tauri::AppHandle,
 ) -> Result<String> {
-    use std::hash::{Hash, Hasher};
     use tauri::{Emitter, Manager};
 
     let client = state
         .client(&session_id)
         .ok_or_else(|| Error::SessionNotFound(session_id.clone()))?;
-    let name = std::path::Path::new(&remote_path)
-        .file_name()
-        .map(|s| s.to_string_lossy().into_owned())
-        .unwrap_or_else(|| "download".into());
-    // Unique temp subdir per remote path, so two files that share a basename do
-    // not collide (which would re-upload one over the other's remote path).
-    let mut hasher = std::collections::hash_map::DefaultHasher::new();
-    remote_path.hash(&mut hasher);
-    let dir = std::env::temp_dir()
-        .join("turbofiles-edit")
-        .join(format!("{:016x}", hasher.finish()));
-    std::fs::create_dir_all(&dir)?;
-    let dest = dir.join(&name);
+    let dest = edit_temp_dest(&remote_path);
+    if let Some(parent) = dest.parent() {
+        std::fs::create_dir_all(parent)?;
+    }
     let dest_key = dest.to_string_lossy().into_owned();
 
-    // If this exact file is already being watched, reuse the temp file and its
-    // single watcher (no duplicate prompts); just bring the editor back up.
-    let is_new = {
-        let mut watches = state.edit_watches.lock();
-        if watches.contains_key(&dest_key) {
-            false
-        } else {
-            // Claim the slot with a sentinel baseline so nothing can fire while we
-            // download (no watcher reads this before it is overwritten below).
-            watches.insert(dest_key.clone(), (u64::MAX, 0));
-            true
-        }
-    };
-    if !is_new {
+    let already = state.edit_watches.lock().contains_key(&dest_key);
+    if already && fresh != Some(true) {
+        // Reopen the existing local copy: no re-download, no second watcher.
         open_for_edit(&dest, editor.as_deref())?;
         return Ok(dest_key);
+    }
+
+    // Download a fresh copy: the file is new, or the user chose to discard the
+    // local copy. For an already-watched file the existing watcher keeps running,
+    // so we just reset its baseline (below) rather than spawning a second one.
+    if !already {
+        // Claim the slot with a sentinel baseline so nothing can fire mid-download.
+        state
+            .edit_watches
+            .lock()
+            .insert(dest_key.clone(), (u64::MAX, 0));
     }
 
     let dl_client = client.clone();
@@ -420,7 +439,9 @@ pub async fn start_file_edit(
         Err(e) => Err(Error::Remote(e.to_string())),
     };
     if let Err(e) = dl_result {
-        state.edit_watches.lock().remove(&dest_key); // release the slot
+        if !already {
+            state.edit_watches.lock().remove(&dest_key); // release the claimed slot
+        }
         return Err(e);
     }
 
@@ -433,6 +454,11 @@ pub async fn start_file_edit(
 
     // Open with the chosen editor, or the OS default app.
     open_for_edit(&dest, editor.as_deref())?;
+
+    // An already-watched file already has a watcher; don't spawn a second one.
+    if already {
+        return Ok(dest_key);
+    }
 
     // Watch for saves and re-upload. Bounded so a forgotten file can't watch
     // forever (FileZilla similarly stops watching eventually). One watcher per

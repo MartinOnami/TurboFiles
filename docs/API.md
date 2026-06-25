@@ -74,13 +74,18 @@ can `openPath` it ("Open with…" for remote files). Errors: `SESSION_NOT_FOUND`
 Read a small remote text file (config/version/log) as UTF-8, capped at `maxBytes`
 (≤ 1 MiB). Used by the assistant to inspect files. Errors: `SESSION_NOT_FOUND`, `REMOTE`.
 
-### `startFileEdit(sessionId, remotePath, editor?) → string`
+### `startFileEdit(sessionId, remotePath, editor?, fresh?) → string`
 Download a remote file to a temp dir, open it (with `editor` or the OS default
 app), and watch it: each time the local copy is saved, the backend emits
 `editor://changed` with `{ sessionId, remotePath, localPath }`. The frontend then
 confirms with the user (unless disabled) and queues the upload via `enqueueUpload`.
-The watcher stops when the session closes. Returns the temp path. Errors:
-`SESSION_NOT_FOUND`, `REMOTE`.
+If the file is already being edited, `fresh = true` discards the local copy and
+re-downloads; any other value reopens the existing local copy. The watcher stops
+when the session closes. Returns the temp path. Errors: `SESSION_NOT_FOUND`, `REMOTE`.
+
+### `isFileBeingEdited(remotePath) → boolean`
+Whether a remote file already has a local copy open for editing (an active
+watcher). Used to offer "reopen local" vs "discard and re-download".
 
 ```ts
 type EntryKind = "file" | "directory" | "symlink";

@@ -18,6 +18,8 @@ This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Ch
   and revisit past conversations from the panel header (kept on this device).
 - Assistant: opening a remote folder now matches names case- and separator-
   insensitively, so "Support Custom" opens "support-custom" on the first try.
+- File editing: opening a file that is already being edited now asks whether to
+  reopen the local copy or discard it and download a fresh one (like FileZilla).
 ### Fixed
 - File editing: re-uploaded edits now appear in the transfer queue with their
   correct name and remote path (the queued transfer was not registered, so it

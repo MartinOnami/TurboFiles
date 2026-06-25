@@ -243,8 +243,10 @@ export const api = {
    * `editor` is an optional editor command/app (empty = OS default). Returns the
    * temp path. Listen via `onEditorChange`, then upload with `uploadEditedFile`.
    */
-  startFileEdit: (sessionId: string, remotePath: string, editor?: string) =>
-    call<string>("start_file_edit", { sessionId, remotePath, editor }),
+  startFileEdit: (sessionId: string, remotePath: string, editor?: string, fresh?: boolean) =>
+    call<string>("start_file_edit", { sessionId, remotePath, editor, fresh }),
+  /** Whether a remote file already has a local copy open for editing. */
+  isFileBeingEdited: (remotePath: string) => call<boolean>("is_file_being_edited", { remotePath }),
   /** Ask the user to confirm uploading a changed local file back to the server. */
   confirmUploadEdit: async (filename: string, host?: string): Promise<boolean> =>
     ask(`The file "${filename}" was changed. Upload the new version${host ? ` to ${host}` : ""}?`, {
