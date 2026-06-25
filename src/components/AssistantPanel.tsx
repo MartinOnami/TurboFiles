@@ -100,6 +100,46 @@ const baseName = (p: string) => {
   return i >= 0 ? s.slice(i + 1) : s;
 };
 const joinPath = (dir: string, name: string) => (dir.endsWith("/") ? dir + name : dir + "/" + name);
+
+/**
+ * Resolve a remote directory path tolerantly. Tries the exact path first; if that
+ * fails, walks from the root matching each component case- and separator-
+ * insensitively (so "Support Custom" finds "support-custom"). Returns the real
+ * path and its entries, or throws a helpful ToolFailure listing what's available.
+ */
+async function resolveRemoteDir(
+  sessionId: string,
+  input: string,
+): Promise<{ path: string; entries: DirEntry[] }> {
+  try {
+    return { path: input, entries: await api.listRemote(sessionId, input) };
+  } catch {
+    /* fall back to a tolerant walk from the root */
+  }
+  const norm = (s: string) => s.toLowerCase().replace(/[\s._-]+/g, "");
+  const parts = input.split("/").filter(Boolean);
+  let cur = "/";
+  let entries = await api.listRemote(sessionId, cur);
+  for (const part of parts) {
+    const dirs = entries.filter((e) => e.kind === "directory");
+    const hit =
+      dirs.find((e) => e.name === part) ??
+      dirs.find((e) => e.name.toLowerCase() === part.toLowerCase()) ??
+      dirs.find((e) => norm(e.name) === norm(part));
+    if (!hit) {
+      const avail =
+        dirs
+          .map((e) => e.name)
+          .slice(0, 25)
+          .join(", ") || "(no subfolders)";
+      throw new ToolFailure(`No folder matching "${part}" in ${cur}. Available: ${avail}.`);
+    }
+    cur = joinPath(cur, hit.name);
+    entries = await api.listRemote(sessionId, cur);
+  }
+  return { path: cur, entries };
+}
+
 const summarize = (entries: DirEntry[]) =>
   entries.length
     ? entries
@@ -518,8 +558,8 @@ export function AssistantPanel({
         if (!sess)
           throw new ToolFailure("Not connected to a server. Connect first with connect_site.");
         if (!st.activeTabId) throw new ToolFailure("No active session tab.");
-        const path = String(a.path);
-        const entries = await api.listRemote(sess.id, path);
+        // Tolerant match so e.g. "Support Custom" resolves to "support-custom".
+        const { path, entries } = await resolveRemoteDir(sess.id, String(a.path));
         // Navigate the remote pane so the user actually sees the folder.
         st.updateTab(st.activeTabId, { remotePath: path, remoteEntries: entries });
         return `Opened ${path}.\n${summarize(entries)}`;
