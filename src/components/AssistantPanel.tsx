@@ -18,6 +18,8 @@ import {
   History,
   SquarePen,
   Trash2,
+  Search,
+  ChevronLeft,
 } from "lucide-react";
 import { api, pickFiles } from "../lib/api";
 import { BrandMark } from "./BrandMark";
@@ -85,6 +87,15 @@ function relTime(ts: number): string {
   const h = Math.floor(m / 60);
   if (h < 24) return `${h}h ago`;
   return `${Math.floor(h / 24)}d ago`;
+}
+
+/** A one-line preview of a chat's most recent message, for the history list. */
+function chatSnippet(items: ChatItem[]): string {
+  const last = [...items].reverse().find((i) => i.kind === "user" || i.kind === "assistant") as
+    | { text: string }
+    | undefined;
+  const t = (last?.text ?? "").trim().replace(/\s+/g, " ");
+  return t.length > 64 ? `${t.slice(0, 64)}…` : t;
 }
 
 /**
@@ -349,7 +360,7 @@ export function AssistantPanel({
   const chats = useChats((s) => s.chats);
   const activeId = useChats((s) => s.activeId);
   const [showHistory, setShowHistory] = useState(false);
-  const historyRef = useRef<HTMLDivElement>(null);
+  const [historySearch, setHistorySearch] = useState("");
 
   // Restore the last active chat once on mount (the panel stays mounted).
   useEffect(() => {
@@ -370,16 +381,16 @@ export function AssistantPanel({
     useChats.getState().saveActive(items, convo.current, deriveTitle(items));
   }, [items, busy]);
 
-  // Close the history menu on any outside click.
-  useEffect(() => {
-    if (!showHistory) return;
-    const close = (e: MouseEvent) => {
-      if (historyRef.current && !historyRef.current.contains(e.target as Node))
-        setShowHistory(false);
-    };
-    document.addEventListener("mousedown", close);
-    return () => document.removeEventListener("mousedown", close);
-  }, [showHistory]);
+  // Chats matching the history search (by title or any message text).
+  const historyMatches = (() => {
+    const q = historySearch.trim().toLowerCase();
+    if (!q) return chats;
+    return chats.filter(
+      (c) =>
+        c.title.toLowerCase().includes(q) ||
+        c.items.some((it) => "text" in it && it.text.toLowerCase().includes(q)),
+    );
+  })();
 
   const startNewChat = () => {
     // The outgoing chat is already saved by the persist effect above.
@@ -841,67 +852,115 @@ export function AssistantPanel({
   if (!open) return null;
 
   return (
-    <div className="flex w-[380px] shrink-0 flex-col border-l border-border bg-surface">
-      <header className="flex items-center gap-2 border-b border-border px-3 py-2">
-        <Sparkles size={15} className="text-accent" />
+    <div className="relative flex w-[380px] shrink-0 flex-col border-l border-border bg-surface">
+      <header className="flex items-center gap-1.5 border-b border-border px-3 py-2.5">
+        <Sparkles size={16} className="shrink-0 text-accent" />
         <span className="text-sm font-semibold">Ask TurboFiles</span>
-        <span
-          className="ml-1 truncate text-[10px] text-subtle"
-          title={`${agentProvider} · ${agentModel}`}
-        >
-          {agentModel || agentProvider}
-        </span>
         <div className="flex-1" />
         <button
           onClick={startNewChat}
           title="New chat"
-          className="rounded p-1 text-subtle hover:bg-muted hover:text-fg"
+          className="rounded-md p-1.5 text-subtle hover:bg-muted hover:text-fg"
         >
-          <SquarePen size={15} />
+          <SquarePen size={16} />
         </button>
-        <div className="relative" ref={historyRef}>
-          <button
-            onClick={() => setShowHistory((v) => !v)}
-            title="Chat history"
-            className={`rounded p-1 hover:bg-muted hover:text-fg ${
-              showHistory ? "bg-muted text-fg" : "text-subtle"
-            }`}
-          >
-            <History size={15} />
-          </button>
-          {showHistory && (
-            <div className="absolute right-0 top-full z-50 mt-1 max-h-80 w-64 overflow-auto rounded-md border border-border bg-surface py-1 shadow-lg">
-              {chats.length === 0 ? (
-                <p className="px-3 py-2 text-xs text-subtle">No past chats yet.</p>
-              ) : (
-                chats.map((c) => (
-                  <div key={c.id} className="group flex items-center gap-1 px-1">
+        <button
+          onClick={() => setShowHistory(true)}
+          title="History"
+          className="rounded-md p-1.5 text-subtle hover:bg-muted hover:text-fg"
+        >
+          <History size={16} />
+        </button>
+        <button
+          onClick={onClose}
+          title="Close"
+          className="rounded-md p-1.5 text-subtle hover:bg-muted hover:text-fg"
+        >
+          <X size={16} />
+        </button>
+      </header>
+
+      {showHistory && (
+        <div className="absolute inset-0 z-30 flex flex-col bg-surface">
+          <header className="flex items-center gap-1.5 border-b border-border px-2 py-2.5">
+            <button
+              onClick={() => setShowHistory(false)}
+              title="Back to chat"
+              className="rounded-md p-1.5 text-subtle hover:bg-muted hover:text-fg"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <span className="text-sm font-semibold">History</span>
+            <div className="flex-1" />
+            <button
+              onClick={startNewChat}
+              title="New chat"
+              className="rounded-md p-1.5 text-subtle hover:bg-muted hover:text-fg"
+            >
+              <SquarePen size={16} />
+            </button>
+          </header>
+          <div className="flex items-center gap-2 border-b border-border px-3 py-2">
+            <Search size={14} className="shrink-0 text-subtle" />
+            <input
+              autoFocus
+              value={historySearch}
+              onChange={(e) => setHistorySearch(e.target.value)}
+              placeholder="Search chats..."
+              className="min-w-0 flex-1 bg-transparent text-sm text-fg placeholder:text-subtle focus:outline-none"
+            />
+            {historySearch && (
+              <button
+                onClick={() => setHistorySearch("")}
+                className="shrink-0 rounded p-0.5 text-subtle hover:text-fg"
+                title="Clear"
+              >
+                <X size={13} />
+              </button>
+            )}
+          </div>
+          <div className="min-h-0 flex-1 overflow-auto p-2">
+            {historyMatches.length === 0 ? (
+              <p className="p-4 text-center text-xs text-subtle">
+                {chats.length === 0 ? "No past chats yet." : "No chats match your search."}
+              </p>
+            ) : (
+              <div className="space-y-0.5">
+                {historyMatches.map((c) => (
+                  <div
+                    key={c.id}
+                    className="group flex items-start gap-1 rounded-lg hover:bg-muted/60"
+                  >
                     <button
                       onClick={() => loadChat(c)}
-                      className={`min-w-0 flex-1 rounded px-2 py-1.5 text-left hover:bg-muted ${
+                      className={`min-w-0 flex-1 rounded-lg px-2.5 py-2 text-left ${
                         c.id === activeId ? "bg-muted" : ""
                       }`}
                     >
-                      <span className="block truncate text-xs text-fg">{c.title}</span>
-                      <span className="block text-[10px] text-subtle">{relTime(c.updatedAt)}</span>
+                      <span className="block truncate text-[13px] font-medium text-fg">
+                        {c.title}
+                      </span>
+                      <span className="mt-0.5 block truncate text-[11px] text-subtle">
+                        {chatSnippet(c.items) || "Empty chat"}
+                      </span>
+                      <span className="mt-0.5 block text-[10px] text-subtle">
+                        {relTime(c.updatedAt)}
+                      </span>
                     </button>
                     <button
                       onClick={() => useChats.getState().removeChat(c.id)}
                       title="Delete chat"
-                      className="shrink-0 rounded p-1 text-subtle opacity-0 hover:text-danger group-hover:opacity-100"
+                      className="mt-2 shrink-0 rounded p-1 text-subtle opacity-0 hover:text-danger group-hover:opacity-100"
                     >
-                      <Trash2 size={12} />
+                      <Trash2 size={13} />
                     </button>
                   </div>
-                ))
-              )}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-        <button onClick={onClose} className="rounded p-1 text-subtle hover:bg-muted hover:text-fg">
-          <X size={15} />
-        </button>
-      </header>
+      )}
 
       <div ref={scrollRef} className="min-h-0 flex-1 space-y-3 overflow-auto px-3 py-3 text-sm">
         {!ready ? (
@@ -958,6 +1017,13 @@ export function AssistantPanel({
               className="mt-7 w-full rounded-xl bg-accent py-2.5 text-sm font-semibold text-accent-fg hover:opacity-90"
             >
               Give it a try
+            </button>
+            <button
+              onClick={onOpenSettings}
+              title="Change in Assistant settings"
+              className="mt-3 max-w-full truncate text-[11px] text-subtle hover:text-fg"
+            >
+              Model: {agentModel || agentProvider}
             </button>
           </div>
         ) : null}

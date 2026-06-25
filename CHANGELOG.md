@@ -16,6 +16,8 @@ This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Ch
   controls it (on by default; turn off for silent auto-upload).
 - Assistant: a redesigned welcome screen, plus chat history - start a new chat
   and revisit past conversations from the panel header (kept on this device).
+- Assistant: a cleaner header and a full, searchable History view (search past
+  chats by title or message text) in place of the cramped dropdown.
 - Assistant: opening a remote folder now matches names case- and separator-
   insensitively, so "Support Custom" opens "support-custom" on the first try.
 - File editing: opening a file that is already being edited now asks whether to
