@@ -1166,17 +1166,24 @@ export default function App() {
     }
   };
 
-  // "Open With…" for a remote file: download to temp, then open with the chosen app.
+  // "Open With…" for a remote file. With "watch edits" on, this watches the file
+  // and re-uploads on save (same as the default-app path); otherwise it's a
+  // one-shot download-and-open.
   const handleOpenRemoteFileWith = async (entry: DirEntry, app?: string) => {
     if (!isTauri() || !session) return;
     const scope = sessionLabel(session);
     try {
       const chosen = app ?? (await pickApplication()) ?? undefined;
       if (!chosen) return;
-      addLog("info", `Opening ${entry.name}…`, scope);
-      const tmp = await api.downloadToTemp(session.id, entry.path);
-      await api.openWith(tmp, chosen);
       rememberApp(entry.name, chosen);
+      if (watchEdits) {
+        addLog("info", `Editing ${entry.name} (changes re-upload on save)…`, scope);
+        await api.startFileEdit(session.id, entry.path, chosen);
+      } else {
+        addLog("info", `Opening ${entry.name}…`, scope);
+        const tmp = await api.downloadToTemp(session.id, entry.path);
+        await api.openWith(tmp, chosen);
+      }
     } catch (err) {
       addLog("error", `Could not open ${entry.name}: ${fmtErr(err)}`, scope);
     }
