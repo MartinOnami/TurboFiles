@@ -53,7 +53,8 @@ export function TransferQueue({
   );
 
   const activeFilter = FILTERS.find((f) => f.value === filter)!;
-  const visible = transfers.filter((t) => activeFilter.match(t.status));
+  // Newest first.
+  const visible = transfers.filter((t) => activeFilter.match(t.status)).reverse();
   const hasCleared = transfers.some((t) => t.status === "completed" || t.status === "cancelled");
 
   return (

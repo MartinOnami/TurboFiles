@@ -57,7 +57,15 @@ import { NEW_SITE_REQUEST, useStore } from "./store/useStore";
 import { useSettings } from "./store/useSettings";
 import { setByteFormat, setDateTimeFormat } from "./lib/utils";
 import { setLocale } from "./lib/i18n";
-import type { DirEntry, LogLevel, ReleaseInfo, Session, Site, Transfer } from "./lib/types";
+import type {
+  DirEntry,
+  LogEntry,
+  LogLevel,
+  ReleaseInfo,
+  Session,
+  Site,
+  Transfer,
+} from "./lib/types";
 
 import type { ConnReq } from "./components/ConnectionBar";
 import { demoLocal, demoLogs, demoRemote, demoSites, demoTransfers } from "./lib/demo";
@@ -159,6 +167,29 @@ export default function App() {
   const liveTransfers = transfers.filter((t) => t.scope != null && liveScopes.has(t.scope));
   const liveLogs = logs.filter((l) => l.scope != null && liveScopes.has(l.scope));
 
+  // Persistent history (SQLite) for the top-tab Logs / Transfer-queue panels, so
+  // they survive disconnects while the bottom panels clear. Live in-progress
+  // transfers are merged in (history only holds finished ones).
+  const [historyLogs, setHistoryLogs] = useState<LogEntry[]>([]);
+  const [historyTransfers, setHistoryTransfers] = useState<Transfer[]>([]);
+  const refreshHistory = () => {
+    if (!isTauri()) return;
+    api
+      .listLogs()
+      .then(setHistoryLogs)
+      .catch(() => undefined);
+    api
+      .listTransferHistory()
+      .then(setHistoryTransfers)
+      .catch(() => undefined);
+  };
+  const globalTransfers = (() => {
+    const byId = new Map<string, Transfer>();
+    for (const t of historyTransfers) byId.set(t.id, t);
+    for (const t of transfers) byId.set(t.id, t); // live overrides finished
+    return Array.from(byId.values());
+  })();
+
   const [bottomTab, setBottomTab] = useState<BottomTab>("queue");
   const [connecting, setConnecting] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -186,6 +217,11 @@ export default function App() {
   const [bottomExpanded, setBottomExpanded] = useState(true);
   // Global Logs / Queue views opened as their own closable top tabs.
   const [activePanel, setActivePanel] = useState<"logs" | "queue" | null>(null);
+  // Refresh the persistent history each time a top-tab panel is opened.
+  useEffect(() => {
+    if (activePanel) refreshHistory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activePanel]);
   const [openPanels, setOpenPanels] = useState<{ logs: boolean; queue: boolean }>({
     logs: false,
     queue: false,
@@ -614,15 +650,10 @@ export default function App() {
         .homeDir()
         .then((home) => api.listLocal(home).then((e) => setLocal(home, e)))
         .catch(() => undefined);
-      // Restore durable history so past logs/transfers are referenceable.
-      api
-        .listLogs()
-        .then(setLogs)
-        .catch(() => undefined);
-      api
-        .listTransferHistory()
-        .then(setTransfers)
-        .catch(() => undefined);
+      // Load durable history for the top-tab panels. The live store (bottom
+      // panels) is NOT seeded - it stays empty until this session does something,
+      // and clears again on disconnect.
+      refreshHistory();
 
       const TERMINAL = new Set(["completed", "failed", "cancelled"]);
       const unlisten = onTransferProgress((e) => {
@@ -709,12 +740,23 @@ export default function App() {
     }
   };
 
+  // After a session closes, clear the live (bottom) panels once nothing is
+  // connected; the persistent history (top tabs) keeps everything.
+  const afterDisconnect = () => {
+    if (!useStore.getState().tabs.some((t) => t.session)) {
+      setTransfers([]);
+      setLogs([]);
+    }
+    refreshHistory();
+  };
+
   const handleCloseTab = (tabId: string) => {
     const tab = tabs.find((t) => t.id === tabId);
     if (tab?.session && isTauri()) {
       api.disconnect(tab.session.id).catch(() => undefined);
     }
     closeTab(tabId);
+    afterDisconnect();
   };
 
   const handleConnect = async (req: ConnReq, acceptInvalidCert = false) => {
@@ -856,6 +898,7 @@ export default function App() {
     } finally {
       setBusySiteId(null);
       closeTab(sessionId);
+      afterDisconnect();
     }
   };
 
@@ -941,8 +984,15 @@ export default function App() {
 
   const navigateRemote = async (path: string) => {
     if (!session || !activeTabId) return;
-    const entries = await api.listRemote(session.id, path);
-    updateTab(activeTabId, { remotePath: path, remoteEntries: entries });
+    setRemoteRefreshing(true);
+    try {
+      const entries = await api.listRemote(session.id, path);
+      updateTab(activeTabId, { remotePath: path, remoteEntries: entries });
+    } catch (err) {
+      addLog("error", `Could not open ${path}: ${fmtErr(err)}`, sessionLabel(session));
+    } finally {
+      setRemoteRefreshing(false);
+    }
   };
 
   const navigateLocal = async (path: string) => {
@@ -1556,7 +1606,7 @@ export default function App() {
 
           {activePanel === "queue" ? (
             <GlobalQueuePanel
-              transfers={transfers}
+              transfers={globalTransfers}
               onPause={(id) => isTauri() && api.pauseTransfer(id)}
               onResume={(id) => isTauri() && api.resumeTransfer(id)}
               onCancel={(id) => isTauri() && api.cancelTransfer(id)}
@@ -1564,7 +1614,7 @@ export default function App() {
               onClearCompleted={handleClearCompleted}
             />
           ) : activePanel === "logs" ? (
-            <GlobalLogsPanel logs={logs} />
+            <GlobalLogsPanel logs={historyLogs} />
           ) : (
             <>
               <ConnectionBar

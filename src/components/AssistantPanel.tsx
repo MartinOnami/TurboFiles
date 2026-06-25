@@ -872,6 +872,13 @@ export function AssistantPanel({
         <span className="text-sm font-semibold">Ask TurboFiles</span>
         <div className="flex-1" />
         <button
+          onClick={onOpenSettings}
+          title="Assistant settings (provider and model)"
+          className="rounded-md p-1.5 text-subtle hover:bg-muted hover:text-fg"
+        >
+          <SettingsIcon size={16} />
+        </button>
+        <button
           onClick={startNewChat}
           title="New chat"
           className="rounded-md p-1.5 text-subtle hover:bg-muted hover:text-fg"

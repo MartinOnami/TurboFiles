@@ -5,9 +5,12 @@ This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Ch
 
 ## [Unreleased]
 ### Changed
-- Transfer queue / Logs: the bottom panels now show only currently-connected
-  sessions and clear when a session disconnects. The full history stays in the
-  Logs and Transfer-queue top tabs (opened from the sidebar).
+- Transfer queue / Logs: the bottom panels are now ephemeral - they show only the
+  live session and clear on disconnect. The Logs and Transfer-queue top tabs read
+  the persistent history (kept across disconnects). Newest entries show first.
+- Remote browsing: opening a folder now shows a loading spinner.
+- Assistant: a settings gear in the header opens Settings -> Assistant directly
+  (reachable even when a configured model fails to respond).
 ### Added
 - File editing: when a file you opened from the remote is saved, TurboFiles now
   asks to confirm uploading the new version back to the server (like FileZilla),

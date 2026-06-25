@@ -6,6 +6,7 @@ import {
   Folder,
   FolderPlus,
   FolderUp,
+  Loader2,
   RefreshCw,
   Trash2,
 } from "lucide-react";
@@ -376,6 +377,11 @@ export function FileBrowser({
             ))}
           </tbody>
         </table>
+        {isRefreshing && (
+          <div className="pointer-events-none absolute inset-0 flex items-start justify-center bg-surface/30 pt-10">
+            <Loader2 size={20} className="animate-spin text-accent" />
+          </div>
+        )}
       </div>
 
       <footer className="border-t border-border px-3 py-1.5 text-xs text-subtle">
