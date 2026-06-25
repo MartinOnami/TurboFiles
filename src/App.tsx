@@ -500,10 +500,22 @@ export default function App() {
     let unlisten: Array<() => void> | undefined;
     let cancelled = false;
     onEditorChange(async ({ sessionId, remotePath, localPath }) => {
+      // Guard against malformed events: a blank remote/local path would queue a
+      // nameless upload to nowhere.
+      if (!remotePath || !localPath) {
+        addLog(
+          "error",
+          `Ignored edit event with missing paths (remote="${remotePath}", local="${localPath}").`,
+          "System",
+        );
+        return;
+      }
       const name = remotePath.split("/").pop() || remotePath;
       const host = useStore.getState().tabs.find((t) => t.session?.id === sessionId)?.session?.host;
-      // Read the setting live so toggling it does not require re-subscribing.
-      if (useSettings.getState().confirmEditUpload) {
+      addLog("info", `Detected a change to ${name} (${remotePath}).`, "System");
+      // Ask unless the setting is *explicitly* off (so a missing/legacy value
+      // still prompts rather than uploading silently).
+      if (useSettings.getState().confirmEditUpload !== false) {
         const ok = await api.confirmUploadEdit(name, host);
         if (!ok) {
           addLog("info", `Kept local edits to ${name}; not uploaded.`, "System");
@@ -514,7 +526,7 @@ export default function App() {
         // Queue it like any other upload so it shows in the transfer queue with
         // progress and retry (the worker re-uploads to the exact remote path).
         await api.enqueueUpload(sessionId, localPath, remotePath, false);
-        addLog("info", `Queued edited file for upload: ${name}`, "System");
+        addLog("info", `Queued edited file for upload: ${name} -> ${remotePath}`, "System");
       } catch (err) {
         addLog("error", `Could not queue ${name} for upload: ${fmtErr(err)}`, "System");
       }
