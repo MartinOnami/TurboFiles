@@ -20,6 +20,8 @@ import {
   Trash2,
   Search,
   ChevronLeft,
+  FileText,
+  ExternalLink,
 } from "lucide-react";
 import { api, pickFiles } from "../lib/api";
 import { BrandMark } from "./BrandMark";
@@ -44,6 +46,9 @@ export interface AssistantPanelProps {
   /** Connect to a saved site by id (runs the app's full connect flow). Returns
    *  the outcome so the assistant can report the real reason on failure. */
   onConnectSite: (siteId: string) => Promise<{ ok: boolean; reason?: string }>;
+  /** Open a remote file the assistant referenced (default app / chosen app). */
+  onOpenFile?: (file: { name: string; path: string }) => void;
+  onOpenFileWith?: (file: { name: string; path: string }) => void;
 }
 
 export interface Step {
@@ -57,6 +62,7 @@ export type ChatItem =
   | { kind: "assistant"; text: string }
   | { kind: "tool"; text: string }
   | { kind: "error"; text: string }
+  | { kind: "file"; name: string; path: string; size?: number }
   | { kind: "thought"; steps: Step[]; done: boolean; answer?: string };
 
 interface Pending {
@@ -334,6 +340,8 @@ export function AssistantPanel({
   onClose,
   onOpenSettings,
   onConnectSite,
+  onOpenFile,
+  onOpenFileWith,
 }: AssistantPanelProps) {
   const { tabs, activeTabId, localPath } = useStore();
   const agentProvider = useSettings((s) => s.agentProvider);
@@ -607,8 +615,13 @@ export function AssistantPanel({
       case "read_remote_file": {
         if (!sess)
           throw new ToolFailure("Not connected to a server. Connect first with connect_site.");
+        const path = String(a.path);
         const max = typeof a.maxBytes === "number" ? a.maxBytes : 65536;
-        return await api.readRemoteText(sess.id, String(a.path), max);
+        const text = await api.readRemoteText(sess.id, path, max);
+        // Show the user an openable file card instead of relying on the model to
+        // (or worse, dump) the contents in chat.
+        push({ kind: "file", name: baseName(path), path });
+        return text;
       }
       case "wordpress_audit": {
         if (!sess)
@@ -1031,6 +1044,8 @@ export function AssistantPanel({
         {items.map((it, idx) =>
           it.kind === "thought" ? (
             <ChainOfThought key={idx} steps={it.steps} done={it.done} answer={it.answer} />
+          ) : it.kind === "file" ? (
+            <FileCard key={idx} file={it} onOpen={onOpenFile} onOpenWith={onOpenFileWith} />
           ) : (
             <ChatLine key={idx} item={it} />
           ),
@@ -1136,7 +1151,48 @@ export function AssistantPanel({
   );
 }
 
-function ChatLine({ item }: { item: Exclude<ChatItem, { kind: "thought" }> }) {
+/** A compact, openable card for a file the assistant read/opened (instead of
+ *  dumping its contents into the chat). */
+function FileCard({
+  file,
+  onOpen,
+  onOpenWith,
+}: {
+  file: { name: string; path: string; size?: number };
+  onOpen?: (f: { name: string; path: string }) => void;
+  onOpenWith?: (f: { name: string; path: string }) => void;
+}) {
+  return (
+    <div className="flex items-center gap-2.5 rounded-lg border border-border bg-bg p-2.5">
+      <FileText size={18} className="shrink-0 text-accent" />
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-[13px] font-medium text-fg" title={file.path}>
+          {file.name}
+        </div>
+        <div className="truncate text-[11px] text-subtle">{file.path}</div>
+      </div>
+      {onOpen && (
+        <button
+          onClick={() => onOpen(file)}
+          className="shrink-0 rounded-md border border-border px-2 py-1 text-xs text-fg hover:bg-muted"
+        >
+          Open
+        </button>
+      )}
+      {onOpenWith && (
+        <button
+          onClick={() => onOpenWith(file)}
+          title="Open with..."
+          className="shrink-0 rounded-md border border-border p-1.5 text-subtle hover:bg-muted hover:text-fg"
+        >
+          <ExternalLink size={13} />
+        </button>
+      )}
+    </div>
+  );
+}
+
+function ChatLine({ item }: { item: Exclude<ChatItem, { kind: "thought" | "file" }> }) {
   if (item.kind === "user")
     return (
       <div className="flex justify-end">

@@ -1730,6 +1730,12 @@ export default function App() {
             if (!site) return { ok: false, reason: "site not found" };
             return handleConnectSite(site);
           }}
+          onOpenFile={(f) =>
+            handleOpenRemoteFile({ name: f.name, path: f.path, kind: "file", size: 0 })
+          }
+          onOpenFileWith={(f) =>
+            handleOpenRemoteFileWith({ name: f.name, path: f.path, kind: "file", size: 0 })
+          }
         />
       </div>
 
