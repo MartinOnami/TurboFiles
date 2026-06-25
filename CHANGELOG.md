@@ -3,6 +3,12 @@
 All notable changes to TurboFiles are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Changelog](https://keepachangelog.com).
 
+## [Unreleased]
+### Fixed
+- Assistant: `connect_site` no longer fails with "site not found" right after the
+  assistant creates a site with `add_site`. The connect handler now reads the
+  live site list instead of a stale render snapshot.
+
 ## [0.1.5] - 2026-06-20
 ### Changed
 - Updater: after an update is downloaded and installed, TurboFiles now asks

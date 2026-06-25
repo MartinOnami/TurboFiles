@@ -1642,7 +1642,10 @@ export default function App() {
             setShowSettings(true);
           }}
           onConnectSite={async (siteId) => {
-            const site = sites.find((s) => s.id === siteId);
+            // Read the live store, not this render's `sites` closure: the assistant
+            // may have just created the site via add_site in the same run, so the
+            // closed-over snapshot can be stale ("site not found" despite list_sites).
+            const site = useStore.getState().sites.find((s) => s.id === siteId);
             if (!site) return { ok: false, reason: "site not found" };
             return handleConnectSite(site);
           }}
