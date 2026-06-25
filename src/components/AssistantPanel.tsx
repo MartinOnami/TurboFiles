@@ -22,6 +22,7 @@ import {
   ChevronLeft,
   FileText,
   ExternalLink,
+  AppWindow,
 } from "lucide-react";
 import { api, pickFiles } from "../lib/api";
 import { BrandMark } from "./BrandMark";
@@ -1162,6 +1163,17 @@ function FileCard({
   onOpen?: (f: { name: string; path: string }) => void;
   onOpenWith?: (f: { name: string; path: string }) => void;
 }) {
+  const [menu, setMenu] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!menu) return;
+    const close = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setMenu(false);
+    };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, [menu]);
+
   return (
     <div className="flex items-center gap-2.5 rounded-lg border border-border bg-bg p-2.5">
       <FileText size={18} className="shrink-0 text-accent" />
@@ -1171,22 +1183,44 @@ function FileCard({
         </div>
         <div className="truncate text-[11px] text-subtle">{file.path}</div>
       </div>
-      {onOpen && (
-        <button
-          onClick={() => onOpen(file)}
-          className="shrink-0 rounded-md border border-border px-2 py-1 text-xs text-fg hover:bg-muted"
-        >
-          Open
-        </button>
-      )}
-      {onOpenWith && (
-        <button
-          onClick={() => onOpenWith(file)}
-          title="Open with..."
-          className="shrink-0 rounded-md border border-border p-1.5 text-subtle hover:bg-muted hover:text-fg"
-        >
-          <ExternalLink size={13} />
-        </button>
+      {(onOpen || onOpenWith) && (
+        <div className="relative shrink-0" ref={ref}>
+          <button
+            onClick={() => setMenu((v) => !v)}
+            className="flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-xs font-medium text-fg hover:bg-muted"
+          >
+            Open
+            <ChevronDown size={13} className="text-subtle" />
+          </button>
+          {menu && (
+            <div className="absolute right-0 top-full z-20 mt-1 w-44 overflow-hidden rounded-md border border-border bg-surface py-1 shadow-lg">
+              {onOpen && (
+                <button
+                  onClick={() => {
+                    setMenu(false);
+                    onOpen(file);
+                  }}
+                  className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-fg hover:bg-muted"
+                >
+                  <ExternalLink size={13} className="shrink-0 text-subtle" />
+                  Open in editor
+                </button>
+              )}
+              {onOpenWith && (
+                <button
+                  onClick={() => {
+                    setMenu(false);
+                    onOpenWith(file);
+                  }}
+                  className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-fg hover:bg-muted"
+                >
+                  <AppWindow size={13} className="shrink-0 text-subtle" />
+                  Open with...
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       )}
     </div>
   );
