@@ -4,6 +4,10 @@ All notable changes to TurboFiles are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Changelog](https://keepachangelog.com).
 
 ## [Unreleased]
+### Changed
+- Transfer queue / Logs: the bottom panels now show only currently-connected
+  sessions and clear when a session disconnects. The full history stays in the
+  Logs and Transfer-queue top tabs (opened from the sidebar).
 ### Added
 - File editing: when a file you opened from the remote is saved, TurboFiles now
   asks to confirm uploading the new version back to the server (like FileZilla),
@@ -13,6 +17,9 @@ This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Ch
 - Assistant: a redesigned welcome screen, plus chat history - start a new chat
   and revisit past conversations from the panel header (kept on this device).
 ### Fixed
+- File editing: re-uploaded edits now appear in the transfer queue with their
+  correct name and remote path (the queued transfer was not registered, so it
+  showed as a blank row).
 - File editing: edits are detected by content, not just modification time, so
   opening or closing a file without changing it no longer triggers an upload.
   Each opened file also uses a unique temp file (per remote path) and a single

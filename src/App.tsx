@@ -145,6 +145,15 @@ export default function App() {
   const remotePath = activeTab?.remotePath ?? "";
   const remoteEntries = activeTab?.remoteEntries ?? [];
 
+  // Scopes (user@host) of sessions that are currently connected. The bottom
+  // panels show only these; once a session disconnects its entries drop from the
+  // bottom (the full history stays in the Logs/Transfer-queue top tabs).
+  const liveScopes = new Set(
+    tabs.filter((t) => t.session).map((t) => `${t.session!.username}@${t.session!.host}`),
+  );
+  const liveTransfers = transfers.filter((t) => t.scope != null && liveScopes.has(t.scope));
+  const liveLogs = logs.filter((l) => l.scope != null && liveScopes.has(l.scope));
+
   const [bottomTab, setBottomTab] = useState<BottomTab>("queue");
   const [connecting, setConnecting] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -511,24 +520,29 @@ export default function App() {
         return;
       }
       const name = remotePath.split("/").pop() || remotePath;
-      const host = useStore.getState().tabs.find((t) => t.session?.id === sessionId)?.session?.host;
-      addLog("info", `Detected a change to ${name} (${remotePath}).`, "System");
+      const sess =
+        useStore.getState().tabs.find((t) => t.session?.id === sessionId)?.session ?? null;
+      const scope = sess ? `${sess.username}@${sess.host}` : "System";
+      addLog("info", `Detected a change to ${name} (${remotePath}).`, scope);
       // Ask unless the setting is *explicitly* off (so a missing/legacy value
       // still prompts rather than uploading silently).
       if (useSettings.getState().confirmEditUpload !== false) {
-        const ok = await api.confirmUploadEdit(name, host);
+        const ok = await api.confirmUploadEdit(name, sess?.host);
         if (!ok) {
-          addLog("info", `Kept local edits to ${name}; not uploaded.`, "System");
+          addLog("info", `Kept local edits to ${name}; not uploaded.`, scope);
           return;
         }
       }
       try {
         // Queue it like any other upload so it shows in the transfer queue with
         // progress and retry (the worker re-uploads to the exact remote path).
-        await api.enqueueUpload(sessionId, localPath, remotePath, false);
-        addLog("info", `Queued edited file for upload: ${name} -> ${remotePath}`, "System");
+        // Register the returned transfer(s) so the queue has their name/path/scope
+        // (progress events alone don't carry them - otherwise the row is blank).
+        const queued = await api.enqueueUpload(sessionId, localPath, remotePath, false);
+        queued.forEach((t) => upsertTransfer({ ...t, scope }));
+        addLog("info", `Queued edited file for upload: ${name} -> ${remotePath}`, scope);
       } catch (err) {
-        addLog("error", `Could not queue ${name} for upload: ${fmtErr(err)}`, "System");
+        addLog("error", `Could not queue ${name} for upload: ${fmtErr(err)}`, scope);
       }
     })
       .then((fns) => {
@@ -1620,9 +1634,9 @@ export default function App() {
                       }}
                     >
                       Transfer Queue
-                      {transfers.length > 0 && (
+                      {liveTransfers.length > 0 && (
                         <span className="ml-1.5 rounded-full bg-accent px-1.5 text-[10px] text-accent-fg">
-                          {transfers.length}
+                          {liveTransfers.length}
                         </span>
                       )}
                     </TabButton>
@@ -1648,7 +1662,7 @@ export default function App() {
                     <div className="min-h-0 flex-1">
                       {bottomTab === "queue" ? (
                         <TransferQueue
-                          transfers={transfers}
+                          transfers={liveTransfers}
                           onPause={(id) => isTauri() && api.pauseTransfer(id)}
                           onResume={(id) => isTauri() && api.resumeTransfer(id)}
                           onCancel={(id) => isTauri() && api.cancelTransfer(id)}
@@ -1656,7 +1670,7 @@ export default function App() {
                           onClearCompleted={handleClearCompleted}
                         />
                       ) : (
-                        <LogsPanel logs={logs} />
+                        <LogsPanel logs={liveLogs} />
                       )}
                     </div>
                   )}
