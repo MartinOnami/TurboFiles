@@ -199,6 +199,8 @@ export default function App() {
   const [remoteRefreshing, setRemoteRefreshing] = useState(false);
   // Remote folder currently being opened (shows a spinner on that row).
   const [openingRemotePath, setOpeningRemotePath] = useState<string | null>(null);
+  // Last remote path we logged "Opened" for - dedupes repeats / refreshes.
+  const lastRemoteOpenRef = useRef<string>("");
   const [showNewMenu, setShowNewMenu] = useState(false);
   const [busySiteId, setBusySiteId] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
@@ -987,13 +989,16 @@ export default function App() {
   const navigateRemote = async (path: string) => {
     if (!session || !activeTabId) return;
     const scope = sessionLabel(session);
-    // A same-path call is a refresh (e.g. after a delete/rename), not navigation.
-    const isRefresh = path === remotePath;
     setOpeningRemotePath(path);
     try {
       const entries = await api.listRemote(session.id, path);
       updateTab(activeTabId, { remotePath: path, remoteEntries: entries });
-      if (!isRefresh) addLog("info", `Opened ${path}`, scope);
+      // Log once per distinct folder: skip repeats and same-path refreshes
+      // (e.g. after a delete/rename, or a stale double navigation).
+      if (path !== lastRemoteOpenRef.current) {
+        addLog("info", `Opened ${path}`, scope);
+        lastRemoteOpenRef.current = path;
+      }
     } catch (err) {
       addLog("error", `Could not open ${path}: ${fmtErr(err)}`, scope);
     } finally {
@@ -1029,8 +1034,12 @@ export default function App() {
     setSelectedLocal(null);
   };
   const navUpRemote = () => {
-    if (!isTauri() || !remotePath) return;
-    navigateRemote(parentPath(remotePath)).catch(() => undefined);
+    if (!isTauri()) return;
+    // Read the live path so going up always steps from the real current folder.
+    const st = useStore.getState();
+    const cur = st.tabs.find((t) => t.id === st.activeTabId)?.remotePath ?? "";
+    if (!cur || cur === "/") return;
+    navigateRemote(parentPath(cur)).catch(() => undefined);
     if (synchronizedBrowsing && localPath)
       navigateLocal(parentPath(localPath)).catch(() => undefined);
     setSelectedRemote(null);
