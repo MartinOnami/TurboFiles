@@ -978,19 +978,23 @@ export function AssistantPanel({
 
       <div ref={scrollRef} className="min-h-0 flex-1 space-y-3 overflow-auto px-3 py-3 text-sm">
         {!ready ? (
-          <div className="rounded-md border border-border bg-bg p-3 text-xs text-subtle">
-            <p className="mb-2 font-medium text-fg">Connect your model</p>
-            <p>
-              Add an API key for your provider to start - or point the provider at a local model
+          <div className="flex flex-col items-center px-3 pt-10 text-center">
+            <BrandMark size={36} />
+            <h2 className="mt-5 text-base font-bold text-fg">Set up your AI model</h2>
+            <p className="mt-2 text-[13px] leading-relaxed text-subtle">
+              To use the assistant, add an API key for your provider - or point it at a local model
               (Ollama / LM Studio), which needs no key. Keys are stored in the OS keychain and never
               leave your device.
             </p>
             <button
               onClick={onOpenSettings}
-              className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-fg hover:bg-muted"
+              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent py-2.5 text-sm font-semibold text-accent-fg hover:opacity-90"
             >
-              <SettingsIcon size={12} /> Open Assistant settings
+              <SettingsIcon size={15} /> Open Assistant settings
             </button>
+            <p className="mt-3 text-[11px] text-subtle">
+              Provider and key live in Settings -&gt; Assistant.
+            </p>
           </div>
         ) : items.length === 0 ? (
           <div className="flex flex-col items-center px-2 pt-8 text-center">
@@ -1175,22 +1179,22 @@ function FileCard({
   }, [menu]);
 
   return (
-    <div className="flex items-center gap-2.5 rounded-lg border border-border bg-bg p-2.5">
-      <FileText size={18} className="shrink-0 text-accent" />
+    <div className="flex items-center gap-2 rounded-lg border border-border bg-bg p-2">
+      <FileText size={15} className="shrink-0 text-accent" />
       <div className="min-w-0 flex-1">
-        <div className="truncate text-[13px] font-medium text-fg" title={file.path}>
+        <div className="truncate text-[12px] font-medium text-fg" title={file.path}>
           {file.name}
         </div>
-        <div className="truncate text-[11px] text-subtle">{file.path}</div>
+        <div className="truncate text-[10px] text-subtle">{file.path}</div>
       </div>
       {(onOpen || onOpenWith) && (
         <div className="relative shrink-0" ref={ref}>
           <button
             onClick={() => setMenu((v) => !v)}
-            className="flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-xs font-medium text-fg hover:bg-muted"
+            className="flex items-center gap-1 rounded-md border border-border px-2 py-0.5 text-[11px] font-medium text-fg hover:bg-muted"
           >
             Open
-            <ChevronDown size={13} className="text-subtle" />
+            <ChevronDown size={12} className="text-subtle" />
           </button>
           {menu && (
             <div className="absolute right-0 top-full z-20 mt-1 w-44 overflow-hidden rounded-md border border-border bg-surface py-1 shadow-lg">
@@ -1262,23 +1266,23 @@ function ChainOfThought({
 
   const stepIcon = (s: Step["status"]) =>
     s === "active" ? (
-      <Loader2 size={12} className="animate-spin text-accent" />
+      <Loader2 size={11} className="animate-spin text-accent" />
     ) : s === "error" ? (
-      <CircleX size={12} className="text-danger" />
+      <CircleX size={11} className="text-danger" />
     ) : (
-      <Check size={12} className="text-success" />
+      <Check size={11} className="text-success" />
     );
 
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-bg/60">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center gap-2 px-2.5 py-2 text-sm text-subtle hover:bg-muted/50"
+        className="flex w-full items-center gap-1.5 px-2.5 py-1.5 text-xs text-subtle hover:bg-muted/50"
       >
         {done ? (
-          <Brain size={15} className="text-accent" />
+          <Brain size={13} className="text-accent" />
         ) : (
-          <Loader2 size={15} className="animate-spin text-accent" />
+          <Loader2 size={13} className="animate-spin text-accent" />
         )}
         <span className="font-medium text-fg">
           {done
@@ -1286,26 +1290,28 @@ function ChainOfThought({
             : "Thinking…"}
         </span>
         <span className="flex-1" />
-        <ChevronDown size={15} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+        <ChevronDown size={13} className={`transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open && (
-        <div className="space-y-2.5 border-t border-border px-3 py-2.5 text-sm">
+        <div className="space-y-2 border-t border-border px-2.5 py-2 text-xs">
           {steps.length === 0 ? (
             <div className="text-subtle">Working…</div>
           ) : (
             steps.map((s, i) => (
-              <div key={i} className="flex gap-2">
-                <span className="mt-1 shrink-0">{stepIcon(s.status)}</span>
+              <div key={i} className="flex gap-1.5">
+                <span className="mt-0.5 shrink-0">{stepIcon(s.status)}</span>
                 <div className="min-w-0">
                   <div className="break-words font-medium text-fg">{s.label}</div>
-                  {s.detail && <div className="mt-0.5 line-clamp-2 text-subtle">{s.detail}</div>}
+                  {s.detail && (
+                    <div className="mt-0.5 line-clamp-2 text-[11px] text-subtle">{s.detail}</div>
+                  )}
                 </div>
               </div>
             ))
           )}
           {answer && (
-            <div className="whitespace-pre-wrap text-fg">
+            <div className="whitespace-pre-wrap text-[13px] text-fg">
               <Markdown text={answer} />
             </div>
           )}
@@ -1314,11 +1320,11 @@ function ChainOfThought({
 
       {/* Glanceable outcome, always visible at the bottom-right. */}
       {done && (
-        <div className="flex justify-end border-t border-border px-3 py-1">
+        <div className="flex justify-end border-t border-border px-2.5 py-1">
           <span
-            className={`flex items-center gap-1 text-sm font-semibold ${failed ? "text-danger" : "text-success"}`}
+            className={`flex items-center gap-1 text-xs font-semibold ${failed ? "text-danger" : "text-success"}`}
           >
-            {failed ? <CircleX size={14} /> : <Check size={14} />}
+            {failed ? <CircleX size={12} /> : <Check size={12} />}
             {failed ? "Failed" : "Successful"}
           </span>
         </div>

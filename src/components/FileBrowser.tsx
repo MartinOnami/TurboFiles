@@ -127,6 +127,16 @@ export function FileBrowser({
     }
   };
   const menuRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  // Pane width drives which columns fit. Start wide so nothing flashes hidden.
+  const [paneW, setPaneW] = useState(9999);
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver((entries) => setPaneW(entries[0].contentRect.width));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   const confirmDelete = useSettings((s) => s.confirmDelete);
   const enterDirs = useSettings((s) => s.doubleClickDir) === "enter";
   const transferFiles = useSettings((s) => s.doubleClickFile) === "transfer";
@@ -236,8 +246,12 @@ export function FileBrowser({
   const sortArrow = (col: "name" | "size" | "modified") =>
     sortBy === col ? (sortAsc ? " ▲" : " ▼") : "";
 
-  // Always render the same 5 columns for both panes; extras hidden on local.
-  const extraCls = remote ? "hidden xl:table-cell" : "hidden";
+  // Show columns based on the pane's own width (not the viewport), so the Name
+  // column stays readable when the pane is squeezed (e.g. the assistant is open).
+  const showModified = paneW >= 360;
+  const showPermsOwner = remote && paneW >= 560;
+  const extraCls = showPermsOwner ? "" : "hidden";
+  const modifiedCls = showModified ? "" : "hidden";
 
   return (
     <section
@@ -280,6 +294,7 @@ export function FileBrowser({
       </header>
 
       <div
+        ref={scrollRef}
         className={`relative flex-1 overflow-auto ${dragOver ? "ring-2 ring-inset ring-accent" : ""}`}
         onContextMenu={(e) => {
           e.stopPropagation();
@@ -293,9 +308,9 @@ export function FileBrowser({
           <colgroup>
             <col />
             <col className="w-16" />
-            <col className="w-28" />
-            <col className={remote ? "w-24" : "hidden"} />
-            <col className={remote ? "w-12" : "hidden"} />
+            <col className={showModified ? "w-28" : "hidden"} />
+            <col className={showPermsOwner ? "w-24" : "hidden"} />
+            <col className={showPermsOwner ? "w-12" : "hidden"} />
           </colgroup>
           <thead className="sticky top-0 bg-elevated text-left text-xs text-subtle">
             <tr>
@@ -316,7 +331,7 @@ export function FileBrowser({
                 </th>,
                 <th
                   key="m"
-                  className="cursor-pointer select-none px-3 py-2 font-medium hover:text-fg"
+                  className={`cursor-pointer select-none px-3 py-2 font-medium hover:text-fg ${modifiedCls}`}
                   onClick={() => toggleSort("modified")}
                 >
                   Modified{sortArrow("modified")}
@@ -331,13 +346,19 @@ export function FileBrowser({
             </tr>
           </thead>
           <tbody>
-            <ParentRow onNavigateUp={onNavigateUp} onSelect={onSelect} extraCls={extraCls} />
+            <ParentRow
+              onNavigateUp={onNavigateUp}
+              onSelect={onSelect}
+              extraCls={extraCls}
+              modifiedCls={modifiedCls}
+            />
             {sortedEntries.map((entry) => (
               <EntryRow
                 key={entry.path}
                 entry={entry}
                 isSelected={selected === entry.path}
                 extraCls={extraCls}
+                modifiedCls={modifiedCls}
                 compareCls={
                   compareMap ? COMPARE_CLS[compareEntry(entry, compareMap, compareThreshold)] : ""
                 }
@@ -465,10 +486,12 @@ function ParentRow({
   onNavigateUp,
   onSelect,
   extraCls,
+  modifiedCls,
 }: {
   onNavigateUp: () => void;
   onSelect?: (e: DirEntry | null) => void;
   extraCls: string;
+  modifiedCls: string;
 }) {
   return (
     <tr
@@ -484,7 +507,7 @@ function ParentRow({
           </div>
         </td>,
         <td key="s" />,
-        <td key="m" />,
+        <td key="m" className={modifiedCls} />,
         <td key="p" className={extraCls} />,
         <td key="o" className={extraCls} />,
       ]}
@@ -496,6 +519,7 @@ function EntryRow({
   entry,
   isSelected,
   extraCls,
+  modifiedCls,
   compareCls,
   onSelect,
   onOpenDir,
@@ -508,6 +532,7 @@ function EntryRow({
   entry: DirEntry;
   isSelected: boolean;
   extraCls: string;
+  modifiedCls: string;
   compareCls: string;
   onSelect?: (e: DirEntry | null) => void;
   onOpenDir: (path: string) => void;
@@ -547,7 +572,7 @@ function EntryRow({
         <td key="s" className="px-3 py-1.5 text-right text-subtle">
           {isDir ? null : formatBytes(entry.size)}
         </td>,
-        <td key="m" className="px-3 py-1.5 text-subtle">
+        <td key="m" className={`px-3 py-1.5 text-subtle ${modifiedCls}`}>
           {entry.modified ?? null}
         </td>,
         <td key="p" className={`px-3 py-1.5 font-mono text-xs text-subtle ${extraCls}`}>

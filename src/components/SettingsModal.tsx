@@ -23,12 +23,7 @@ import { APP_VERSION, GITHUB_REPO, RELEASES_URL, isNewerVersion } from "@/lib/ap
 import changelogRaw from "../../CHANGELOG.md?raw";
 import type { ReleaseInfo } from "@/lib/types";
 
-export interface SettingsModalProps {
-  open: boolean;
-  onClose: () => void;
-}
-
-type Category =
+export type SettingsCategory =
   | "interface"
   | "connection"
   | "filelists"
@@ -37,6 +32,15 @@ type Category =
   | "assistant"
   | "changelog"
   | "about";
+
+export interface SettingsModalProps {
+  open: boolean;
+  onClose: () => void;
+  /** Category to show when the modal opens (defaults to "interface"). */
+  initialCategory?: SettingsCategory;
+}
+
+type Category = SettingsCategory;
 
 // Labels come from i18n (`settings.<value>`); see the render below.
 const CATEGORIES: { value: Category; icon: typeof Monitor }[] = [
@@ -55,8 +59,13 @@ const THEMES: { value: Theme; label: string; icon: typeof Sun }[] = [
   { value: "dark", label: "Dark", icon: Moon },
 ];
 
-export function SettingsModal({ open, onClose }: SettingsModalProps) {
-  const [category, setCategory] = useState<Category>("interface");
+export function SettingsModal({ open, onClose, initialCategory }: SettingsModalProps) {
+  const [category, setCategory] = useState<Category>(initialCategory ?? "interface");
+
+  // Jump to the requested category each time the modal is (re)opened.
+  useEffect(() => {
+    if (open && initialCategory) setCategory(initialCategory);
+  }, [open, initialCategory]);
 
   useEffect(() => {
     if (!open) return;

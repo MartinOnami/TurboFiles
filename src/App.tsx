@@ -21,7 +21,7 @@ import { FileBrowser } from "./components/FileBrowser";
 import { TransferQueue } from "./components/TransferQueue";
 import { LogsPanel } from "./components/LogsPanel";
 import { GlobalLogsPanel, GlobalQueuePanel } from "./components/GlobalPanels";
-import { SettingsModal } from "./components/SettingsModal";
+import { SettingsModal, type SettingsCategory } from "./components/SettingsModal";
 import { Onboarding } from "./components/Onboarding";
 import { AssistantPanel } from "./components/AssistantPanel";
 import {
@@ -169,6 +169,11 @@ export default function App() {
   const [showNewMenu, setShowNewMenu] = useState(false);
   const [busySiteId, setBusySiteId] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [settingsCategory, setSettingsCategory] = useState<SettingsCategory>("interface");
+  const openSettings = (category: SettingsCategory = "interface") => {
+    setSettingsCategory(category);
+    setShowSettings(true);
+  };
   const [showAssistant, setShowAssistant] = useState(false);
   // Available app update (newer GitHub release than the running version), or null.
   const [update, setUpdate] = useState<ReleaseInfo | null>(null);
@@ -1381,7 +1386,7 @@ export default function App() {
           busySiteId={busySiteId}
           onShowQueue={() => openPanel("queue")}
           onShowLogs={() => openPanel("logs")}
-          onOpenSettings={() => setShowSettings(true)}
+          onOpenSettings={() => openSettings()}
         />
 
         <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
@@ -1720,7 +1725,7 @@ export default function App() {
           onClose={() => setShowAssistant(false)}
           onOpenSettings={() => {
             setShowAssistant(false);
-            setShowSettings(true);
+            openSettings("assistant");
           }}
           onConnectSite={async (siteId) => {
             // Read the live store, not this render's `sites` closure: the assistant
@@ -1761,7 +1766,11 @@ export default function App() {
         </span>
       </footer>
 
-      <SettingsModal open={showSettings} onClose={() => setShowSettings(false)} />
+      <SettingsModal
+        open={showSettings}
+        onClose={() => setShowSettings(false)}
+        initialCategory={settingsCategory}
+      />
       <OverwriteDialog conflict={conflict} onResolve={resolveConflict} />
       <CertTrustDialog prompt={certPrompt} onResolve={resolveCertTrust} />
       <PasswordPromptDialog prompt={passwordPrompt} onResolve={resolvePassword} />

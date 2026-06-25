@@ -20,6 +20,11 @@ This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Ch
   chats by title or message text) in place of the cramped dropdown.
 - Assistant: reading/opening a file now shows a compact, openable file card
   (Open / Open with) instead of pasting the whole file into the chat.
+- Assistant: more compact reasoning ("Worked through N steps") and file cards;
+  a clearer "set up a model" screen when no model is configured; clicking the
+  model name opens Settings -> Assistant directly.
+- File lists: columns (Modified / Permissions / Owner) now hide based on the
+  pane's own width, so filenames stay readable when the assistant panel is open.
 - Assistant: opening a remote folder now matches names case- and separator-
   insensitively, so "Support Custom" opens "support-custom" on the first try.
 - File editing: opening a file that is already being edited now asks whether to
