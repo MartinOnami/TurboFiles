@@ -26,6 +26,8 @@ export interface FileBrowserProps {
   remote?: boolean;
   selected?: string;
   isRefreshing?: boolean;
+  /** Path of a folder currently being opened (shows a spinner on that row). */
+  openingPath?: string;
   /** Which pane this browser represents (drives drag-and-drop direction). */
   paneKind: PaneKind;
   onOpenDir: (path: string) => void;
@@ -99,6 +101,7 @@ export function FileBrowser({
   remote,
   selected,
   isRefreshing,
+  openingPath,
   paneKind,
   onOpenDir,
   onNavigateUp,
@@ -358,6 +361,7 @@ export function FileBrowser({
                 key={entry.path}
                 entry={entry}
                 isSelected={selected === entry.path}
+                isOpening={entry.path === openingPath}
                 extraCls={extraCls}
                 modifiedCls={modifiedCls}
                 compareCls={
@@ -377,11 +381,6 @@ export function FileBrowser({
             ))}
           </tbody>
         </table>
-        {isRefreshing && (
-          <div className="pointer-events-none absolute inset-0 flex items-start justify-center bg-surface/30 pt-10">
-            <Loader2 size={20} className="animate-spin text-accent" />
-          </div>
-        )}
       </div>
 
       <footer className="border-t border-border px-3 py-1.5 text-xs text-subtle">
@@ -524,6 +523,7 @@ function ParentRow({
 function EntryRow({
   entry,
   isSelected,
+  isOpening,
   extraCls,
   modifiedCls,
   compareCls,
@@ -537,6 +537,7 @@ function EntryRow({
 }: {
   entry: DirEntry;
   isSelected: boolean;
+  isOpening: boolean;
   extraCls: string;
   modifiedCls: string;
   compareCls: string;
@@ -567,7 +568,9 @@ function EntryRow({
       {[
         <td key="n" className="px-3 py-1.5 text-fg">
           <div className="flex min-w-0 items-center gap-2">
-            {isDir ? (
+            {isOpening ? (
+              <Loader2 size={15} className="shrink-0 animate-spin text-accent" />
+            ) : isDir ? (
               <Folder size={15} className="shrink-0 text-accent" />
             ) : (
               <File size={15} className="shrink-0 text-subtle" />

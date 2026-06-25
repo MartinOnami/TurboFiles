@@ -8,7 +8,9 @@ This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Ch
 - Transfer queue / Logs: the bottom panels are now ephemeral - they show only the
   live session and clear on disconnect. The Logs and Transfer-queue top tabs read
   the persistent history (kept across disconnects). Newest entries show first.
-- Remote browsing: opening a folder now shows a loading spinner.
+- Remote browsing: opening a folder shows a spinner on that folder's row (not the
+  whole pane), and every action is logged (opened folder, created/renamed/deleted,
+  uploaded/downloaded, edited) so the Logs read like an activity trail.
 - Assistant: a settings gear in the header opens Settings -> Assistant directly
   (reachable even when a configured model fails to respond).
 ### Added

@@ -197,6 +197,8 @@ export default function App() {
   const [selectedRemote, setSelectedRemote] = useState<DirEntry | null>(null);
   const [localRefreshing, setLocalRefreshing] = useState(false);
   const [remoteRefreshing, setRemoteRefreshing] = useState(false);
+  // Remote folder currently being opened (shows a spinner on that row).
+  const [openingRemotePath, setOpeningRemotePath] = useState<string | null>(null);
   const [showNewMenu, setShowNewMenu] = useState(false);
   const [busySiteId, setBusySiteId] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
@@ -984,14 +986,18 @@ export default function App() {
 
   const navigateRemote = async (path: string) => {
     if (!session || !activeTabId) return;
-    setRemoteRefreshing(true);
+    const scope = sessionLabel(session);
+    // A same-path call is a refresh (e.g. after a delete/rename), not navigation.
+    const isRefresh = path === remotePath;
+    setOpeningRemotePath(path);
     try {
       const entries = await api.listRemote(session.id, path);
       updateTab(activeTabId, { remotePath: path, remoteEntries: entries });
+      if (!isRefresh) addLog("info", `Opened ${path}`, scope);
     } catch (err) {
-      addLog("error", `Could not open ${path}: ${fmtErr(err)}`, sessionLabel(session));
+      addLog("error", `Could not open ${path}: ${fmtErr(err)}`, scope);
     } finally {
-      setRemoteRefreshing(false);
+      setOpeningRemotePath(null);
     }
   };
 
@@ -1205,6 +1211,7 @@ export default function App() {
   const handleDeleteRemote = async (entry: DirEntry) => {
     if (!session) return;
     await api.deleteRemote(session.id, entry.path);
+    addLog("info", `Deleted ${entry.path}`, sessionLabel(session));
     await navigateRemote(remotePath);
   };
 
@@ -1219,6 +1226,7 @@ export default function App() {
     const dir = entry.path.substring(0, entry.path.lastIndexOf("/"));
     const newPath = `${dir}/${newName}`;
     await api.renameRemote(session.id, entry.path, newPath);
+    addLog("info", `Renamed ${entry.name} to ${newName}`, sessionLabel(session));
     await navigateRemote(remotePath);
   };
 
@@ -1230,6 +1238,7 @@ export default function App() {
   const handleMkdirRemote = async (parentDir: string, name: string) => {
     if (!session) return;
     await api.mkdirRemote(session.id, joinPath(parentDir, name));
+    addLog("info", `Created folder ${joinPath(parentDir, name)}`, sessionLabel(session));
     await navigateRemote(remotePath);
   };
 
@@ -1695,6 +1704,7 @@ export default function App() {
                       remote
                       selected={selectedRemote?.path}
                       isRefreshing={remoteRefreshing}
+                      openingPath={openingRemotePath ?? undefined}
                       onSelect={setSelectedRemote}
                       onOpenDir={openRemoteDir}
                       onNavigateUp={navUpRemote}
