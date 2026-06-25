@@ -13,10 +13,11 @@ This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Ch
 - Assistant: a redesigned welcome screen, plus chat history - start a new chat
   and revisit past conversations from the panel header (kept on this device).
 ### Fixed
-- File editing: each opened file now uses a unique temp file (per remote path)
-  and a single watcher, so re-opening a file, or editing two files that share a
-  name, no longer causes repeated upload prompts or uploads to the wrong remote
-  path / filename. Re-opening a watched file reuses it instead of re-prompting.
+- File editing: edits are detected by content, not just modification time, so
+  opening or closing a file without changing it no longer triggers an upload.
+  Each opened file also uses a unique temp file (per remote path) and a single
+  watcher, so re-opening a file, or editing two files that share a name, no
+  longer causes repeated prompts or uploads to the wrong remote path / filename.
 - Assistant: `connect_site` no longer fails with "site not found" right after the
   assistant creates a site with `add_site`. The connect handler now reads the
   live site list instead of a stale render snapshot.

@@ -395,8 +395,8 @@ pub async fn start_file_edit(
             false
         } else {
             // Claim the slot with a sentinel baseline so nothing can fire while we
-            // download.
-            watches.insert(dest_key.clone(), u64::MAX);
+            // download (no watcher reads this before it is overwritten below).
+            watches.insert(dest_key.clone(), (u64::MAX, 0));
             true
         }
     };
@@ -424,11 +424,12 @@ pub async fn start_file_edit(
         return Err(e);
     }
 
-    // Baseline the freshly-downloaded file so opening it is not seen as an edit.
+    // Baseline the freshly-downloaded file (mtime + content hash) so opening it
+    // is not seen as an edit.
     state
         .edit_watches
         .lock()
-        .insert(dest_key.clone(), file_mtime(&dest));
+        .insert(dest_key.clone(), (file_mtime(&dest), file_hash(&dest)));
 
     // Open with the chosen editor, or the OS default app.
     open_for_edit(&dest, editor.as_deref())?;
@@ -450,23 +451,39 @@ pub async fn start_file_edit(
                 state.edit_watches.lock().remove(&watch_key);
                 return; // session gone - stop watching
             }
-            let last = match state.edit_watches.lock().get(&watch_key) {
+            let (last_mtime, last_hash) = match state.edit_watches.lock().get(&watch_key) {
                 Some(v) => *v,
                 None => return, // unregistered - stop
             };
-            let current = file_mtime(&watch_dest);
-            if current > last {
-                // Acknowledge this save before notifying so the next poll is quiet.
-                state.edit_watches.lock().insert(watch_key.clone(), current);
-                let _ = app.emit(
-                    "editor://changed",
-                    EditChanged {
-                        session_id: session_id.clone(),
-                        remote_path: watch_remote.clone(),
-                        local_path: watch_dest.to_string_lossy().into_owned(),
-                    },
-                );
+            // Fast path: mtime unchanged means nothing happened.
+            let current_mtime = file_mtime(&watch_dest);
+            if current_mtime == last_mtime {
+                continue;
             }
+            // mtime moved - only a real content change counts as an edit. Opening
+            // or closing a file in an editor can bump mtime without changing it.
+            let current_hash = file_hash(&watch_dest);
+            if current_hash == last_hash {
+                // Touched but unchanged: record the new mtime so we don't re-hash.
+                state
+                    .edit_watches
+                    .lock()
+                    .insert(watch_key.clone(), (current_mtime, last_hash));
+                continue;
+            }
+            // Acknowledge this save before notifying so the next poll is quiet.
+            state
+                .edit_watches
+                .lock()
+                .insert(watch_key.clone(), (current_mtime, current_hash));
+            let _ = app.emit(
+                "editor://changed",
+                EditChanged {
+                    session_id: session_id.clone(),
+                    remote_path: watch_remote.clone(),
+                    local_path: watch_dest.to_string_lossy().into_owned(),
+                },
+            );
         }
         if let Some(state) = app.try_state::<AppState>() {
             state.edit_watches.lock().remove(&watch_key);
@@ -474,6 +491,20 @@ pub async fn start_file_edit(
     });
 
     Ok(dest_key)
+}
+
+/// A cheap content fingerprint of a file (0 if unreadable). Used to tell a real
+/// edit from a mere open/close that only bumps mtime.
+fn file_hash(path: &std::path::Path) -> u64 {
+    use std::hash::{Hash, Hasher};
+    match std::fs::read(path) {
+        Ok(bytes) => {
+            let mut h = std::collections::hash_map::DefaultHasher::new();
+            bytes.hash(&mut h);
+            h.finish()
+        }
+        Err(_) => 0,
+    }
 }
 
 /// Most-recent-modification time of a file as seconds since the epoch (0 if unknown).

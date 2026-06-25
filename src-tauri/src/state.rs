@@ -28,10 +28,11 @@ pub struct AppState {
     pub sleep_guard: Mutex<Option<std::process::Child>>,
     /// Open file that log lines are mirrored to, when "log to file" is enabled.
     pub log_file: Mutex<Option<std::fs::File>>,
-    /// Temp files currently watched for in-app editing, mapped to the last mtime
-    /// the watcher has acknowledged. Dedupes watchers (one per file) and lets a
-    /// re-open reset the baseline so it is not counted as an edit.
-    pub edit_watches: Mutex<HashMap<String, u64>>,
+    /// Temp files currently watched for in-app editing, mapped to the last
+    /// acknowledged `(mtime, content-hash)`. Dedupes watchers (one per file) and
+    /// lets a re-open reset the baseline. The content hash means merely opening or
+    /// closing a file (which can bump mtime) is not mistaken for an edit.
+    pub edit_watches: Mutex<HashMap<String, (u64, u64)>>,
 }
 
 /// Download/upload speed caps in bytes per second (0 means no limit).
