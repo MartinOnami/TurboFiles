@@ -366,6 +366,7 @@ pub async fn start_file_edit(
     state: State<'_, AppState>,
     app: tauri::AppHandle,
 ) -> Result<String> {
+    use std::hash::{Hash, Hasher};
     use tauri::{Emitter, Manager};
 
     let client = state
@@ -375,32 +376,70 @@ pub async fn start_file_edit(
         .file_name()
         .map(|s| s.to_string_lossy().into_owned())
         .unwrap_or_else(|| "download".into());
-    let dir = std::env::temp_dir().join("turbofiles-edit");
+    // Unique temp subdir per remote path, so two files that share a basename do
+    // not collide (which would re-upload one over the other's remote path).
+    let mut hasher = std::collections::hash_map::DefaultHasher::new();
+    remote_path.hash(&mut hasher);
+    let dir = std::env::temp_dir()
+        .join("turbofiles-edit")
+        .join(format!("{:016x}", hasher.finish()));
     std::fs::create_dir_all(&dir)?;
     let dest = dir.join(&name);
+    let dest_key = dest.to_string_lossy().into_owned();
+
+    // If this exact file is already being watched, reuse the temp file and its
+    // single watcher (no duplicate prompts); just bring the editor back up.
+    let is_new = {
+        let mut watches = state.edit_watches.lock();
+        if watches.contains_key(&dest_key) {
+            false
+        } else {
+            // Claim the slot with a sentinel baseline so nothing can fire while we
+            // download.
+            watches.insert(dest_key.clone(), u64::MAX);
+            true
+        }
+    };
+    if !is_new {
+        open_for_edit(&dest, editor.as_deref())?;
+        return Ok(dest_key);
+    }
 
     let dl_client = client.clone();
     let dl_dest = dest.clone();
     let dl_remote = remote_path.clone();
-    tauri::async_runtime::spawn_blocking(move || {
+    let dl_result: Result<()> = match tauri::async_runtime::spawn_blocking(move || {
         let mut noop = |_: u64, _: u64| true;
         dl_client
             .lock()
             .download(&dl_remote, &dl_dest, false, &mut noop)
     })
     .await
-    .map_err(|e| Error::Remote(e.to_string()))??;
+    {
+        Ok(inner) => inner,
+        Err(e) => Err(Error::Remote(e.to_string())),
+    };
+    if let Err(e) = dl_result {
+        state.edit_watches.lock().remove(&dest_key); // release the slot
+        return Err(e);
+    }
+
+    // Baseline the freshly-downloaded file so opening it is not seen as an edit.
+    state
+        .edit_watches
+        .lock()
+        .insert(dest_key.clone(), file_mtime(&dest));
 
     // Open with the chosen editor, or the OS default app.
     open_for_edit(&dest, editor.as_deref())?;
 
     // Watch for saves and re-upload. Bounded so a forgotten file can't watch
-    // forever (FileZilla similarly stops watching eventually).
-    let baseline = file_mtime(&dest);
+    // forever (FileZilla similarly stops watching eventually). One watcher per
+    // file: the registry baseline dedupes and survives re-opens.
     let watch_dest = dest.clone();
     let watch_remote = remote_path.clone();
+    let watch_key = dest_key.clone();
     std::thread::spawn(move || {
-        let mut last = baseline;
         // ~2 hours at a 2s poll interval.
         for _ in 0..3600 {
             std::thread::sleep(std::time::Duration::from_secs(2));
@@ -408,13 +447,17 @@ pub async fn start_file_edit(
                 return;
             };
             if state.client(&session_id).is_none() {
+                state.edit_watches.lock().remove(&watch_key);
                 return; // session gone - stop watching
             }
+            let last = match state.edit_watches.lock().get(&watch_key) {
+                Some(v) => *v,
+                None => return, // unregistered - stop
+            };
             let current = file_mtime(&watch_dest);
             if current > last {
-                last = current;
-                // Notify the UI that the opened file changed; the frontend decides
-                // whether to confirm with the user, then calls `upload_edited_file`.
+                // Acknowledge this save before notifying so the next poll is quiet.
+                state.edit_watches.lock().insert(watch_key.clone(), current);
                 let _ = app.emit(
                     "editor://changed",
                     EditChanged {
@@ -425,9 +468,12 @@ pub async fn start_file_edit(
                 );
             }
         }
+        if let Some(state) = app.try_state::<AppState>() {
+            state.edit_watches.lock().remove(&watch_key);
+        }
     });
 
-    Ok(dest.to_string_lossy().into_owned())
+    Ok(dest_key)
 }
 
 /// Most-recent-modification time of a file as seconds since the epoch (0 if unknown).

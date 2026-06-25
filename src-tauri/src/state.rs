@@ -28,6 +28,10 @@ pub struct AppState {
     pub sleep_guard: Mutex<Option<std::process::Child>>,
     /// Open file that log lines are mirrored to, when "log to file" is enabled.
     pub log_file: Mutex<Option<std::fs::File>>,
+    /// Temp files currently watched for in-app editing, mapped to the last mtime
+    /// the watcher has acknowledged. Dedupes watchers (one per file) and lets a
+    /// re-open reset the baseline so it is not counted as an edit.
+    pub edit_watches: Mutex<HashMap<String, u64>>,
 }
 
 /// Download/upload speed caps in bytes per second (0 means no limit).
@@ -72,6 +76,7 @@ impl AppState {
             speed_limits: Mutex::new(SpeedLimits::default()),
             sleep_guard: Mutex::new(None),
             log_file: Mutex::new(None),
+            edit_watches: Mutex::new(HashMap::new()),
         })
     }
 
