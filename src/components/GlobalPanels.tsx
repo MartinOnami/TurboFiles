@@ -155,11 +155,12 @@ function tsMillis(ts?: string): number {
   return isNaN(d.getTime()) ? 0 : d.getTime();
 }
 
-/** Sort items chronologically and group into consecutive same-day sections. */
+/** Group into consecutive same-day sections, newest first (newest day on top,
+ *  newest entry first within each day). */
 function groupByDate<T extends { timestamp?: string }>(
   items: T[],
 ): { key: string; label: string; entries: { entry: T; i: number }[] }[] {
-  const sorted = [...items].sort((a, b) => tsMillis(a.timestamp) - tsMillis(b.timestamp));
+  const sorted = [...items].sort((a, b) => tsMillis(b.timestamp) - tsMillis(a.timestamp));
   const groups: { key: string; label: string; entries: { entry: T; i: number }[] }[] = [];
   sorted.forEach((entry, i) => {
     const key = logDateKey(entry.timestamp);
