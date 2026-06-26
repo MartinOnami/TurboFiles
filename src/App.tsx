@@ -665,7 +665,24 @@ export default function App() {
         if (TERMINAL.has(e.status)) {
           // Persist the merged record (carries name/path/scope), not the bare event.
           const merged = useStore.getState().transfers.find((t) => t.id === e.id);
-          if (merged) api.recordTransfer(merged, now()).catch(() => undefined);
+          if (merged) {
+            api.recordTransfer(merged, now()).catch(() => undefined);
+            // Log the finished transfer (FileZilla-style activity trail).
+            const noun = merged.direction === "upload" ? "Upload" : "Download";
+            if (e.status === "completed") {
+              addLog(
+                "info",
+                `${merged.direction === "upload" ? "Uploaded" : "Downloaded"} ${merged.name}`,
+                merged.scope,
+              );
+            } else if (e.status === "failed") {
+              addLog(
+                "error",
+                `${noun} failed: ${merged.name}${merged.error ? ` (${merged.error})` : ""}`,
+                merged.scope,
+              );
+            }
+          }
         }
         if (e.status === "completed") {
           const sess = sessionRef.current;
