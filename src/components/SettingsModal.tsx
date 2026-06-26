@@ -1096,6 +1096,7 @@ function AboutPanel() {
   const [rel, setRel] = useState<ReleaseInfo | null>(null);
   const [checking, setChecking] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [checkFailed, setCheckFailed] = useState(false);
   // null = idle; 0..1 = download progress; "error" = install failed
   const [installing, setInstalling] = useState<number | "error" | null>(null);
   // true once the update is installed and only a restart remains.
@@ -1134,10 +1135,14 @@ function AboutPanel() {
   const checkNow = () => {
     if (!isTauri() || checking) return;
     setChecking(true);
+    setCheckFailed(false);
     api
       .checkLatestRelease(GITHUB_REPO)
       .then((r) => setRel(r))
-      .catch(() => setRel(null))
+      .catch(() => {
+        setRel(null);
+        setCheckFailed(true);
+      })
       .finally(() => {
         setChecking(false);
         setChecked(true);
@@ -1194,7 +1199,11 @@ function AboutPanel() {
           </button>
           {checked &&
             !checking &&
-            (hasUpdate ? (
+            (checkFailed ? (
+              <span className="text-xs text-danger">
+                Could not check for updates. Try again in a moment.
+              </span>
+            ) : hasUpdate ? (
               <span className="text-xs font-medium text-accent">
                 Version {rel!.version} is available.
               </span>
