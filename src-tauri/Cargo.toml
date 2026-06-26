@@ -1,6 +1,6 @@
 [package]
 name = "turbofiles"
-version = "0.1.5"
+version = "0.1.6"
 description = "TurboFiles - modern SFTP/FTP/FTPS client"
 authors = ["Martin Onami"]
 license = "MIT"

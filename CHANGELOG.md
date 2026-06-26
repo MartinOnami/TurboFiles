@@ -3,7 +3,7 @@
 All notable changes to TurboFiles are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Changelog](https://keepachangelog.com).
 
-## [Unreleased]
+## [0.1.6] - 2026-06-26
 ### Changed
 - Transfer queue / Logs: the bottom panels are now ephemeral - they show only the
   live session and clear on disconnect. The Logs and Transfer-queue top tabs read

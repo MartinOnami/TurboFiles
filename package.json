@@ -1,6 +1,6 @@
 {
   "name": "turbofiles",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "TurboFiles - a modern, fast FileZilla-style SFTP/FTP/FTPS client built with Tauri, React and Rust.",
   "type": "module",
   "license": "MIT",
