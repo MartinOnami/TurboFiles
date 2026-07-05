@@ -18,8 +18,8 @@
     <meta name="author" content="xFusion" />
     <link rel="canonical" href="https://martinonami.github.io/TurboFiles/" />
     <link rel="icon" href="assets/logo.png" type="image/png" />
-    <meta name="theme-color" content="#f6f6f4" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0b0b0c" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f7f3ea" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171310" media="(prefers-color-scheme: dark)" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -46,7 +46,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,480..700;1,9..144,480..700&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap"
     />
     <link rel="stylesheet" href="styles.css" />
 
@@ -114,324 +114,359 @@
       }
     </script>
   </head>
-  <body>
+  <body id="top">
     <!-- ============================================================ NAV -->
-    <header class="nav">
-      <div class="nav__in pad">
+    <header class="topbar">
+      <div class="wrap topbar__in">
         <a class="brand" href="#top" aria-label="TurboFiles home">
-          <img src="assets/logo.png" width="22" height="22" alt="TurboFiles logo" />
-          TurboFiles
+          <img src="assets/logo.png" width="24" height="24" alt="TurboFiles logo" />
+          <span>TurboFiles</span>
         </a>
-        <nav class="nav__links" aria-label="Primary">
+        <nav class="topnav" aria-label="Primary">
           <a href="#capabilities">Capabilities</a>
           <a href="#assistant">Assistant</a>
           <a href="#compare">vs FileZilla</a>
           <a href="#faq">FAQ</a>
           <a href="https://github.com/MartinOnami/TurboFiles" target="_blank" rel="noopener">GitHub</a>
-          <a class="cta" href="#download">Download</a>
+          <a class="btn btn--sm" href="#download">Download</a>
         </nav>
       </div>
     </header>
 
-    <div class="frame" id="top">
-      <main>
-        <!-- ======================================================== HERO -->
-        <section class="sec hero">
-          <div class="hero__head">
-            <span class="badge"><span class="badge__dot" aria-hidden="true"></span>macOS &middot; Windows &middot; Linux</span>
-            <h1>Everything FileZilla does. <br class="hb" />Plus an agent that does it <em>for you.</em></h1>
-          </div>
-          <div class="hero__row">
-            <div class="hero__lead">
-              <p class="hero__sub">
-                TurboFiles is a fast, open-source client for <b>SFTP, FTP and FTPS</b>, with a
-                dual-pane workspace, a live transfer queue, and secrets kept in your OS keychain.
-                Then an <b>agentic AI assistant</b> lists, moves, edits and audits for you. Imports
-                your FileZilla sites in one step.
+    <main>
+      <!-- ======================================================== HERO -->
+      <section class="hero">
+        <div class="wrap">
+          <p class="kicker">Free &middot; Open source &middot; macOS / Windows / Linux</p>
+          <div class="hero__grid">
+            <div class="hero__copy">
+              <h1>Everything FileZilla does. Plus an agent that does it <em>for you.</em></h1>
+              <p class="hero__lead">
+                TurboFiles is a fast, open-source client for <strong>SFTP, FTP and FTPS</strong>,
+                with a dual-pane workspace, a live transfer queue, and secrets kept in your OS
+                keychain. Then an <strong>agentic AI assistant</strong> lists, moves, edits and
+                audits for you. Imports your FileZilla sites in one step.
               </p>
               <div class="hero__cta">
-                <a class="btn" href="#download">
-                  Download free
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12m0 0 5-5m-5 5-5-5M5 20h14"/></svg>
-                </a>
-                <a class="txtlink" href="#capabilities">Read the capabilities <span class="ar">-&gt;</span></a>
+                <a class="btn" href="#download">Download free</a>
+                <a class="arrowlink" href="#capabilities">See the capabilities <span aria-hidden="true">-&gt;</span></a>
               </div>
             </div>
-            <aside class="meta" aria-label="At a glance">
-              <div class="meta__row"><span class="meta__k">Release</span><span class="meta__v" id="version-line">latest release</span></div>
-              <div class="meta__row"><span class="meta__k">Platforms</span><span class="meta__v">macOS, Windows, Linux</span></div>
-              <div class="meta__row"><span class="meta__k">License</span><span class="meta__v">MIT, free forever</span></div>
-              <div class="meta__row"><span class="meta__k">Account</span><span class="meta__v">None, no telemetry</span></div>
-              <div class="meta__row"><span class="meta__k">Source</span><span class="meta__v"><a href="https://github.com/MartinOnami/TurboFiles" target="_blank" rel="noopener">github.com/MartinOnami</a></span></div>
+            <aside class="spec" aria-label="At a glance">
+              <p class="spec__title">At a glance</p>
+              <dl>
+                <div class="spec__row"><dt>Release</dt><dd id="version-line">latest release</dd></div>
+                <div class="spec__row"><dt>Platforms</dt><dd>macOS, Windows, Linux</dd></div>
+                <div class="spec__row"><dt>License</dt><dd>MIT, free forever</dd></div>
+                <div class="spec__row"><dt>Account</dt><dd>None, no telemetry</dd></div>
+                <div class="spec__row"><dt>Source</dt><dd><a href="https://github.com/MartinOnami/TurboFiles" target="_blank" rel="noopener">github.com/MartinOnami</a></dd></div>
+              </dl>
             </aside>
           </div>
 
-          <!-- flat dual-pane window -->
-          <div class="win pad-0" role="img" aria-label="The TurboFiles dual-pane interface, showing a local and remote file list with a live transfer queue">
-            <div class="win__bar">
-              <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
-              <span>sftp &middot; deploy@acme-staging</span>
-              <span>/var/www/acme/public</span>
+          <!-- hand-built dual-pane window -->
+          <figure class="appwin" role="img" aria-label="The TurboFiles dual-pane interface: local and remote file lists side by side with a live transfer queue below">
+            <div class="appwin__chrome">
+              <span class="appwin__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="appwin__host">sftp &middot; deploy@acme-staging</span>
+              <span class="appwin__path">/var/www/acme/public</span>
             </div>
-            <div class="win__panes">
-              <div class="win__pane">
-                <div class="win__ph">Local site</div>
-                <div class="win__row dir"><span class="mk">/</span><span class="nm">build</span></div>
-                <div class="win__row dir"><span class="mk">/</span><span class="nm">assets</span></div>
-                <div class="win__row"><span class="mk"></span><span class="nm">index.html</span><span class="sz">4.2 KB</span></div>
-                <div class="win__row"><span class="mk"></span><span class="nm">styles.css</span><span class="sz">11 KB</span></div>
-                <div class="win__row"><span class="mk"></span><span class="nm">app.bundle.js</span><span class="sz">182 KB</span></div>
-                <div class="win__row"><span class="mk"></span><span class="nm">README.md</span><span class="sz">2.0 KB</span></div>
+            <div class="appwin__panes">
+              <div class="pane">
+                <div class="pane__head"><span>Local site</span><span class="pane__crumb">~/sites/acme</span></div>
+                <div class="frow is-dir"><span class="frow__mk">/</span><span class="frow__nm">build</span><span class="frow__sz">--</span></div>
+                <div class="frow is-dir"><span class="frow__mk">/</span><span class="frow__nm">assets</span><span class="frow__sz">--</span></div>
+                <div class="frow"><span class="frow__mk"></span><span class="frow__nm">index.html</span><span class="frow__sz">4.2 KB</span></div>
+                <div class="frow"><span class="frow__mk"></span><span class="frow__nm">styles.css</span><span class="frow__sz">11 KB</span></div>
+                <div class="frow is-sel"><span class="frow__mk"></span><span class="frow__nm">app.bundle.js</span><span class="frow__sz">182 KB</span></div>
+                <div class="frow"><span class="frow__mk"></span><span class="frow__nm">README.md</span><span class="frow__sz">2.0 KB</span></div>
               </div>
-              <div class="win__mid" aria-hidden="true">
-                <span class="hot" title="Upload"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></span>
-                <span title="Download"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m0 0 6 6m-6-6 6-6"/></svg></span>
+              <div class="appwin__mid" aria-hidden="true">
+                <span class="appwin__arrow is-up">-&gt;</span>
+                <span class="appwin__arrow">&lt;-</span>
               </div>
-              <div class="win__pane">
-                <div class="win__ph">Remote site</div>
-                <div class="win__row dir"><span class="mk">/</span><span class="nm">wp-content</span></div>
-                <div class="win__row dir"><span class="mk">/</span><span class="nm">wp-includes</span></div>
-                <div class="win__row"><span class="mk"></span><span class="nm">index.html</span><span class="sz">4.2 KB</span></div>
-                <div class="win__row"><span class="mk"></span><span class="nm">wp-config.php</span><span class="sz">3.1 KB</span></div>
-                <div class="win__row"><span class="mk"></span><span class="nm">.htaccess</span><span class="sz">812 B</span></div>
+              <div class="pane">
+                <div class="pane__head"><span>Remote site</span><span class="pane__crumb">/var/www/acme/public</span></div>
+                <div class="frow is-dir"><span class="frow__mk">/</span><span class="frow__nm">wp-content</span><span class="frow__sz">--</span></div>
+                <div class="frow is-dir"><span class="frow__mk">/</span><span class="frow__nm">wp-includes</span><span class="frow__sz">--</span></div>
+                <div class="frow"><span class="frow__mk"></span><span class="frow__nm">index.html</span><span class="frow__sz">4.2 KB</span></div>
+                <div class="frow"><span class="frow__mk"></span><span class="frow__nm">wp-config.php</span><span class="frow__sz">3.1 KB</span></div>
+                <div class="frow"><span class="frow__mk"></span><span class="frow__nm">.htaccess</span><span class="frow__sz">812 B</span></div>
               </div>
             </div>
-            <div class="win__q">
-              <div class="win__qh"><span>Transfer queue</span><span>2 active &middot; 4.1 MB/s</span></div>
-              <div class="win__qr"><span class="nm">app.bundle.js</span><span class="win__bar2"><i style="width:72%"></i></span><span class="pc">72%</span></div>
-              <div class="win__qr"><span class="nm">styles.css</span><span class="win__bar2"><i style="width:100%"></i></span><span class="pc">100%</span></div>
+            <div class="appwin__queue">
+              <div class="queue__head"><span>Transfer queue</span><span class="queue__stat">2 active &middot; 4.1 MB/s</span></div>
+              <div class="queue__row"><span class="queue__nm">app.bundle.js</span><span class="qbar"><i style="width:72%"></i></span><span class="queue__pc">72%</span></div>
+              <div class="queue__row"><span class="queue__nm">styles.css</span><span class="qbar is-done"><i style="width:100%"></i></span><span class="queue__pc">100%</span></div>
+            </div>
+            <figcaption class="appwin__cap">The dual-pane workspace with a live transfer queue. Drawn to scale, not a screenshot.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- ==================================================== CAPABILITIES -->
+      <section class="section" id="capabilities">
+        <div class="wrap">
+          <div class="sechead">
+            <span class="sechead__label">Capabilities</span>
+            <span class="sechead__no">01 / 06</span>
+          </div>
+          <h2 class="h2">Built like a tool, <em>not a tab.</em></h2>
+          <div class="bento">
+            <article class="card card--wide2">
+              <span class="card__no">01</span>
+              <h3>Dual pane and a live queue</h3>
+              <p>Local and remote side by side. <strong>Parallel transfers</strong>, resume after a dropped connection, drag and drop, and column sorting like a real file manager.</p>
+              <div class="miniq" aria-hidden="true">
+                <div class="miniq__row"><span>backup-2026.tar.gz</span><span class="qbar"><i style="width:64%"></i></span><span class="miniq__pc">64%</span></div>
+                <div class="miniq__row"><span>media/uploads</span><span class="qbar"><i style="width:31%"></i></span><span class="miniq__pc">31%</span></div>
+                <div class="miniq__row"><span>error.log</span><span class="qbar is-done"><i style="width:100%"></i></span><span class="miniq__pc">100%</span></div>
+              </div>
+            </article>
+            <article class="card">
+              <span class="card__no">02</span>
+              <h3>Three protocols, one client</h3>
+              <p>SFTP over SSH, plain FTP, and FTPS over TLS. <strong>Host-key verification</strong>, key-file and SSH-agent auth, and configurable TLS.</p>
+              <div class="chips" aria-hidden="true"><span class="chip">SFTP</span><span class="chip">FTP</span><span class="chip">FTPS</span></div>
+            </article>
+            <article class="card card--accent">
+              <span class="card__no">03</span>
+              <h3>Agentic AI, your key</h3>
+              <p>Describe a task in plain English. It plans, <strong>calls real tools</strong> against your session, shows each step, and waits before it writes.</p>
+              <div class="chips" aria-hidden="true"><span class="chip">Claude</span><span class="chip">OpenAI</span><span class="chip">DeepSeek</span><span class="chip">Ollama</span></div>
+            </article>
+            <article class="card">
+              <span class="card__no">04</span>
+              <h3>Keychain security</h3>
+              <p>Passwords, passphrases and API keys live in the <strong>OS keychain only</strong>. Never in SQLite, logs or the frontend. No telemetry, and a strict CSP.</p>
+            </article>
+            <article class="card">
+              <span class="card__no">05</span>
+              <h3>Native everywhere</h3>
+              <p>One app on a <strong>Rust core</strong> for macOS, Windows and Linux. Light and dark themes, and a universal Apple-silicon and Intel build.</p>
+            </article>
+            <article class="card card--strip">
+              <div>
+                <span class="card__no">06</span>
+                <h3>Site Manager, FileZilla import</h3>
+                <p>Per-site defaults, bookmarks, proxy rules and server time-offset. <strong>Import your FileZilla sites</strong> in a single step, then connect with a click.</p>
+              </div>
+              <div class="import" aria-hidden="true">
+                <span class="import__file">filezilla-sites.xml</span>
+                <span class="import__arrow">-&gt;</span>
+                <span class="import__file is-out">TurboFiles &middot; 14 sites</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================== ASSISTANT -->
+      <section class="section" id="assistant">
+        <div class="wrap">
+          <div class="sechead">
+            <span class="sechead__label">Assistant</span>
+            <span class="sechead__no">02 / 06</span>
+          </div>
+          <div class="asst">
+            <div class="asst__copy">
+              <h2 class="h2">An assistant that <em>acts,</em> not just answers.</h2>
+              <p><strong>Agentic means it does the work.</strong> TurboFiles turns a plain-English request into real tool calls against your live session: list, read, move, edit, audit. It shows its reasoning and asks for confirmation before it changes anything.</p>
+              <p>Cloud or local. Bring your own key for Claude, OpenAI or DeepSeek, or run a model through Ollama or LM Studio. Your files and keys stay on your machine unless you send them. Includes a built-in WordPress security audit.</p>
+            </div>
+            <div class="term" role="img" aria-label="Example assistant transcript: a WordPress audit run step by step">
+              <div class="term__bar"><span>Assistant</span><span>session &middot; acme-staging</span></div>
+              <p class="term__u">audit this WordPress site for known issues</p>
+              <p class="term__t">wordpress_audit /var/www/acme/public</p>
+              <p class="term__t">read_remote_file wp-includes/version.php</p>
+              <p class="term__t">list_remote_directory wp-content</p>
+              <p class="term__r">Core 6.5 is current. <strong>wp-config.php</strong> is not world-readable. No debug.log or .env exposed. One plugin is two minors behind; consider updating.</p>
+              <p class="term__done">Successful</p>
             </div>
           </div>
-          <div style="height:64px"></div>
-        </section>
+        </div>
+      </section>
 
-        <!-- ==================================================== CAPABILITIES -->
-        <section class="sec" id="capabilities">
-          <div class="shead"><span class="lbl">Capabilities</span><span>Index / 01-06</span></div>
-          <div class="scontent">
-            <div class="index">
-              <div class="index__row">
-                <span class="index__no">01</span>
-                <span class="index__t">Protocols</span>
-                <span class="index__d">SFTP over SSH, plain FTP, and FTPS over TLS. <b>Host-key verification</b>, key-file and SSH-agent auth, and configurable TLS. One client, every server.</span>
+      <!-- ==================================================== COMPARE -->
+      <section class="section" id="compare">
+        <div class="wrap">
+          <div class="sechead">
+            <span class="sechead__label">Compare</span>
+            <span class="sechead__no">03 / 06</span>
+          </div>
+          <h2 class="h2">The classic FTP workflow, <em>brought up to date.</em></h2>
+          <p class="lead">Everything you know from FileZilla, made modern and safer by default.</p>
+          <div class="tblwrap">
+            <table class="cmp">
+              <caption>A feature comparison between TurboFiles and FileZilla.</caption>
+              <thead>
+                <tr><th scope="col">Feature</th><th scope="col" class="us">TurboFiles</th><th scope="col">FileZilla</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Price</th><td class="us">Free, MIT open-source</td><td>Free, open-source</td></tr>
+                <tr><th scope="row">SFTP, FTP and FTPS</th><td class="us"><span class="yes">Yes</span></td><td><span class="yes">Yes</span></td></tr>
+                <tr><th scope="row">Dual-pane + transfer queue</th><td class="us"><span class="yes">Yes</span></td><td><span class="yes">Yes</span></td></tr>
+                <tr><th scope="row">Resume interrupted transfers</th><td class="us"><span class="yes">Yes</span></td><td><span class="yes">Yes</span></td></tr>
+                <tr><th scope="row">Agentic AI assistant</th><td class="us"><span class="yes">Yes</span></td><td><span class="no">No</span></td></tr>
+                <tr><th scope="row">Secrets in OS keychain</th><td class="us"><span class="yes">Yes</span></td><td>Optional master password</td></tr>
+                <tr><th scope="row">Imports FileZilla sites</th><td class="us"><span class="yes">Yes</span></td><td>n/a</td></tr>
+                <tr><th scope="row">No telemetry, no account</th><td class="us"><span class="yes">Yes</span></td><td><span class="yes">Yes</span></td></tr>
+                <tr><th scope="row">Interface</th><td class="us">Modern, light + dark</td><td>Classic</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="footnote">Comparison reflects the default configuration of each app. FileZilla is a trademark of its respective owner; TurboFiles is an independent project and is not affiliated with FileZilla.</p>
+        </div>
+      </section>
+
+      <!-- ==================================================== DOWNLOAD -->
+      <section class="section" id="download">
+        <div class="wrap">
+          <div class="sechead">
+            <span class="sechead__label">Download</span>
+            <span class="sechead__no">04 / 06</span>
+          </div>
+          <h2 class="h2">Get TurboFiles. <em>It is free.</em></h2>
+          <p class="lead">Pick a platform; the right installer resolves automatically from the latest release.</p>
+          <div class="oscards" id="os-cards">
+            <div class="os-card" data-os="macos">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.9c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.8-3.5.8s-1.8-.8-3-.8c-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.8 1.1 9 .7 1.1 1.6 2.3 2.7 2.2 1.1 0 1.5-.7 2.8-.7s1.7.7 2.8.7c1.2 0 1.9-1.1 2.6-2.2.8-1.2 1.2-2.4 1.2-2.5-.1 0-2.3-.9-2.3-3.4zM14.3 5.8c.6-.7 1-1.7.9-2.8-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.6-1 2.6 1 .1 2-.5 2.7-1.1z"/></svg>
+              <span class="os-name">macOS</span>
+              <span class="os-file" data-file="macos">Apple Silicon &amp; Intel</span>
+              <a class="btn btn--full" data-link="macos" href="https://github.com/MartinOnami/TurboFiles/releases/latest">Download .dmg</a>
+            </div>
+            <div class="os-card" data-os="windows">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.7 10.3 4.7v7.2H3zM3 18.3l7.3 1V12H3zM11.3 4.6 21 3v8.9h-9.7zM11.3 19.4 21 21v-9.1h-9.7z"/></svg>
+              <span class="os-name">Windows</span>
+              <span class="os-file" data-file="windows">Windows 10 &amp; 11 &middot; 64-bit</span>
+              <a class="btn btn--full" data-link="windows" href="https://github.com/MartinOnami/TurboFiles/releases/latest">Download .exe</a>
+              <div class="os-alt">
+                <a data-link="windows_msi" href="https://github.com/MartinOnami/TurboFiles/releases/latest">.msi (IT / MDM)</a>
               </div>
-              <div class="index__row">
-                <span class="index__no">02</span>
-                <span class="index__t">Dual pane and queue</span>
-                <span class="index__d">Local and remote side by side. <b>Parallel transfers</b>, resume after a dropped connection, drag and drop, and column sorting like a real file manager.</span>
-              </div>
-              <div class="index__row">
-                <span class="index__no">03</span>
-                <span class="index__t">Agentic AI</span>
-                <span class="index__d">Describe a task in plain English. It plans, <b>calls real tools</b> against your session, shows each step, and waits before it writes. Bring your own key.</span>
-              </div>
-              <div class="index__row">
-                <span class="index__no">04</span>
-                <span class="index__t">Keychain security</span>
-                <span class="index__d">Passwords, passphrases and API keys live in the <b>OS keychain only</b>. Never in SQLite, logs or the frontend. No telemetry. The UI is locked down by a strict CSP.</span>
-              </div>
-              <div class="index__row">
-                <span class="index__no">05</span>
-                <span class="index__t">Cross-platform</span>
-                <span class="index__d">One native app on a <b>Rust core</b> for macOS, Windows and Linux. Light and dark themes, and a universal Apple-silicon and Intel build.</span>
-              </div>
-              <div class="index__row">
-                <span class="index__no">06</span>
-                <span class="index__t">Site Manager</span>
-                <span class="index__d">Per-site defaults, bookmarks, proxy rules and server time-offset. <b>Import your FileZilla sites</b> in a single step, then connect with a click.</span>
+            </div>
+            <div class="os-card" data-os="linux">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c-2 0-3 2-2.9 4.5.1 1.4-.4 2.2-1.2 3.4-1 1.4-2.2 2.8-2.2 5 0 .9.3 1.6.8 2.2-.2.6-.1 1.3.4 1.7.6.5 1.6.4 2.4.5.7.1 1.2.6 2.7.6s2-.5 2.7-.6c.8-.1 1.8 0 2.4-.5.5-.4.6-1.1.4-1.7.5-.6.8-1.3.8-2.2 0-2.2-1.2-3.6-2.2-5-.8-1.2-1.3-2-1.2-3.4C15 4 14 2 12 2zm-1.4 4.3c.4 0 .7.4.7.9s-.3.9-.7.9-.7-.4-.7-.9.3-.9.7-.9zm2.8 0c.4 0 .7.4.7.9s-.3.9-.7.9-.7-.4-.7-.9.3-.9.7-.9z"/></svg>
+              <span class="os-name">Linux</span>
+              <span class="os-file" data-file="linux_appimage">Portable &middot; x86-64</span>
+              <a class="btn btn--full" data-link="linux_appimage" href="https://github.com/MartinOnami/TurboFiles/releases/latest">Download .AppImage</a>
+              <div class="os-alt">
+                <a data-link="linux_deb" href="https://github.com/MartinOnami/TurboFiles/releases/latest">.deb</a>
+                <span class="os-alt__sep">/</span>
+                <a data-link="linux_rpm" href="https://github.com/MartinOnami/TurboFiles/releases/latest">.rpm</a>
               </div>
             </div>
           </div>
-        </section>
+          <p class="footnote">Building it yourself? <a href="https://github.com/MartinOnami/TurboFiles/blob/main/docs/INSTALL.md" target="_blank" rel="noopener">See the install guide</a>.</p>
+        </div>
+      </section>
 
-        <!-- ==================================================== ASSISTANT -->
-        <section class="sec" id="assistant">
-          <div class="shead"><span class="lbl">Assistant</span><span>02 / Agentic AI</span></div>
-          <div class="scontent">
-            <div class="asst">
-              <div class="asst__copy">
-                <h3>An assistant that acts, not just answers.</h3>
-                <p><b>Agentic means it does the work.</b> TurboFiles turns a plain-English request into real tool calls against your live session: list, read, move, edit, audit. It shows its reasoning and asks for confirmation before it changes anything.</p>
-                <p>Cloud or local. Bring your own key for Claude, OpenAI or DeepSeek, or run a model through Ollama or LM Studio. Your files and keys stay on your machine unless you send them. Includes a built-in WordPress security audit.</p>
-              </div>
-              <div class="transcript" aria-label="Example assistant transcript">
-                <p class="u">audit this WordPress site for known issues</p>
-                <p class="s">wordpress_audit /var/www/acme/public</p>
-                <p class="s">read_remote_file wp-includes/version.php</p>
-                <p class="s">list_remote_directory wp-content</p>
-                <p class="r">Core 6.5 is current. <b>wp-config.php</b> is not world-readable. No debug.log or .env exposed. One plugin is two minors behind; consider updating.</p>
-                <p class="done">Successful</p>
-              </div>
-            </div>
+      <!-- ==================================================== FIRST LAUNCH -->
+      <section class="section" id="first-run">
+        <div class="wrap">
+          <div class="sechead">
+            <span class="sechead__label">First launch</span>
+            <span class="sechead__no">05 / 06</span>
           </div>
-        </section>
-
-        <!-- ==================================================== COMPARE -->
-        <section class="sec" id="compare">
-          <div class="shead"><span class="lbl">Compare</span><span>TurboFiles / FileZilla</span></div>
-          <div class="scontent">
-            <h2 class="h2">The classic FTP workflow, brought up to date.</h2>
-            <p class="lead-lg" style="margin:18px 0 34px">Everything you know from FileZilla, made modern and safer by default.</p>
-            <div class="tbl-wrap">
-              <table class="cmp">
-                <caption>A feature comparison between TurboFiles and FileZilla.</caption>
-                <thead>
-                  <tr><th scope="col">Feature</th><th scope="col" class="us">TurboFiles</th><th scope="col">FileZilla</th></tr>
-                </thead>
-                <tbody>
-                  <tr><th scope="row">Price</th><td class="us">Free, MIT open-source</td><td>Free, open-source</td></tr>
-                  <tr><th scope="row">SFTP, FTP and FTPS</th><td class="us"><span class="yes">Yes</span></td><td><span class="yes">Yes</span></td></tr>
-                  <tr><th scope="row">Dual-pane + transfer queue</th><td class="us"><span class="yes">Yes</span></td><td><span class="yes">Yes</span></td></tr>
-                  <tr><th scope="row">Resume interrupted transfers</th><td class="us"><span class="yes">Yes</span></td><td><span class="yes">Yes</span></td></tr>
-                  <tr><th scope="row">Agentic AI assistant</th><td class="us"><span class="yes">Yes</span></td><td><span class="no">No</span></td></tr>
-                  <tr><th scope="row">Secrets in OS keychain</th><td class="us"><span class="yes">Yes</span></td><td>Optional master password</td></tr>
-                  <tr><th scope="row">Imports FileZilla sites</th><td class="us"><span class="yes">Yes</span></td><td>n/a</td></tr>
-                  <tr><th scope="row">No telemetry, no account</th><td class="us"><span class="yes">Yes</span></td><td><span class="yes">Yes</span></td></tr>
-                  <tr><th scope="row">Interface</th><td class="us">Modern, light + dark</td><td>Classic</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <p class="cmp-note">Comparison reflects the default configuration of each app. FileZilla is a trademark of its respective owner; TurboFiles is an independent project and is not affiliated with FileZilla.</p>
-          </div>
-        </section>
-
-        <!-- ==================================================== DOWNLOAD -->
-        <section class="sec" id="download">
-          <div class="shead"><span class="lbl">Download</span><span>macOS / Windows / Linux</span></div>
-          <div class="scontent">
-            <h2 class="h2">Get TurboFiles.</h2>
-            <p class="lead-lg" style="margin:18px 0 34px">Free and open-source. Pick a platform; the right installer resolves automatically from the latest release.</p>
-            <div class="os-cards" id="os-cards">
-              <div class="os-card" data-os="macos">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.9c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.8-3.5.8s-1.8-.8-3-.8c-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.8 1.1 9 .7 1.1 1.6 2.3 2.7 2.2 1.1 0 1.5-.7 2.8-.7s1.7.7 2.8.7c1.2 0 1.9-1.1 2.6-2.2.8-1.2 1.2-2.4 1.2-2.5-.1 0-2.3-.9-2.3-3.4zM14.3 5.8c.6-.7 1-1.7.9-2.8-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.6-1 2.6 1 .1 2-.5 2.7-1.1z"/></svg>
-                <span class="os-name">macOS</span>
-                <span class="os-file" data-file="macos">Apple Silicon &amp; Intel</span>
-                <a class="btn" data-link="macos" href="https://github.com/MartinOnami/TurboFiles/releases/latest">Download .dmg</a>
-              </div>
-              <div class="os-card" data-os="windows">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.7 10.3 4.7v7.2H3zM3 18.3l7.3 1V12H3zM11.3 4.6 21 3v8.9h-9.7zM11.3 19.4 21 21v-9.1h-9.7z"/></svg>
-                <span class="os-name">Windows</span>
-                <span class="os-file" data-file="windows">Windows 10 &amp; 11 &middot; 64-bit</span>
-                <a class="btn" data-link="windows" href="https://github.com/MartinOnami/TurboFiles/releases/latest">Download .exe</a>
-                <div class="os-altlinks">
-                  <a data-link="windows_msi" href="https://github.com/MartinOnami/TurboFiles/releases/latest">.msi (IT / MDM)</a>
+          <h2 class="h2">Opening it <em>the first time.</em></h2>
+          <p class="lead">TurboFiles is open-source and not yet code-signed, so your system asks once. Here is the 10-second approval per platform.</p>
+          <div class="firstrun">
+            <article class="fr__col">
+              <h3 class="fr__h">macOS</h3>
+              <ol class="fr__steps">
+                <li>Double-click <strong>TurboFiles</strong>; a warning appears. Click <strong>Done</strong>.</li>
+                <li>Open <strong>System Settings</strong>, then <strong>Privacy &amp; Security</strong>.</li>
+                <li>Under <strong>Security</strong>, find "TurboFiles was blocked", click <strong>Open Anyway</strong>, confirm with password or Touch ID.</li>
+              </ol>
+              <p class="fr__alt">macOS 14 or earlier: Control-click the app, then <strong>Open</strong>, then <strong>Open</strong>.</p>
+            </article>
+            <article class="fr__col">
+              <h3 class="fr__h">Windows</h3>
+              <ol class="fr__steps">
+                <li>Run the installer; <strong>"Windows protected your PC"</strong> appears.</li>
+                <li>Click <strong>More info</strong>.</li>
+                <li>Click <strong>Run anyway</strong>, then install as usual.</li>
+              </ol>
+              <p class="fr__alt">SmartScreen stops warning once the app builds reputation.</p>
+            </article>
+            <article class="fr__col">
+              <h3 class="fr__h">Linux</h3>
+              <p class="fr__alt fr__alt--lead">No prompt. Install from your download folder:</p>
+              <div class="cmds">
+                <div class="cmd">
+                  <span class="cmd__lab">Debian / Ubuntu <em>.deb</em></span>
+                  <div class="cmd__row"><code>sudo apt install ./TurboFiles_*_amd64.deb</code><button class="fl-copy" type="button" data-copy="sudo apt install ./TurboFiles_*_amd64.deb" aria-label="Copy command">Copy</button></div>
+                </div>
+                <div class="cmd">
+                  <span class="cmd__lab">Fedora / RHEL <em>.rpm</em></span>
+                  <div class="cmd__row"><code>sudo dnf install ./TurboFiles-*.x86_64.rpm</code><button class="fl-copy" type="button" data-copy="sudo dnf install ./TurboFiles-*.x86_64.rpm" aria-label="Copy command">Copy</button></div>
+                </div>
+                <div class="cmd">
+                  <span class="cmd__lab">Any distro <em>.AppImage</em></span>
+                  <div class="cmd__row"><code>chmod +x TurboFiles_*.AppImage &amp;&amp; ./TurboFiles_*.AppImage</code><button class="fl-copy" type="button" data-copy="chmod +x TurboFiles_*.AppImage &amp;&amp; ./TurboFiles_*.AppImage" aria-label="Copy command">Copy</button></div>
                 </div>
               </div>
-              <div class="os-card" data-os="linux">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c-2 0-3 2-2.9 4.5.1 1.4-.4 2.2-1.2 3.4-1 1.4-2.2 2.8-2.2 5 0 .9.3 1.6.8 2.2-.2.6-.1 1.3.4 1.7.6.5 1.6.4 2.4.5.7.1 1.2.6 2.7.6s2-.5 2.7-.6c.8-.1 1.8 0 2.4-.5.5-.4.6-1.1.4-1.7.5-.6.8-1.3.8-2.2 0-2.2-1.2-3.6-2.2-5-.8-1.2-1.3-2-1.2-3.4C15 4 14 2 12 2zm-1.4 4.3c.4 0 .7.4.7.9s-.3.9-.7.9-.7-.4-.7-.9.3-.9.7-.9zm2.8 0c.4 0 .7.4.7.9s-.3.9-.7.9-.7-.4-.7-.9.3-.9.7-.9z"/></svg>
-                <span class="os-name">Linux</span>
-                <span class="os-file" data-file="linux_appimage">Portable &middot; x86-64</span>
-                <a class="btn" data-link="linux_appimage" href="https://github.com/MartinOnami/TurboFiles/releases/latest">Download .AppImage</a>
-                <div class="os-altlinks">
-                  <a data-link="linux_deb" href="https://github.com/MartinOnami/TurboFiles/releases/latest">.deb</a>
-                  <span class="sep">/</span>
-                  <a data-link="linux_rpm" href="https://github.com/MartinOnami/TurboFiles/releases/latest">.rpm</a>
-                </div>
-              </div>
-            </div>
-            <p class="dl-hint">Building it yourself? <a href="https://github.com/MartinOnami/TurboFiles/blob/main/docs/INSTALL.md" target="_blank" rel="noopener">See the install guide</a>.</p>
+            </article>
           </div>
-        </section>
+          <p class="footnote">Why the prompt? Signing certificates cost money to maintain. The entire app is public on <a href="https://github.com/MartinOnami/TurboFiles" target="_blank" rel="noopener">GitHub</a>, so you can verify exactly what you are running.</p>
+        </div>
+      </section>
 
-        <!-- ==================================================== FIRST LAUNCH -->
-        <section class="sec" id="first-run">
-          <div class="shead"><span class="lbl">First launch</span><span>Unsigned build</span></div>
-          <div class="scontent">
-            <h2 class="h2">Opening it the first time.</h2>
-            <p class="lead-lg" style="margin:18px 0 34px">TurboFiles is open-source and not yet code-signed, so your system asks once. Here is the 10-second approval per platform.</p>
-            <div class="fl">
-              <article class="fl__col" data-os="macos">
-                <div class="fl__h"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.9c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.8-3.5.8s-1.8-.8-3-.8c-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.8 1.1 9 .7 1.1 1.6 2.3 2.7 2.2 1.1 0 1.5-.7 2.8-.7s1.7.7 2.8.7c1.2 0 1.9-1.1 2.6-2.2.8-1.2 1.2-2.4 1.2-2.5-.1 0-2.3-.9-2.3-3.4zM14.3 5.8c.6-.7 1-1.7.9-2.8-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.6-1 2.6 1 .1 2-.5 2.7-1.1z"/></svg>macOS</div>
-                <ol class="fl__steps">
-                  <li>Double-click <b>TurboFiles</b>; a warning appears. Click <b>Done</b>.</li>
-                  <li>Open <b>System Settings</b>, then <b>Privacy &amp; Security</b>.</li>
-                  <li>Under <b>Security</b>, find "TurboFiles was blocked", click <b>Open Anyway</b>, confirm with password or Touch ID.</li>
-                </ol>
-                <p class="fl__alt">macOS 14 or earlier: Control-click the app, then <b>Open</b>, then <b>Open</b>.</p>
-              </article>
-              <article class="fl__col" data-os="windows">
-                <div class="fl__h"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.7 10.3 4.7v7.2H3zM3 18.3l7.3 1V12H3zM11.3 4.6 21 3v8.9h-9.7zM11.3 19.4 21 21v-9.1h-9.7z"/></svg>Windows</div>
-                <ol class="fl__steps">
-                  <li>Run the installer; <b>"Windows protected your PC"</b> appears.</li>
-                  <li>Click <b>More info</b>.</li>
-                  <li>Click <b>Run anyway</b>, then install as usual.</li>
-                </ol>
-                <p class="fl__alt">SmartScreen stops warning once the app builds reputation.</p>
-              </article>
-              <article class="fl__col" data-os="linux">
-                <div class="fl__h"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c-2 0-3 2-2.9 4.5.1 1.4-.4 2.2-1.2 3.4-1 1.4-2.2 2.8-2.2 5 0 .9.3 1.6.8 2.2-.2.6-.1 1.3.4 1.7.6.5 1.6.4 2.4.5.7.1 1.2.6 2.7.6s2-.5 2.7-.6c.8-.1 1.8 0 2.4-.5.5-.4.6-1.1.4-1.7.5-.6.8-1.3.8-2.2 0-2.2-1.2-3.6-2.2-5-.8-1.2-1.3-2-1.2-3.4C15 4 14 2 12 2z"/></svg>Linux</div>
-                <p class="fl__alt" style="margin:0 0 14px">No prompt. Install from your download folder:</p>
-                <div class="fl__cmds">
-                  <div class="fl__cmd">
-                    <span class="lab"><b>Debian / Ubuntu</b> <span class="ext">.deb</span></span>
-                    <div class="fl__row"><code>sudo apt install ./TurboFiles_*_amd64.deb</code><button class="fl-copy" type="button" data-copy="sudo apt install ./TurboFiles_*_amd64.deb" aria-label="Copy command">Copy</button></div>
-                  </div>
-                  <div class="fl__cmd">
-                    <span class="lab"><b>Fedora / RHEL</b> <span class="ext">.rpm</span></span>
-                    <div class="fl__row"><code>sudo dnf install ./TurboFiles-*.x86_64.rpm</code><button class="fl-copy" type="button" data-copy="sudo dnf install ./TurboFiles-*.x86_64.rpm" aria-label="Copy command">Copy</button></div>
-                  </div>
-                  <div class="fl__cmd">
-                    <span class="lab"><b>Any distro</b> <span class="ext">.AppImage</span></span>
-                    <div class="fl__row"><code>chmod +x TurboFiles_*.AppImage &amp;&amp; ./TurboFiles_*.AppImage</code><button class="fl-copy" type="button" data-copy="chmod +x TurboFiles_*.AppImage &amp;&amp; ./TurboFiles_*.AppImage" aria-label="Copy command">Copy</button></div>
-                  </div>
-                </div>
-              </article>
-            </div>
-            <p class="fl__foot">Why the prompt? Signing certificates cost money to maintain. The entire app is public on <a href="https://github.com/MartinOnami/TurboFiles" target="_blank" rel="noopener">GitHub</a>, so you can verify exactly what you are running.</p>
+      <!-- ==================================================== FAQ -->
+      <section class="section" id="faq">
+        <div class="wrap">
+          <div class="sechead">
+            <span class="sechead__label">FAQ</span>
+            <span class="sechead__no">06 / 06</span>
           </div>
-        </section>
-
-        <!-- ==================================================== FAQ -->
-        <section class="sec" id="faq">
-          <div class="shead"><span class="lbl">FAQ</span><span>Index / 08</span></div>
-          <div class="scontent">
-            <div class="faq">
-              <details open><summary>What is TurboFiles?</summary><div class="a">TurboFiles is a free, open-source desktop client for SFTP, FTP and FTPS, available for macOS, Windows and Linux. It combines a dual-pane workspace and a live transfer queue with OS-keychain security and an agentic AI assistant that can run file-management tasks on your behalf.</div></details>
-              <details><summary>Is TurboFiles free?</summary><div class="a">Yes. TurboFiles is free and open-source under the MIT license. There is no account, no subscription and no paid tier, and the full source is on <a href="https://github.com/MartinOnami/TurboFiles" target="_blank" rel="noopener">GitHub</a>.</div></details>
-              <details><summary>Is TurboFiles a good FileZilla alternative?</summary><div class="a">It covers the FileZilla essentials (SFTP, FTP and FTPS, a dual-pane window, a transfer queue, a Site Manager and resume) and adds a modern interface, an agentic AI assistant, and secrets stored in the OS keychain instead of plaintext. It can import your existing FileZilla sites, so switching takes one step.</div></details>
-              <details><summary>What is an agentic AI assistant in a file client?</summary><div class="a">Agentic means the assistant does not just answer questions, it acts. You describe a task in plain English and it plans the work, calls real tools against your live session (list, read, move, edit, audit), shows each step, and waits for your confirmation before it changes anything. You bring your own API key for Claude, OpenAI, DeepSeek or a local model via Ollama.</div></details>
-              <details><summary>Does TurboFiles support SFTP, FTP and FTPS?</summary><div class="a">Yes. TurboFiles speaks SFTP (over SSH), plain FTP and FTPS (FTP over TLS), with host-key verification, key-file and SSH-agent authentication, and configurable TLS, all behind one consistent interface.</div></details>
-              <details><summary>Where does TurboFiles store my passwords and keys?</summary><div class="a">Only in the operating system keychain: Keychain on macOS, Credential Manager on Windows, and the Secret Service on Linux. Secrets are never written to SQLite, logs or the frontend, and the UI is locked down by a strict Content Security Policy.</div></details>
-              <details><summary>Which operating systems does it run on?</summary><div class="a">TurboFiles is a native cross-platform app for macOS (Apple silicon and Intel), Windows 10 and 11, and Linux (AppImage, .deb and .rpm). It is built on a Rust core with a Tauri shell.</div></details>
-              <details><summary>Does TurboFiles send my data anywhere?</summary><div class="a">No. TurboFiles has no telemetry and no account, so your files and credentials stay on your machine. The AI assistant only talks to the provider you choose, with your own key, and only when you use it.</div></details>
-            </div>
+          <h2 class="h2">Questions, <em>answered.</em></h2>
+          <div class="faq">
+            <details open><summary>What is TurboFiles?</summary><div class="faq__a">TurboFiles is a free, open-source desktop client for SFTP, FTP and FTPS, available for macOS, Windows and Linux. It combines a dual-pane workspace and a live transfer queue with OS-keychain security and an agentic AI assistant that can run file-management tasks on your behalf.</div></details>
+            <details><summary>Is TurboFiles free?</summary><div class="faq__a">Yes. TurboFiles is free and open-source under the MIT license. There is no account, no subscription and no paid tier, and the full source is on <a href="https://github.com/MartinOnami/TurboFiles" target="_blank" rel="noopener">GitHub</a>.</div></details>
+            <details><summary>Is TurboFiles a good FileZilla alternative?</summary><div class="faq__a">It covers the FileZilla essentials (SFTP, FTP and FTPS, a dual-pane window, a transfer queue, a Site Manager and resume) and adds a modern interface, an agentic AI assistant, and secrets stored in the OS keychain instead of plaintext. It can import your existing FileZilla sites, so switching takes one step.</div></details>
+            <details><summary>What is an agentic AI assistant in a file client?</summary><div class="faq__a">Agentic means the assistant does not just answer questions, it acts. You describe a task in plain English and it plans the work, calls real tools against your live session (list, read, move, edit, audit), shows each step, and waits for your confirmation before it changes anything. You bring your own API key for Claude, OpenAI, DeepSeek or a local model via Ollama.</div></details>
+            <details><summary>Does TurboFiles support SFTP, FTP and FTPS?</summary><div class="faq__a">Yes. TurboFiles speaks SFTP (over SSH), plain FTP and FTPS (FTP over TLS), with host-key verification, key-file and SSH-agent authentication, and configurable TLS, all behind one consistent interface.</div></details>
+            <details><summary>Where does TurboFiles store my passwords and keys?</summary><div class="faq__a">Only in the operating system keychain: Keychain on macOS, Credential Manager on Windows, and the Secret Service on Linux. Secrets are never written to SQLite, logs or the frontend, and the UI is locked down by a strict Content Security Policy.</div></details>
+            <details><summary>Which operating systems does it run on?</summary><div class="faq__a">TurboFiles is a native cross-platform app for macOS (Apple silicon and Intel), Windows 10 and 11, and Linux (AppImage, .deb and .rpm). It is built on a Rust core with a Tauri shell.</div></details>
+            <details><summary>Does TurboFiles send my data anywhere?</summary><div class="faq__a">No. TurboFiles has no telemetry and no account, so your files and credentials stay on your machine. The AI assistant only talks to the provider you choose, with your own key, and only when you use it.</div></details>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
+    </main>
 
-      <!-- ======================================================== FOOTER -->
-      <footer>
-        <div class="foot">
-          <div class="foot__brand">
-            <span class="brand"><img src="assets/logo.png" width="22" height="22" alt="TurboFiles logo" /> TurboFiles</span>
+    <!-- ======================================================== FOOTER -->
+    <footer class="footer">
+      <div class="wrap">
+        <div class="footer__grid">
+          <div class="footer__brand">
+            <span class="brand"><img src="assets/logo.png" width="24" height="24" alt="TurboFiles logo" /> <span>TurboFiles</span></span>
             <p>The fast, open-source SFTP, FTP and FTPS client with an agentic AI assistant. For macOS, Windows and Linux.</p>
           </div>
-          <div class="foot__col">
+          <div class="footer__col">
             <h4>Product</h4>
             <a href="#capabilities">Capabilities</a>
             <a href="#assistant">AI assistant</a>
             <a href="#compare">vs FileZilla</a>
             <a href="#download">Download</a>
           </div>
-          <div class="foot__col">
+          <div class="footer__col">
             <h4>Resources</h4>
             <a href="#faq">FAQ</a>
             <a href="https://github.com/MartinOnami/TurboFiles/blob/main/docs/INSTALL.md" target="_blank" rel="noopener">Install guide</a>
             <a href="https://github.com/MartinOnami/TurboFiles/blob/main/docs/PERMISSIONS.md" target="_blank" rel="noopener">Privacy &amp; permissions</a>
           </div>
-          <div class="foot__col">
+          <div class="footer__col">
             <h4>Project</h4>
             <a href="https://github.com/MartinOnami/TurboFiles" target="_blank" rel="noopener">GitHub</a>
             <a href="https://github.com/MartinOnami/TurboFiles/issues" target="_blank" rel="noopener">Report an issue</a>
             <a href="https://github.com/MartinOnami/TurboFiles/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contribute</a>
           </div>
         </div>
-        <div class="foot__bar">
+        <div class="footer__bar">
           <span>&copy; 2026 xFusion &middot; MIT licensed</span>
-          <span><a href="#top">Back to top</a></span>
+          <a href="#top">Back to top</a>
         </div>
-      </footer>
-    </div>
+      </div>
+    </footer>
 
     <script src="main.js"></script>
   </body>
