@@ -3,7 +3,7 @@
 All notable changes to TurboFiles are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Changelog](https://keepachangelog.com).
 
-## [Unreleased]
+## [0.1.7] - 2026-07-14
 ### Changed
 - Rebrand: the maintainer/publisher is now GoWP (was xFusion), and the product
   domain and contact addresses use gowp.com (security@gowp.com, conduct@gowp.com).
