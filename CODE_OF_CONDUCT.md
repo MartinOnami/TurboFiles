@@ -13,7 +13,7 @@ and harassment-free space for everyone.
 ## Reporting
 
 If you experience or witness unacceptable behavior, report it privately to the
-maintainers at **conduct@xfusion.io**. All reports are reviewed and handled
+maintainers at **conduct@gowp.com**. All reports are reviewed and handled
 confidentially. Maintainers are responsible for clarifying standards and may take
 appropriate, fair corrective action in response to any behavior they deem
 inappropriate.

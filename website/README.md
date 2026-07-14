@@ -49,7 +49,7 @@ See [`../docs/INSTALL.md`](../docs/INSTALL.md) and
 
 - **Domain/links:** the page links to `github.com/MartinOnami/TurboFiles` (set
   `GITHUB_REPO` in `main.js` if your repo differs). The product domain is
-  `xfusion.io`.
+  `gowp.com`.
 - **Screenshots:** the app UI is recreated in pure HTML/CSS (hero window, assistant
   chat, Site Manager modal). To use real PNG screenshots instead, replace the
   `.window` / `.chat` / `.modal-demo` blocks in `index.html` with `<img>` tags.

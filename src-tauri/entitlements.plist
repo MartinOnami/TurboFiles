@@ -23,6 +23,9 @@
        keychain (never on disk); allow the hardened runtime to reach it. -->
   <key>keychain-access-groups</key>
   <array>
+    <string>$(AppIdentifierPrefix)com.gowp.turbofiles</string>
+    <!-- Retained after the GoWP rebrand so secrets saved under the previous
+         group (io.xfusion.turbofiles) stay readable for one-time migration. -->
     <string>$(AppIdentifierPrefix)io.xfusion.turbofiles</string>
   </array>
 </dict>

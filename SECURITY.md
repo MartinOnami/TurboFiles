@@ -3,7 +3,7 @@
 ## Reporting a vulnerability
 
 Please report security issues privately via GitHub Security Advisories
-("Report a vulnerability") or by emailing **security@xfusion.io**. Do not open a
+("Report a vulnerability") or by emailing **security@gowp.com**. Do not open a
 public issue for vulnerabilities. We aim to acknowledge within 3 business days.
 
 ## Security model

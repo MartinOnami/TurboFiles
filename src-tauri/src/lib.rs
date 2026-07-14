@@ -19,6 +19,43 @@ pub mod util;
 use tauri::Manager;
 use tracing_subscriber::EnvFilter;
 
+/// One-time data migration for the GoWP rebrand. Renaming the bundle identifier
+/// (io.xfusion.turbofiles -> com.gowp.turbofiles) moves Tauri's app-data dir, so
+/// on first launch under the new identifier we copy the previous dir's databases
+/// (saved sites and history, plus any WAL/SHM sidecars) into the new location.
+/// Best-effort: any failure is logged and the app continues with a fresh store.
+fn migrate_legacy_data_dir(data_dir: &std::path::Path) {
+    if data_dir.join("turbofiles.sqlite").exists() {
+        return; // already migrated, or this install already has data
+    }
+    let legacy_dir = data_dir.with_file_name("io.xfusion.turbofiles");
+    if !legacy_dir.join("turbofiles.sqlite").exists() {
+        return; // no previous install to migrate from
+    }
+    if let Err(e) = std::fs::create_dir_all(data_dir) {
+        tracing::warn!("data-dir migration: cannot create {data_dir:?}: {e}");
+        return;
+    }
+    // Copy both databases plus any WAL/SHM sidecars that may hold uncheckpointed
+    // writes, so the copy is consistent even if the old app exited with a WAL.
+    for name in [
+        "turbofiles.sqlite",
+        "turbofiles.sqlite-wal",
+        "turbofiles.sqlite-shm",
+        "turbofiles-history.sqlite",
+        "turbofiles-history.sqlite-wal",
+        "turbofiles-history.sqlite-shm",
+    ] {
+        let src = legacy_dir.join(name);
+        if src.exists() {
+            if let Err(e) = std::fs::copy(&src, data_dir.join(name)) {
+                tracing::warn!("data-dir migration: copying {name} failed: {e}");
+            }
+        }
+    }
+    tracing::info!("migrated app data from {legacy_dir:?} to {data_dir:?}");
+}
+
 /// Build and run the application. Called from `main.rs`.
 pub fn run() {
     init_tracing();
@@ -31,9 +68,13 @@ pub fn run() {
         .plugin(tauri_plugin_process::init())
         .setup(|app| {
             let data_dir = app.path().app_data_dir()?;
-            let db_path = std::env::var("TURBOFILES_DB_PATH")
-                .map(std::path::PathBuf::from)
-                .unwrap_or_else(|_| data_dir.join("turbofiles.sqlite"));
+            let db_path = match std::env::var("TURBOFILES_DB_PATH") {
+                Ok(p) => std::path::PathBuf::from(p),
+                Err(_) => {
+                    migrate_legacy_data_dir(&data_dir);
+                    data_dir.join("turbofiles.sqlite")
+                }
+            };
             let state = state::AppState::new(db_path)?;
             app.manage(state);
 
@@ -108,4 +149,49 @@ fn init_tracing() {
     let filter =
         EnvFilter::try_from_env("TURBOFILES_LOG").unwrap_or_else(|_| EnvFilter::new("info"));
     let _ = tracing_subscriber::fmt().with_env_filter(filter).try_init();
+}
+
+#[cfg(test)]
+mod migration_tests {
+    use super::migrate_legacy_data_dir;
+    use std::fs;
+
+    #[test]
+    fn copies_legacy_databases_into_new_dir() {
+        let base = tempfile::tempdir().unwrap();
+        let legacy = base.path().join("io.xfusion.turbofiles");
+        let new_dir = base.path().join("com.gowp.turbofiles");
+        fs::create_dir_all(&legacy).unwrap();
+        fs::write(legacy.join("turbofiles.sqlite"), b"sites").unwrap();
+        fs::write(legacy.join("turbofiles-history.sqlite"), b"history").unwrap();
+
+        migrate_legacy_data_dir(&new_dir);
+
+        assert_eq!(
+            fs::read(new_dir.join("turbofiles.sqlite")).unwrap(),
+            b"sites"
+        );
+        assert_eq!(
+            fs::read(new_dir.join("turbofiles-history.sqlite")).unwrap(),
+            b"history"
+        );
+    }
+
+    #[test]
+    fn does_not_overwrite_existing_data() {
+        let base = tempfile::tempdir().unwrap();
+        let legacy = base.path().join("io.xfusion.turbofiles");
+        let new_dir = base.path().join("com.gowp.turbofiles");
+        fs::create_dir_all(&legacy).unwrap();
+        fs::create_dir_all(&new_dir).unwrap();
+        fs::write(legacy.join("turbofiles.sqlite"), b"old").unwrap();
+        fs::write(new_dir.join("turbofiles.sqlite"), b"current").unwrap();
+
+        migrate_legacy_data_dir(&new_dir);
+
+        assert_eq!(
+            fs::read(new_dir.join("turbofiles.sqlite")).unwrap(),
+            b"current"
+        );
+    }
 }

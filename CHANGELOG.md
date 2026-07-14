@@ -3,6 +3,15 @@
 All notable changes to TurboFiles are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and [Keep a Changelog](https://keepachangelog.com).
 
+## [Unreleased]
+### Changed
+- Rebrand: the maintainer/publisher is now GoWP (was xFusion), and the product
+  domain and contact addresses use gowp.com (security@gowp.com, conduct@gowp.com).
+- App identity: the bundle identifier is now com.gowp.turbofiles (was
+  io.xfusion.turbofiles). A one-time, automatic migration on first launch carries
+  your saved sites, transfer/log history, and keychain secrets forward, so you do
+  not lose data or have to re-enter passwords.
+
 ## [0.1.6] - 2026-06-26
 ### Changed
 - Transfer queue / Logs: the bottom panels are now ephemeral - they show only the

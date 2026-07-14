@@ -8,7 +8,7 @@
 - Platforms: macOS (Apple silicon and Intel), Windows 10 and 11, Linux (AppImage, .deb, .rpm).
 - Price: free and open-source under the MIT license. No account, no subscription, no telemetry.
 - Built with: a Rust core in a Tauri shell.
-- Maintained by: xFusion. Source at https://github.com/MartinOnami/TurboFiles
+- Maintained by: GoWP. Source at https://github.com/MartinOnami/TurboFiles
 
 ## Features
 

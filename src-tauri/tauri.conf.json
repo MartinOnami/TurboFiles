@@ -2,7 +2,7 @@
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "TurboFiles",
   "version": "0.1.6",
-  "identifier": "io.xfusion.turbofiles",
+  "identifier": "com.gowp.turbofiles",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -38,8 +38,8 @@
       "icons/icon.ico"
     ],
     "category": "Utility",
-    "publisher": "xFusion",
-    "homepage": "https://xfusion.io",
+    "publisher": "GoWP",
+    "homepage": "https://gowp.com",
     "copyright": "© 2026 Martin Onami. Licensed under the MIT License.",
     "licenseFile": "../LICENSE",
     "shortDescription": "Modern SFTP/FTP/FTPS client",

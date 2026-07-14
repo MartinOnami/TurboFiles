@@ -1,17 +1,27 @@
 //! Secret storage backed by the operating-system keychain (`keyring` crate):
 //! macOS Keychain, Windows Credential Manager, or the Secret Service on Linux.
 //!
-//! Secrets are keyed by site id under a single service name. Passwords are never
-//! written to SQLite, logs, or returned to the frontend.
+//! Secrets are keyed by site id under the app's keychain service name. Passwords
+//! are never written to SQLite, logs, or returned to the frontend.
 
 use keyring::Entry;
 
 use crate::error::{Error, Result};
 
-const SERVICE: &str = "io.xfusion.turbofiles";
+const SERVICE: &str = "com.gowp.turbofiles";
+
+/// Service name used before the GoWP rebrand (was `io.xfusion.turbofiles`). The
+/// `keyring` crate cannot enumerate items, so secrets stored under the old name
+/// are migrated lazily: `get_secret` reads through to it and copies the secret
+/// forward under `SERVICE` on first access.
+const LEGACY_SERVICE: &str = "io.xfusion.turbofiles";
 
 fn entry(site_id: &str) -> Result<Entry> {
     Entry::new(SERVICE, site_id).map_err(|e| Error::Keychain(e.to_string()))
+}
+
+fn legacy_entry(site_id: &str) -> Result<Entry> {
+    Entry::new(LEGACY_SERVICE, site_id).map_err(|e| Error::Keychain(e.to_string()))
 }
 
 /// Store (or replace) the secret for a site.
@@ -41,7 +51,7 @@ pub fn set_secret(site_id: &str, secret: &str) -> Result<()> {
 pub fn get_secret(site_id: &str) -> Result<Option<String>> {
     match entry(site_id)?.get_password() {
         Ok(pw) => Ok(Some(pw)),
-        Err(keyring::Error::NoEntry) => Ok(None),
+        Err(keyring::Error::NoEntry) => get_legacy_secret(site_id),
         Err(e) => {
             tracing::warn!(
                 "keychain read failed for site {site_id}: {e}; treating as no stored secret"
@@ -51,8 +61,34 @@ pub fn get_secret(site_id: &str) -> Result<Option<String>> {
     }
 }
 
+/// Read a secret saved under the pre-rebrand service name and, if present, copy
+/// it forward under the current service so later reads hit the new entry. Any
+/// failure degrades to "no stored secret" (the caller then prompts for the
+/// password), so migration never blocks a connection.
+fn get_legacy_secret(site_id: &str) -> Result<Option<String>> {
+    let pw = match legacy_entry(site_id)?.get_password() {
+        Ok(pw) => pw,
+        Err(keyring::Error::NoEntry) => return Ok(None),
+        Err(e) => {
+            tracing::warn!(
+                "legacy keychain read failed for site {site_id}: {e}; treating as no stored secret"
+            );
+            return Ok(None);
+        }
+    };
+    if let Err(e) = set_secret(site_id, &pw) {
+        tracing::warn!("keychain migration copy-forward failed for site {site_id}: {e}");
+    }
+    Ok(Some(pw))
+}
+
 /// Remove the secret for a site (no error if it was absent).
 pub fn delete_secret(site_id: &str) -> Result<()> {
+    // Best-effort removal of any pre-rebrand copy so a deleted secret cannot
+    // resurface via the legacy read-through in `get_secret`.
+    if let Ok(legacy) = legacy_entry(site_id) {
+        let _ = legacy.delete_password();
+    }
     match entry(site_id)?.delete_password() {
         Ok(()) | Err(keyring::Error::NoEntry) => Ok(()),
         Err(e) => Err(Error::Keychain(e.to_string())),
